@@ -12,8 +12,16 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-export function AnalyticsSidebar() {
+interface AnalyticsSidebarProps {
+  guardianName: string;
+  learners: { name: string }[];
+  activeView: "guardian" | number;
+  onSelectView: (view: "guardian" | number) => void;
+}
+
+export function AnalyticsSidebar({ guardianName, learners, activeView, onSelectView }: AnalyticsSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -38,7 +46,24 @@ export function AnalyticsSidebar() {
           <Avatar className="h-6 w-6">
             <AvatarFallback>AG</AvatarFallback>
           </Avatar>
-          <div className="text-sm font-medium">Alex Guardian</div>
+          <div className="text-sm font-medium truncate">{guardianName}</div>
+          <div className="ml-auto">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-xs underline" aria-label="Switch viewer">
+                Switch
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onSelectView("guardian")}>
+                  {activeView === "guardian" ? "✓ " : ""}{guardianName}
+                </DropdownMenuItem>
+                {learners.map((l, idx) => (
+                  <DropdownMenuItem key={l.name} onClick={() => onSelectView(idx)}>
+                    {activeView === idx ? "✓ " : ""}{l.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>

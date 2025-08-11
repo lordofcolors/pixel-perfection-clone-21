@@ -27,13 +27,48 @@ const curriculum = [
   { title: "Emergency Situations & First Aid Basics", locked: true },
 ];
 
+type ViewType = "guardian" | number; // number = learner index
+
 interface ManageSidebarProps {
   learners: { name: string }[];
-  activeIndex: number;
-  onSelectLearner: (index: number) => void;
+  guardianName: string;
+  activeView: ViewType;
+  onSelectView: (view: ViewType) => void;
 }
 
-export function ManageSidebar({ learners, activeIndex, onSelectLearner }: ManageSidebarProps) {
+export function ManageSidebar({ learners, guardianName, activeView, onSelectView }: ManageSidebarProps) {
+  const showAll = activeView === "guardian";
+  const activeIndex = typeof activeView === "number" ? activeView : 0;
+
+  const renderGroup = (learner: { name: string }, i: number) => (
+    <SidebarGroup key={learner.name}>
+      <SidebarGroupLabel>{learner.name}</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive>
+              <NavLink to="#">
+                <span>Master Dog Walking</span>
+              </NavLink>
+            </SidebarMenuButton>
+            <SidebarMenuSub>
+              {curriculum.map((item, idx) => (
+                <li key={idx}>
+                  <SidebarMenuSubButton asChild isActive={false} aria-disabled={false}>
+                    <a href="#" onClick={(e) => e.preventDefault()}>
+                      {item.locked ? <Lock className="opacity-70" size={14} /> : null}
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuSubButton>
+                </li>
+              ))}
+            </SidebarMenuSub>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -43,34 +78,7 @@ export function ManageSidebar({ learners, activeIndex, onSelectLearner }: Manage
       </SidebarHeader>
 
       <SidebarContent>
-        {learners.map((learner, i) => (
-          <SidebarGroup key={learner.name}>
-            <SidebarGroupLabel>{learner.name}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={i === activeIndex}>
-                    <NavLink to="#">
-                      <span>Master Dog Walking</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                  <SidebarMenuSub>
-                    {curriculum.map((item, idx) => (
-                      <li key={idx}>
-                        <SidebarMenuSubButton asChild isActive={false} aria-disabled={false}>
-                          <a href="#" onClick={(e) => e.preventDefault()}>
-                            {item.locked ? <Lock className="opacity-70" size={14} /> : null}
-                            <span>{item.title}</span>
-                          </a>
-                        </SidebarMenuSubButton>
-                      </li>
-                    ))}
-                  </SidebarMenuSub>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+        {showAll ? learners.map((l, i) => renderGroup(l, i)) : renderGroup(learners[activeIndex], activeIndex)}
       </SidebarContent>
 
       <SidebarFooter>
@@ -78,16 +86,19 @@ export function ManageSidebar({ learners, activeIndex, onSelectLearner }: Manage
           <Avatar className="h-6 w-6">
             <AvatarFallback>AG</AvatarFallback>
           </Avatar>
-          <div className="text-sm font-medium">Alex Guardian</div>
+          <div className="text-sm font-medium truncate">{guardianName}</div>
           <div className="ml-auto">
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-xs underline" aria-label="Switch learner">
+              <DropdownMenuTrigger className="text-xs underline" aria-label="Switch viewer">
                 Switch
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onSelectView("guardian")}>
+                  {activeView === "guardian" ? "✓ " : ""}{guardianName}
+                </DropdownMenuItem>
                 {learners.map((l, idx) => (
-                  <DropdownMenuItem key={l.name} onClick={() => onSelectLearner(idx)}>
-                    {idx === activeIndex ? "✓ " : ""}{l.name}
+                  <DropdownMenuItem key={l.name} onClick={() => onSelectView(idx)}>
+                    {activeView === idx ? "✓ " : ""}{l.name}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

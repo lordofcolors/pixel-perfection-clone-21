@@ -3,7 +3,8 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { ManageSidebar } from "@/components/guardian/ManageSidebar";
 
 export default function GuardianManageDashboard() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeView, setActiveView] = useState<"guardian" | number>("guardian");
+  const guardianName = "Alex Guardian";
   const learners = [
     { name: "Jake" },
     { name: "Mia" },
@@ -29,22 +30,29 @@ export default function GuardianManageDashboard() {
     canonical.setAttribute('href', window.location.href);
   }, []);
 
+  const viewingLabel = activeView === "guardian" ? guardianName : learners[activeView].name;
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <ManageSidebar learners={learners} activeIndex={activeIndex} onSelectLearner={setActiveIndex} />
+        <ManageSidebar
+          learners={learners}
+          guardianName={guardianName}
+          activeView={activeView}
+          onSelectView={setActiveView}
+        />
 
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">
             <SidebarTrigger className="mr-2" />
-            <h1 className="text-base font-semibold">Managing learners</h1>
-            <span className="ml-2 text-muted-foreground">Currently viewing: {learners[activeIndex].name}</span>
+            <h1 className="text-base font-semibold">Managing</h1>
+            <span className="ml-2 text-muted-foreground">Currently viewing: {viewingLabel}</span>
           </header>
 
           <main className="p-6 space-y-4">
             <section>
               <h2 className="text-lg font-medium">Progress summary</h2>
-              <p className="text-sm text-muted-foreground">This is a mock view. Choose a lesson in the left tree under {learners[activeIndex].name}.</p>
+              <p className="text-sm text-muted-foreground">This is a mock view. Choose a lesson in the left tree under {viewingLabel}.</p>
             </section>
           </main>
         </SidebarInset>
