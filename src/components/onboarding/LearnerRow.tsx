@@ -54,7 +54,7 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, show
         {showAccountFields && (
           <>
             <div className="md:col-span-5 space-y-2">
-              <Label htmlFor={`learner-email-${index}`}>Email (optional)</Label>
+              <Label htmlFor={`learner-email-${index}`}>Email</Label>
               <Input id={`learner-email-${index}`} placeholder="name@example.com" type="email" {...register(`learners.${index}.email`)} />
             </div>
             <div className="md:col-span-3">
