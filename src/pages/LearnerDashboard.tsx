@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/learner/AppSidebar";
+import { useLocation } from "react-router-dom";
 
 export default function LearnerDashboard() {
   useEffect(() => {
@@ -22,11 +23,13 @@ export default function LearnerDashboard() {
     }
     canonical.setAttribute('href', window.location.href);
   }, []);
+  const location = useLocation();
+  const learnerName = (location.state as any)?.firstName as string | undefined;
 
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <AppSidebar />
+        <AppSidebar learnerName={learnerName} />
 
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">

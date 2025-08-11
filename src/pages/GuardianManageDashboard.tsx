@@ -5,7 +5,7 @@ import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
 
 export default function GuardianManageDashboard() {
   const [activeView, setActiveView] = useState<"guardian" | number>("guardian");
-  const guardianName = "Alex Guardian";
+  const guardianName = "Tree Guardian";
   const learners = [
     { name: "Jake" },
     { name: "Mia" },
@@ -51,7 +51,9 @@ export default function GuardianManageDashboard() {
           </header>
 
           <main className="p-6 space-y-6">
-            <AnalyticsContent guardianName={guardianName} learners={learners} activeView={activeView} />
+            {activeView === "guardian" ? (
+              <AnalyticsContent guardianName={guardianName} learners={learners} activeView="guardian" />
+            ) : null}
           </main>
         </SidebarInset>
       </div>

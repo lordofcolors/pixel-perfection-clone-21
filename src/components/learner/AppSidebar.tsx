@@ -2,6 +2,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -13,6 +14,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Lock } from "lucide-react";
 
 const curriculum = [
@@ -24,7 +26,7 @@ const curriculum = [
   { title: "Emergency Situations & First Aid Basics", locked: true },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ learnerName }: { learnerName?: string }) {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
 
@@ -70,7 +72,14 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <div className="mt-auto p-2" />
+      <SidebarFooter>
+        <div className="flex items-center gap-2 px-2 py-1 rounded-md">
+          <Avatar className="h-6 w-6">
+            <AvatarFallback>LN</AvatarFallback>
+          </Avatar>
+          <div className="text-sm font-medium truncate">{learnerName || "Learner"}</div>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }

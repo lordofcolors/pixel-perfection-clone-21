@@ -84,7 +84,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
       <SidebarFooter>
         <div className="flex items-center gap-2 px-2 py-1 rounded-md">
           <Avatar className="h-6 w-6">
-            <AvatarFallback>AG</AvatarFallback>
+            <AvatarFallback>TG</AvatarFallback>
           </Avatar>
           <div className="text-sm font-medium truncate">{guardianName}</div>
           <div className="ml-auto">

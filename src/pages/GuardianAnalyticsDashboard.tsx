@@ -4,7 +4,7 @@ import { AnalyticsSidebar } from "@/components/guardian/AnalyticsSidebar";
 import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
 
 export default function GuardianAnalyticsDashboard() {
-  const guardianName = "Alex Guardian";
+  const guardianName = "Tree Guardian";
   const learners = [{ name: "Jake" }, { name: "Mia" }];
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function GuardianAnalyticsDashboard() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <AnalyticsSidebar />
+        <AnalyticsSidebar guardianName={guardianName} learners={learners} />
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">
             <SidebarTrigger className="mr-2" />
