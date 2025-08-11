@@ -12,16 +12,13 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import GoogleLogo from "@/assets/google-g-logo.png";
+import { useState } from "react";
 
-interface AnalyticsSidebarProps {
-  guardianName: string;
-  learners: { name: string }[];
-  activeView: "guardian" | number;
-  onSelectView: (view: "guardian" | number) => void;
-}
+export function AnalyticsSidebar() {
+  const [signedIn, setSignedIn] = useState(false);
 
-export function AnalyticsSidebar({ guardianName, learners, activeView, onSelectView }: AnalyticsSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -46,24 +43,19 @@ export function AnalyticsSidebar({ guardianName, learners, activeView, onSelectV
           <Avatar className="h-6 w-6">
             <AvatarFallback>AG</AvatarFallback>
           </Avatar>
-          <div className="text-sm font-medium truncate">{guardianName}</div>
-          <div className="ml-auto">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="text-xs underline" aria-label="Switch viewer">
-                Switch
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onSelectView("guardian")}>
-                  {activeView === "guardian" ? "✓ " : ""}{guardianName}
-                </DropdownMenuItem>
-                {learners.map((l, idx) => (
-                  <DropdownMenuItem key={l.name} onClick={() => onSelectView(idx)}>
-                    {activeView === idx ? "✓ " : ""}{l.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          <div className="text-sm font-medium truncate">Alex Guardian</div>
+        </div>
+        <div className="px-2 pb-2">
+          <Button
+            type="button"
+            variant="google"
+            className="w-full"
+            onClick={() => setSignedIn((v) => !v)}
+            aria-label={signedIn ? "Sign out of Google" : "Sign in with Google"}
+          >
+            <img src={GoogleLogo} alt="Google logo" className="h-5 w-5" />
+            <span>{signedIn ? "Sign out" : "Sign in with Google"}</span>
+          </Button>
         </div>
       </SidebarFooter>
     </Sidebar>

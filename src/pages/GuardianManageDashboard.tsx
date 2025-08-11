@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { ManageSidebar } from "@/components/guardian/ManageSidebar";
+import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
 
 export default function GuardianManageDashboard() {
   const [activeView, setActiveView] = useState<"guardian" | number>("guardian");
@@ -49,11 +50,8 @@ export default function GuardianManageDashboard() {
             <span className="ml-2 text-muted-foreground">Currently viewing: {viewingLabel}</span>
           </header>
 
-          <main className="p-6 space-y-4">
-            <section>
-              <h2 className="text-lg font-medium">Progress summary</h2>
-              <p className="text-sm text-muted-foreground">This is a mock view. Choose a lesson in the left tree under {viewingLabel}.</p>
-            </section>
+          <main className="p-6 space-y-6">
+            <AnalyticsContent guardianName={guardianName} learners={learners} activeView={activeView} />
           </main>
         </SidebarInset>
       </div>
