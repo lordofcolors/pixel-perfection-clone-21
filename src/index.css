@@ -7,90 +7,140 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  /* ========== Light Mode (Default) ========== */
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --foreground: 222 47% 11%;
+    --border: 215 25% 85%;
+    --card: 210 40% 98%;
+    --card-foreground: 229 84% 5%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 86% 97%;
+    --input: 215 25% 65%;
+    --muted: 214 32% 96%;
+    --muted-foreground: 215 25% 40%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 229 84% 5%;
+    --primary: 300 45% 40%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 300 45% 40%;
+    --ring-offset: 0 0% 100%;
+    --secondary: 242 60% 40%;
+    --secondary-foreground: 0 0% 100%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Charts */
+    --chart-1: 298 44% 65%;
+    --chart-2: 173 80% 40%;
+    --chart-3: 217 91% 60%;
+    --chart-4: 48 96% 53%;
+    --chart-5: 258 90% 66%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Sidebar */
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 215 25% 27%;
+    --sidebar-primary: 300 42% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 215 25% 85%;
+    --sidebar-ring: 215 25% 85%;
 
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  /* ========== Dark Mode ========== */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
+    --background: 229 84% 5%; /* e.g. #1B1B1B or slate/950 */
+    --foreground: 0 0% 98%; /* #FAFAFA */
+    --border: 215 25% 27%; /* #3E4C59 (slate/700) */
+    --card: 222 47% 11%; /* #1E293B (slate/900) */
+    --card-foreground: 210 40% 98%; /* #F8FAFC (slate/50) */
+    --destructive: 0 84% 60%; /* #EF4444 (red/500) */
+    --destructive-foreground: 0 86% 97%; /* #FEF2F2 (red/50) */
+    --input: 215 25% 27%; /* #3E4C59 (slate/700) */
+    --muted: 217 33% 17%; /* #2C2F38 */
+    --muted-foreground: 240 5% 65%; /* #9CA3AF (zinc/400) */
+    --popover: 229 84% 5%; /* #0F172A (slate/950) */
     --popover-foreground: 210 40% 98%;
+    --primary: 296 48% 89%; /* xolv-magenta/200 */
+    --primary-foreground: 215 25% 27%; /* #374151 (slate/700) */
+    --ring: 296 48% 89%; /* xolv-magenta/200 */
+    --ring-offset: 0 0% 100%; /* #FFFFFF (still) */
+    --secondary: 229 96% 79%; /* xolv-blue/300 */
+    --secondary-foreground: 227 69% 5%; /* xolv-slate/950? */
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Dark Charts */
+    --chart-1: 297 46% 75%; /* xolv-magenta/400 */
+    --chart-2: 172 66% 50%; /* teal/400 */
+    --chart-3: 213 94% 68%; /* blue/400 */
+    --chart-4: 50 98% 64%; /* yellow/300 */
+    --chart-5: 255 92% 76%; /* violet/400 */
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Dark Sidebar */
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 296 48% 89%;
+    --sidebar-primary-foreground: 0 0% 0%; /* #000000 */
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 215 19% 35%; /* #474F58 (slate/600) */
+    --sidebar-ring: 213 27% 84%; /* #C7D2FE (slate/300) */
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --radius: 0.5rem;
+  }
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+  /* ========== High Contrast (Updated) ========== */
+  .highcontrast {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --border: 215 9% 60%;
+    --card: 222 47% 11%;
+    --card-foreground: 0 0% 100%;
+    --destructive: 0 80% 33%;
+    --destructive-foreground: 0 86% 97%;
+    --input: 215 14% 66%;
+    --muted: 215 20% 17%;
+    --muted-foreground: 0 0% 85%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 300 26% 86%;
+    --primary-foreground: 222 47% 11%;
+    --ring: 300 26% 86%;
+    --ring-offset: 0 0% 100%;
+    --secondary: 220 53% 77%;
+    --secondary-foreground: 0 0% 0%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Charts */
+    --chart-1: 300 32% 73%;
+    --chart-2: 167 47% 54%;
+    --chart-3: 212 100% 82%;
+    --chart-4: 48 100% 75%;
+    --chart-5: 255 100% 85%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar */
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 215 25% 86%;
+    --sidebar-primary: 300 26% 86%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 215 16% 13%;
+    --sidebar-accent-foreground: 215 25% 86%;
+    --sidebar-border: 215 6% 70%;
+    --sidebar-ring: 215 6% 90%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark:not(.highcontrast) .lesson-gradient-bg {
+    position: relative;
+    background: linear-gradient(to bottom, #eed4f0, #2598a6, #97aafd);
+    border-radius: 0.75rem;
+    padding: 4px;
+  }
+
+  .dark:not(.highcontrast) .lesson-gradient-bg > .inner-card {
+    background: #0f172a; /* or use tailwind color var, e.g. var(--card) */
+    border-radius: 0.5rem;
+    padding: 16px;
   }
 }
 
