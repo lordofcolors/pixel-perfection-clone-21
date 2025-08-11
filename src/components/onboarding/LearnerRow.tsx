@@ -18,9 +18,10 @@ interface LearnerRowProps {
   index: number;
   register: UseFormRegister<any>;
   setValue: UseFormSetValue<any>;
+  showAccountFields?: boolean;
 }
 
-const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue }) => {
+const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, showAccountFields = true }) => {
   const [open, setOpen] = useState(false);
   const [googleEmail, setGoogleEmail] = useState('');
 

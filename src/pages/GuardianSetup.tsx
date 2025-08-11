@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ProgressBar } from '@/components/onboarding/ProgressBar';
 import LearnerRow from '@/components/onboarding/LearnerRow';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface Learner {
   fullName: string;
@@ -16,6 +17,7 @@ interface Learner {
 interface GuardianForm {
   fullName: string;
   learnersCount: number;
+  accountMode: 'inhouse' | 'separate';
   learners: Learner[];
 }
 
@@ -28,12 +30,18 @@ const GuardianSetup = () => {
     defaultValues: {
       fullName: firstNameFromPrev,
       learnersCount: 1,
+      accountMode: 'separate',
       learners: [{ fullName: '', email: '' }],
     },
-  });
+});
+
 
   const { fields, append, remove } = useFieldArray({ control, name: 'learners' });
   const learnersCount = watch('learnersCount');
+  const accountMode = watch('accountMode');
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const [center, setCenter] = useState(true);
 
   useEffect(() => {
     if (typeof learnersCount !== 'number') return;
@@ -69,6 +77,24 @@ const GuardianSetup = () => {
     canonical.setAttribute('href', window.location.href);
   }, []);
 
+  useEffect(() => {
+    const update = () => {
+      const el = formRef.current;
+      if (!el) return;
+      const vh = window.innerHeight;
+      const h = el.getBoundingClientRect().height;
+      setCenter(h + 64 < vh);
+    };
+    update();
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(update) : null;
+    if (ro && formRef.current) ro.observe(formRef.current);
+    window.addEventListener('resize', update);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener('resize', update);
+    };
+  }, [fields.length]);
+
   const onSubmit = (data: GuardianForm) => {
     console.log('Guardian setup form:', data);
     navigate('/');
@@ -80,7 +106,9 @@ const GuardianSetup = () => {
       <ProgressBar progress={66} />
       <h1 className="sr-only">Guardian setup - learners</h1>
 
-      <section className="container max-w-3xl py-10">
+      <div ref={wrapperRef} className={`min-h-svh w-full flex ${center ? 'items-center' : 'items-start'}`}>
+        <section className="container max-w-3xl py-10 w-full">
+          <div ref={formRef}>
         <Card>
           <CardHeader>
             <CardTitle>Tell us about your learners</CardTitle>
@@ -101,12 +129,29 @@ const GuardianSetup = () => {
                     max={10}
                     {...register('learnersCount', { valueAsNumber: true })}
                   />
-                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>How will learners sign in?</Label>
+                <RadioGroup
+                  value={accountMode}
+                  onValueChange={(v) => setValue('accountMode', v as 'inhouse' | 'separate')}
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                >
+                  <div className="flex items-center gap-2 rounded-md border border-border bg-card p-3">
+                    <RadioGroupItem value="inhouse" id="mode-inhouse" />
+                    <Label htmlFor="mode-inhouse">Manage in my account</Label>
+                  </div>
+                  <div className="flex items-center gap-2 rounded-md border border-border bg-card p-3">
+                    <RadioGroupItem value="separate" id="mode-separate" />
+                    <Label htmlFor="mode-separate">Create separate learner accounts</Label>
+                  </div>
+                </RadioGroup>
               </div>
 
               <div className="space-y-4">
                 {fields.map((field, index) => (
-                  <LearnerRow key={field.id} index={index} register={register} setValue={setValue} />
+                  <LearnerRow key={field.id} index={index} register={register} setValue={setValue} showAccountFields={accountMode === 'separate'} />
                 ))}
               </div>
 
@@ -115,9 +160,10 @@ const GuardianSetup = () => {
                 <Button type="submit" className="ml-auto">Save</Button>
               </div>
             </form>
-          </CardContent>
-        </Card>
-      </section>
+            </CardContent>
+            </Card>
+            </div>
+      </div>
     </main>
   );
 };
