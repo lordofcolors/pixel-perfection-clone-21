@@ -35,7 +35,7 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, show
   return (
     <div className="rounded-lg border border-border p-4 space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-        <div className={showAccountFields ? "md:col-span-5 space-y-2" : "md:col-span-12 space-y-2"}>
+        <div className={showAccountFields ? "md:col-span-4 space-y-2" : "md:col-span-12 space-y-2"}>
           <Label htmlFor={`learner-name-${index}`}>Learner full name</Label>
           <Input id={`learner-name-${index}`} placeholder="Full name" {...register(`learners.${index}.fullName`)} />
         </div>
@@ -45,10 +45,10 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, show
               <Label htmlFor={`learner-email-${index}`}>Email (optional)</Label>
               <Input id={`learner-email-${index}`} placeholder="name@example.com" type="email" {...register(`learners.${index}.email`)} />
             </div>
-            <div className="md:col-span-2">
+            <div className="md:col-span-3">
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button type="button" variant="google" className="w-full" aria-label="Sign in with Google">
+                  <Button type="button" variant="google" size="lg" className="w-full" aria-label="Sign in with Google">
                     <img src={GoogleLogo} alt="Google G logo" className="h-5 w-5" />
                     <span>Sign in with Google</span>
                   </Button>
