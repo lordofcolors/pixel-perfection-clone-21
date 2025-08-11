@@ -4,6 +4,7 @@ import { ProgressBar } from './ProgressBar';
 import { NameInput } from './NameInput';
 import { RoleCard } from './RoleCard';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface OnboardingFormData {
   firstName: string;
@@ -26,6 +27,8 @@ export const OnboardingLayout: React.FC = () => {
     }
   });
 
+  const navigate = useNavigate();
+
   const firstName = watch('firstName');
   const canSubmit = firstName && firstName.length >= 2 && selectedRole && isValid;
 
@@ -44,7 +47,9 @@ export const OnboardingLayout: React.FC = () => {
   const onSubmit = (data: OnboardingFormData) => {
     const formData = { ...data, role: selectedRole };
     console.log('Onboarding data:', formData);
-    // Handle form submission here
+    if (selectedRole === 'guardian') {
+      navigate('/guardian-setup', { state: { firstName: data.firstName } });
+    }
   };
   const roleCards = [
     {
@@ -68,7 +73,7 @@ export const OnboardingLayout: React.FC = () => {
   ];
 
   return (
-    <main className="w-screen min-h-screen relative overflow-auto font-literata bg-[#040816] max-md:p-5 max-sm:p-4">
+    <main className="w-screen min-h-screen relative overflow-auto font-literata bg-background max-md:p-5 max-sm:p-4">
       <ProgressBar progress={25} />
       
       <div className="absolute -translate-x-2/4 w-[213px] h-[212px] left-2/4 top-[102px] max-md:w-[180px] max-md:h-[180px] max-md:top-20 max-sm:w-[150px] max-sm:h-[150px] max-sm:top-[60px]">
