@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ProgressBar } from './ProgressBar';
 import { NameInput } from './NameInput';
 import { RoleCard } from './RoleCard';
+import { Button } from '@/components/ui/button';
 
 interface OnboardingFormData {
   firstName: string;
@@ -28,12 +29,23 @@ export const OnboardingLayout: React.FC = () => {
   const firstName = watch('firstName');
   const canSubmit = firstName && firstName.length >= 2 && selectedRole && isValid;
 
+  useEffect(() => {
+    document.title = 'Onboarding - Choose Role';
+    const desc = 'Onboarding: enter your first name and pick the role that fits you best.';
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'description');
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', desc);
+  }, []);
+
   const onSubmit = (data: OnboardingFormData) => {
     const formData = { ...data, role: selectedRole };
     console.log('Onboarding data:', formData);
     // Handle form submission here
   };
-
   const roleCards = [
     {
       role: 'learner' as const,
@@ -56,13 +68,14 @@ export const OnboardingLayout: React.FC = () => {
   ];
 
   return (
-    <main className="w-screen h-screen relative overflow-hidden bg-[#040816] max-md:p-5 max-sm:p-4">
+    <main className="w-screen min-h-screen relative overflow-auto font-literata bg-[#040816] max-md:p-5 max-sm:p-4">
       <ProgressBar progress={25} />
       
       <div className="absolute -translate-x-2/4 w-[213px] h-[212px] left-2/4 top-[102px] max-md:w-[180px] max-md:h-[180px] max-md:top-20 max-sm:w-[150px] max-sm:h-[150px] max-sm:top-[60px]">
         <img
           src="https://api.builder.io/api/v1/image/assets/TEMP/93a27a18bc8d04a44cda6817cf59746f14d5582d?width=426"
           alt="Welcome illustration"
+          loading="eager"
           className="w-[213px] h-[212px] shrink-0 max-md:w-[180px] max-md:h-[180px] max-sm:w-[150px] max-sm:h-[150px]"
         />
       </div>
@@ -100,22 +113,14 @@ export const OnboardingLayout: React.FC = () => {
           ))}
         </fieldset>
 
-        <button
+        <Button
           type="submit"
           disabled={!canSubmit}
-          className={`inline-flex h-11 justify-center items-center gap-2 shrink-0 absolute -translate-x-2/4 w-[100px] px-8 py-2 rounded-lg left-2/4 top-[879px] max-md:top-[780px] max-sm:w-[120px] max-sm:top-[680px] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#EED4F0] focus:ring-offset-2 focus:ring-offset-slate-900 ${
-            canSubmit
-              ? 'cursor-pointer bg-[#EED4F0] hover:bg-[#E5C7E7] active:bg-[#DDB8E0]'
-              : 'cursor-not-allowed bg-slate-600 opacity-50'
-          }`}
+          className={`inline-flex h-11 justify-center items-center gap-2 shrink-0 absolute -translate-x-2/4 w-[100px] px-8 py-2 rounded-lg left-2/4 top-[879px] max-md:top-[780px] max-sm:w-[120px] max-sm:top-[680px] transition-all duration-200`}
           aria-label="Complete onboarding process"
         >
-          <span className={`text-sm font-medium leading-5 relative ${
-            canSubmit ? 'text-slate-700' : 'text-slate-400'
-          }`}>
-            Done
-          </span>
-        </button>
+          Done
+        </Button>
       </form>
     </main>
   );
