@@ -130,7 +130,7 @@ const GuardianSetup = () => {
                     {...register('learnersCount', { valueAsNumber: true })}
                   />
               </div>
-
+              </div>
               <div className="space-y-2">
                 <Label>How will learners sign in?</Label>
                 <RadioGroup
@@ -163,7 +163,8 @@ const GuardianSetup = () => {
             </CardContent>
             </Card>
             </div>
-      </div>
+          </section>
+        </div>
     </main>
   );
 };
