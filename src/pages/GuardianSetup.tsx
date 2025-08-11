@@ -116,9 +116,6 @@ const GuardianSetup = () => {
               </div>
             </form>
           </CardContent>
-          <CardFooter className="justify-center text-sm text-muted-foreground">
-            Your data is protected. You can disconnect Google anytime.
-          </CardFooter>
         </Card>
       </section>
     </main>

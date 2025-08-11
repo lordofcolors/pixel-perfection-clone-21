@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import type { UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import GoogleLogo from '@/assets/google-g-logo.png';
 
 interface LearnerRowProps {
   index: number;
@@ -44,9 +45,9 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue }) =>
         <div className="md:col-span-2">
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button type="button" variant="secondary" className="w-full gap-2">
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-background text-foreground">G</span>
-                Connect
+              <Button type="button" variant="google" className="w-full" aria-label="Sign in with Google">
+                <img src={GoogleLogo} alt="Google G logo" className="h-5 w-5" />
+                <span>Sign in with Google</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
