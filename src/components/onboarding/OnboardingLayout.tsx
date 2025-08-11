@@ -49,6 +49,8 @@ export const OnboardingLayout: React.FC = () => {
     console.log('Onboarding data:', formData);
     if (selectedRole === 'guardian') {
       navigate('/guardian-setup', { state: { firstName: data.firstName } });
+    } else if (selectedRole === 'learner') {
+      navigate('/learner', { state: { firstName: data.firstName } });
     }
   };
   const roleCards = [
