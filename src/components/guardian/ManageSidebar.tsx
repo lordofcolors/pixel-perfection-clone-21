@@ -105,6 +105,20 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
             </DropdownMenu>
           </div>
         </div>
+        <div className="px-2 pt-2">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <NavLink to="/guardian/account">Account</NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <NavLink to="/guardian/billing">Billing</NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

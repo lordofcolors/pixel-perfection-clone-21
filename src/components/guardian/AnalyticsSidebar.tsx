@@ -68,6 +68,20 @@ export function AnalyticsSidebar({ guardianName, learners }: { guardianName: str
           </Avatar>
           <div className="text-sm font-medium truncate">{guardianName}</div>
         </div>
+        <div className="px-2 pt-2">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <a href="/guardian/account">Account</a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <a href="/guardian/billing">Billing</a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </div>
         <div className="px-2 pb-2">
           <Button type="button" variant="google" className="w-full" aria-label="Sign out of Google">
             <img src={GoogleLogo} alt="Google logo" className="h-5 w-5" />

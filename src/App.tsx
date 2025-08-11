@@ -9,6 +9,8 @@ import GuardianSetup from "./pages/GuardianSetup";
 import LearnerDashboard from "./pages/LearnerDashboard";
 import GuardianManageDashboard from "./pages/GuardianManageDashboard";
 import GuardianAnalyticsDashboard from "./pages/GuardianAnalyticsDashboard";
+import GuardianAccount from "./pages/GuardianAccount";
+import GuardianBilling from "./pages/GuardianBilling";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/learner" element={<LearnerDashboard />} />
           <Route path="/guardian/manage" element={<GuardianManageDashboard />} />
           <Route path="/guardian/analytics" element={<GuardianAnalyticsDashboard />} />
+          <Route path="/guardian/account" element={<GuardianAccount />} />
+          <Route path="/guardian/billing" element={<GuardianBilling />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
