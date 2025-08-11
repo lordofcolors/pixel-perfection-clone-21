@@ -1,25 +1,22 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { ProgressBar } from '@/components/onboarding/ProgressBar';
+import LearnerRow from '@/components/onboarding/LearnerRow';
+
+interface Learner {
+  fullName: string;
+  email: string;
+}
 
 interface GuardianForm {
   fullName: string;
   learnersCount: number;
-  childrenNames: string;
+  learners: Learner[];
 }
 
 const GuardianSetup = () => {
@@ -27,17 +24,34 @@ const GuardianSetup = () => {
   const location = useLocation();
   const firstNameFromPrev = (location.state as any)?.firstName ?? '';
 
-  const { register, handleSubmit } = useForm<GuardianForm>({
+  const { register, handleSubmit, control, watch, setValue } = useForm<GuardianForm>({
     defaultValues: {
       fullName: firstNameFromPrev,
       learnersCount: 1,
-      childrenNames: ''
-    }
+      learners: [{ fullName: '', email: '' }],
+    },
   });
 
+  const { fields, append, remove } = useFieldArray({ control, name: 'learners' });
+  const learnersCount = watch('learnersCount');
+
   useEffect(() => {
-    document.title = 'Guardian Setup - Connect Google';
-    const desc = 'Add learner details and connect your Google account to continue.';
+    if (typeof learnersCount !== 'number') return;
+    const current = fields.length;
+    const desired = Math.max(1, Math.min(10, learnersCount || 1));
+    // Grow
+    if (desired > current) {
+      for (let i = current; i < desired; i++) append({ fullName: '', email: '' });
+    }
+    // Shrink
+    if (desired < current) {
+      for (let i = current - 1; i >= desired; i--) remove(i);
+    }
+  }, [learnersCount, fields.length, append, remove]);
+
+  useEffect(() => {
+    document.title = 'Guardian Setup - Learners';
+    const desc = 'Add learner details and connect Google accounts to continue.';
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) {
       meta = document.createElement('meta');
@@ -57,68 +71,47 @@ const GuardianSetup = () => {
 
   const onSubmit = (data: GuardianForm) => {
     console.log('Guardian setup form:', data);
+    navigate('/');
   };
 
   return (
-    <main className="min-h-screen w-full font-literata bg-background text-foreground">
-      <header className="w-full border-b border-border py-4">
-        <h1 className="text-center text-2xl">Guardian onboarding</h1>
-      </header>
+    <main className="relative min-h-screen w-full overflow-auto font-literata bg-background text-foreground">
+      {/* Progress at top (2/3) */}
+      <ProgressBar progress={66} />
+      <h1 className="sr-only">Guardian setup - learners</h1>
 
-      <section className="container max-w-2xl py-8">
+      <section className="container max-w-3xl py-10">
         <Card>
           <CardHeader>
             <CardTitle>Tell us about your learners</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Your name</Label>
-                <Input id="fullName" placeholder="Full name" {...register('fullName')} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Your name</Label>
+                  <Input id="fullName" placeholder="Full name" {...register('fullName')} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="learnersCount">How many learners will you support?</Label>
+                  <Input
+                    id="learnersCount"
+                    type="number"
+                    min={1}
+                    max={10}
+                    {...register('learnersCount', { valueAsNumber: true })}
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="learnersCount">How many learners will you support?</Label>
-                <Input id="learnersCount" type="number" min={1} {...register('learnersCount', { valueAsNumber: true })} />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="childrenNames">Learner names (comma separated)</Label>
-                <Textarea id="childrenNames" placeholder="Alex, Jordan, Casey" {...register('childrenNames')} />
+              <div className="space-y-4">
+                {fields.map((field, index) => (
+                  <LearnerRow key={field.id} index={index} register={register} setValue={setValue} />
+                ))}
               </div>
 
               <div className="flex items-center gap-3 pt-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button type="button" variant="secondary" className="gap-2">
-                      <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-background text-foreground">G</span>
-                      Connect Google
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Sign in with Google</DialogTitle>
-                      <DialogDescription>Use your Google account to continue.</DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="googleEmail">Email or phone</Label>
-                        <Input id="googleEmail" placeholder="you@example.com" />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <Button variant="ghost" type="button">Forgot email?</Button>
-                        <Button type="button">Next</Button>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        This is a mock Google sign-in UI for design purposes only.
-                      </p>
-                    </div>
-                    <DialogFooter>
-                      <Button variant="outline" type="button" onClick={() => navigate('/')}>Cancel</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-
+                <Button type="button" variant="outline" onClick={() => navigate('/')}>Cancel</Button>
                 <Button type="submit" className="ml-auto">Save</Button>
               </div>
             </form>
