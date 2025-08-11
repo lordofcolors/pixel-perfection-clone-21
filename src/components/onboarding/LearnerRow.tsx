@@ -32,6 +32,18 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, show
     setOpen(false);
   };
 
+  const mockAccounts = [
+    { name: 'Primary Account', email: 'primary@example.com', status: '' },
+    { name: 'Learner A', email: 'learner.a@example.com', status: '' },
+    { name: 'Learner B', email: 'learner.b@example.com', status: 'Session expired' },
+  ];
+
+  const selectAccount = (email: string) => {
+    setGoogleEmail(email);
+    setValue(`learners.${index}.email`, email);
+    setOpen(false);
+  };
+
   return (
     <div className="rounded-lg border border-border p-4 space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
@@ -50,35 +62,58 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, show
                 <DialogTrigger asChild>
                   <Button type="button" variant="google" size="lg" className="w-full" aria-label="Sign in with Google">
                     <img src={GoogleLogo} alt="Google G logo" className="h-5 w-5" />
-                    <span>Sign in with Google</span>
+                    <span>Sign in</span>
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Sign in with Google</DialogTitle>
-                    <DialogDescription>Use your Google account to continue for this learner.</DialogDescription>
+                <DialogContent className="sm:max-w-lg p-0 overflow-hidden">
+                  <DialogHeader className="px-6 pt-5 pb-3 text-left">
+                    <DialogTitle className="text-base">Choose an account</DialogTitle>
+                    <DialogDescription>to continue</DialogDescription>
                   </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor={`google-email-${index}`}>Email or phone</Label>
-                      <Input
-                        id={`google-email-${index}`}
-                        placeholder="you@example.com"
-                        value={googleEmail}
-                        onChange={(e) => setGoogleEmail(e.target.value)}
-                      />
+                  <div className="px-2 pb-2">
+                    <div className="space-y-1">
+                      <button type="button" onClick={() => selectAccount(mockAccounts[0].email)} className="w-full rounded-md px-4 py-3 text-left hover:bg-accent">
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-muted" />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{mockAccounts[0].name}</p>
+                            <p className="text-xs text-muted-foreground">{mockAccounts[0].email}</p>
+                          </div>
+                        </div>
+                      </button>
+                      <button type="button" onClick={() => selectAccount(mockAccounts[1].email)} className="w-full rounded-md px-4 py-3 text-left hover:bg-accent">
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-muted" />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{mockAccounts[1].name}</p>
+                            <p className="text-xs text-muted-foreground">{mockAccounts[1].email}</p>
+                          </div>
+                        </div>
+                      </button>
+                      <button type="button" onClick={() => selectAccount(mockAccounts[2].email)} className="w-full rounded-md px-4 py-3 text-left hover:bg-accent">
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-muted" />
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm font-medium">{mockAccounts[2].name}</p>
+                              <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground">{mockAccounts[2].status}</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground">{mockAccounts[2].email}</p>
+                          </div>
+                        </div>
+                      </button>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <Button variant="ghost" type="button">Forgot email?</Button>
-                      <Button type="button" onClick={handleGoogleNext}>Next</Button>
+                    <div className="border-t border-border mt-2 pt-2 space-y-1">
+                      <button type="button" className="w-full rounded-md px-4 py-3 text-left hover:bg-accent">Add another account</button>
+                      <button type="button" className="w-full rounded-md px-4 py-3 text-left hover:bg-accent">Sign out of all accounts</button>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      This is a mock Google sign-in UI for design purposes only.
-                    </p>
+                    <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground py-4">
+                      <span>Privacy Policy</span>
+                      <span>•</span>
+                      <span>Terms of Service</span>
+                    </div>
                   </div>
-                  <DialogFooter>
-                    <Button variant="outline" type="button" onClick={() => setOpen(false)}>Cancel</Button>
-                  </DialogFooter>
+                  <DialogFooter className="hidden" />
                 </DialogContent>
               </Dialog>
             </div>

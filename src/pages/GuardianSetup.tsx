@@ -167,7 +167,7 @@ const GuardianSetup = () => {
                 <span>Does your learner already have an account?</span>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="link" type="button" className="px-1">Link your account</Button>
+                    <Button variant="link" type="button" className="px-1">Link accounts</Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
@@ -183,7 +183,7 @@ const GuardianSetup = () => {
                         <Button variant="outline" type="button">Cancel</Button>
                       </DialogClose>
                       <DialogClose asChild>
-                        <Button type="button">Link account</Button>
+                        <Button type="button">Link accounts</Button>
                       </DialogClose>
                     </DialogFooter>
                   </DialogContent>
