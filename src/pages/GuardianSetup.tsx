@@ -98,7 +98,11 @@ const GuardianSetup = () => {
 
   const onSubmit = (data: GuardianForm) => {
     console.log('Guardian setup form:', data);
-    navigate('/');
+    if (data.accountMode === 'inhouse') {
+      navigate('/guardian/manage');
+    } else {
+      navigate('/guardian/analytics');
+    }
   };
 
   return (
