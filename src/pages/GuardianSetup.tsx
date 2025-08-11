@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ProgressBar } from '@/components/onboarding/ProgressBar';
 import LearnerRow from '@/components/onboarding/LearnerRow';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 
 interface Learner {
   fullName: string;
@@ -160,6 +161,35 @@ const GuardianSetup = () => {
                 <Button type="submit" className="ml-auto">Save</Button>
               </div>
             </form>
+            <div className="pt-4">
+              <div className="h-px bg-border my-2" />
+              <div className="text-sm text-muted-foreground flex items-center justify-center gap-1">
+                <span>Does your learner already have an account?</span>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="link" type="button" className="px-1">Link your account</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Link existing learner account</DialogTitle>
+                      <DialogDescription>Enter the email associated with your learner’s account to link it.</DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-2">
+                      <Label htmlFor="link-email">Learner email</Label>
+                      <Input id="link-email" type="email" placeholder="name@example.com" />
+                    </div>
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button variant="outline" type="button">Cancel</Button>
+                      </DialogClose>
+                      <DialogClose asChild>
+                        <Button type="button">Link account</Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
             </CardContent>
             </Card>
             </div>
