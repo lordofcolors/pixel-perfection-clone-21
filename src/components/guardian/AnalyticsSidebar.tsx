@@ -28,9 +28,9 @@ const curriculum = [
 export function AnalyticsSidebar({ guardianName, learners }: { guardianName: string; learners: { name: string }[] }) {
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <div className="px-2">
-          <SidebarInput placeholder="Search" aria-label="Search" />
+        <SidebarHeader>
+          <div className="px-2">
+            <SidebarInput placeholder="Search" aria-label="Search" />
         </div>
       </SidebarHeader>
       <SidebarContent>

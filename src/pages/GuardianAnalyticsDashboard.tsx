@@ -8,7 +8,7 @@ export default function GuardianAnalyticsDashboard() {
   const learners = [{ name: "Jake" }, { name: "Mia" }];
 
   useEffect(() => {
-    document.title = "Guardian - Analytics";
+    document.title = "Guardian - Separate";
     const desc = "Overview of learners' progress and activity.";
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) {
@@ -34,7 +34,7 @@ export default function GuardianAnalyticsDashboard() {
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">
             <SidebarTrigger className="mr-2" />
-            <h1 className="text-base font-semibold">Learner analytics</h1>
+            <h1 className="text-base font-semibold">Separate learner accounts</h1>
           </header>
           <main className="p-6 space-y-6">
             <AnalyticsContent guardianName={guardianName} learners={learners} activeView="guardian" />

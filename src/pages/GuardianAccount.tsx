@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { AnalyticsSidebar } from "@/components/guardian/AnalyticsSidebar";
 import LearnerRow from "@/components/onboarding/LearnerRow";
 import { toast } from "sonner";
 
@@ -74,78 +76,90 @@ export default function GuardianAccount() {
   };
 
   return (
-    <main className="container max-w-3xl py-8">
-      <h1 className="text-2xl font-semibold mb-4">Account settings</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Manage learners & access</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6" ref={formRef}>
-          <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setConfirmOpen(true); }}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Your name</Label>
-                <Input id="fullName" placeholder="Full name" {...register('fullName')} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="learnersCount">Number of learners</Label>
-                <Input id="learnersCount" type="number" min={1} max={10} {...register('learnersCount', { valueAsNumber: true })} />
-                <p className="text-xs text-muted-foreground">Between 1 and 10 learners.</p>
-              </div>
-            </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AnalyticsSidebar guardianName="Tree Guardian" learners={[{ name: "Jake" }, { name: "Mia" }]} />
+        <SidebarInset>
+          <header className="h-16 flex items-center border-b px-3">
+            <SidebarTrigger className="mr-2" />
+            <h1 className="text-base font-semibold">Account settings</h1>
+          </header>
+          <main className="p-6">
+            <section className="container max-w-5xl">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Manage learners & access</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6" ref={formRef}>
+                  <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setConfirmOpen(true); }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="fullName">Your name</Label>
+                        <Input id="fullName" placeholder="Full name" {...register('fullName')} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="learnersCount">Number of learners</Label>
+                        <Input id="learnersCount" type="number" min={1} max={10} {...register('learnersCount', { valueAsNumber: true })} />
+                        <p className="text-xs text-muted-foreground">Between 1 and 10 learners.</p>
+                      </div>
+                    </div>
 
-            <div className="space-y-2">
-              <Label>Account mode</Label>
-              <RadioGroup
-                value={accountMode}
-                onValueChange={(v) => setValue('accountMode', v as 'inhouse' | 'separate')}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-              >
-                <div className="flex items-center gap-2 rounded-md border border-border bg-card p-3">
-                  <RadioGroupItem value="inhouse" id="mode-inhouse" />
-                  <Label htmlFor="mode-inhouse">Manage in my account</Label>
-                </div>
-                <div className="flex items-center gap-2 rounded-md border border-border bg-card p-3">
-                  <RadioGroupItem value="separate" id="mode-separate" />
-                  <Label htmlFor="mode-separate">Separate learner accounts</Label>
-                </div>
-              </RadioGroup>
-            </div>
+                    <div className="space-y-2">
+                      <Label>Account mode</Label>
+                      <RadioGroup
+                        value={accountMode}
+                        onValueChange={(v) => setValue('accountMode', v as 'inhouse' | 'separate')}
+                        className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                      >
+                        <div className="flex items-center gap-2 rounded-md border border-border bg-card p-3">
+                          <RadioGroupItem value="inhouse" id="mode-inhouse" />
+                          <Label htmlFor="mode-inhouse">Manage in my account</Label>
+                        </div>
+                        <div className="flex items-center gap-2 rounded-md border border-border bg-card p-3">
+                          <RadioGroupItem value="separate" id="mode-separate" />
+                          <Label htmlFor="mode-separate">Separate learner accounts</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
 
-            <div className="space-y-4">
-              {fields.map((field, index) => (
-                <LearnerRow key={field.id} index={index} register={register} setValue={setValue} showAccountFields={accountMode === 'separate'} />
-              ))}
-            </div>
+                    <div className="space-y-4">
+                      {fields.map((field, index) => (
+                        <LearnerRow key={field.id} index={index} register={register} setValue={setValue} showAccountFields={accountMode === 'separate'} />
+                      ))}
+                    </div>
 
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" type="button" onClick={() => history.back()}>Cancel</Button>
-              <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-                <AlertDialogTrigger asChild>
-                  <Button type="submit">Save changes</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Override existing settings?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Saving will overwrite your current learner and account settings. Do you want to continue?
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => { handleSubmit(onSubmit)(); setConfirmOpen(false); }}>Confirm & Save</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
-          </form>
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" type="button" onClick={() => history.back()}>Cancel</Button>
+                      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+                        <AlertDialogTrigger asChild>
+                          <Button type="submit">Save changes</Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Override existing settings?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Saving will overwrite your current learner and account settings. Do you want to continue?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => { handleSubmit(onSubmit)(); setConfirmOpen(false); }}>Confirm & Save</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </form>
 
-          <div className="h-px bg-border" />
-          <div className="text-sm text-muted-foreground">
-            Does your learner already have an account? <span className="underline">Link accounts</span>
-          </div>
-        </CardContent>
-      </Card>
-    </main>
+                  <div className="h-px bg-border" />
+                  <div className="text-sm text-muted-foreground">
+                    Does your learner already have an account? <span className="underline">Link accounts</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+          </main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   );
 }
