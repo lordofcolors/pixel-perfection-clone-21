@@ -5,6 +5,7 @@ import { NameInput } from './NameInput';
 import { RoleCard } from './RoleCard';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { saveOnboardingName } from '@/lib/store';
 
 interface OnboardingFormData {
   firstName: string;
@@ -47,6 +48,7 @@ export const OnboardingLayout: React.FC = () => {
   const onSubmit = (data: OnboardingFormData) => {
     const formData = { ...data, role: selectedRole };
     console.log('Onboarding data:', formData);
+    saveOnboardingName(data.firstName);
     if (selectedRole === 'guardian') {
       navigate('/guardian-setup', { state: { firstName: data.firstName } });
     } else if (selectedRole === 'learner') {

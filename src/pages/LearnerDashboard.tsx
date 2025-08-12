@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/learner/AppSidebar";
 import { useLocation } from "react-router-dom";
+import { getOnboardingName } from "@/lib/store";
 
 export default function LearnerDashboard() {
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function LearnerDashboard() {
     canonical.setAttribute('href', window.location.href);
   }, []);
   const location = useLocation();
-  const learnerName = (location.state as any)?.firstName as string | undefined;
+  const learnerName = ((location.state as any)?.firstName as string | undefined) || getOnboardingName();
 
   return (
     <SidebarProvider>

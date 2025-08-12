@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import GuardianSetup from "./pages/GuardianSetup";
 import LearnerDashboard from "./pages/LearnerDashboard";
+import LearnerAccount from "./pages/LearnerAccount";
+import LearnerBilling from "./pages/LearnerBilling";
 import GuardianManageDashboard from "./pages/GuardianManageDashboard";
 import GuardianAnalyticsDashboard from "./pages/GuardianAnalyticsDashboard";
 import GuardianAccount from "./pages/GuardianAccount";
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/guardian-setup" element={<GuardianSetup />} />
           <Route path="/learner" element={<LearnerDashboard />} />
+          <Route path="/learner/account" element={<LearnerAccount />} />
+          <Route path="/learner/billing" element={<LearnerBilling />} />
           <Route path="/guardian/manage" element={<GuardianManageDashboard />} />
           <Route path="/guardian/separate" element={<GuardianAnalyticsDashboard />} />
           <Route path="/guardian/account" element={<GuardianAccount />} />

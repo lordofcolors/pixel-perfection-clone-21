@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { ManageSidebar } from "@/components/guardian/ManageSidebar";
 import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
+import { getGuardianSetup } from "@/lib/store";
 
 export default function GuardianManageDashboard() {
   const [activeView, setActiveView] = useState<"guardian" | number>("guardian");
-  const guardianName = "Tree Guardian";
-  const learners = [
-    { name: "Jake" },
-    { name: "Mia" },
-  ];
+  const data = getGuardianSetup();
+  const guardianName = data?.guardianName || "Tree Guardian";
+  const learners = data?.learners || [{ name: "Jake" }, { name: "Mia" }];
 
   useEffect(() => {
     document.title = "Guardian - Manage Learners";

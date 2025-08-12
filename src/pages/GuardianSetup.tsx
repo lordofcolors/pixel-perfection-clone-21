@@ -9,6 +9,7 @@ import { ProgressBar } from '@/components/onboarding/ProgressBar';
 import LearnerRow from '@/components/onboarding/LearnerRow';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { saveGuardianSetup } from '@/lib/store';
 
 interface Learner {
   fullName: string;
@@ -98,6 +99,11 @@ const GuardianSetup = () => {
 
   const onSubmit = (data: GuardianForm) => {
     console.log('Guardian setup form:', data);
+    saveGuardianSetup({
+      guardianName: data.fullName || 'Guardian',
+      learners: (data.learners || []).map((l) => ({ name: l.fullName || 'Learner' })),
+      accountMode: data.accountMode,
+    });
     if (data.accountMode === 'inhouse') {
       navigate('/guardian/manage');
     } else {

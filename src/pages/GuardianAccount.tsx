@@ -10,6 +10,7 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { AnalyticsSidebar } from "@/components/guardian/AnalyticsSidebar";
 import LearnerRow from "@/components/onboarding/LearnerRow";
 import { toast } from "sonner";
+import { getGuardianSetup } from "@/lib/store";
 
 interface Learner { fullName: string; email: string }
 interface GuardianForm {
@@ -20,15 +21,13 @@ interface GuardianForm {
 }
 
 export default function GuardianAccount() {
+  const setup = getGuardianSetup();
   const { register, handleSubmit, control, watch, setValue } = useForm<GuardianForm>({
     defaultValues: {
-      fullName: "Tree Guardian",
-      learnersCount: 2,
-      accountMode: "separate",
-      learners: [
-        { fullName: "Jake", email: "" },
-        { fullName: "Mia", email: "" },
-      ],
+      fullName: setup?.guardianName || "Tree Guardian",
+      learnersCount: setup?.learners?.length || 2,
+      accountMode: setup?.accountMode || "separate",
+      learners: (setup?.learners || [ { name: "Jake" }, { name: "Mia" }]).map(l => ({ fullName: l.name, email: "" })),
     },
   });
 
@@ -72,6 +71,10 @@ export default function GuardianAccount() {
 
   const onSubmit = (data: GuardianForm) => {
     console.log("Guardian account save:", data);
+    // persist changes
+    const learnersOut = (data.learners || []).map((l) => ({ name: l.fullName || 'Learner' }));
+    const { saveGuardianSetup } = require("@/lib/store");
+    saveGuardianSetup({ guardianName: data.fullName || 'Guardian', learners: learnersOut, accountMode: data.accountMode });
     toast.success("Account settings saved");
   };
 
@@ -88,7 +91,7 @@ export default function GuardianAccount() {
             <section className="container max-w-5xl">
               <Card>
                 <CardHeader>
-                  <CardTitle>Manage learners & access</CardTitle>
+              <CardTitle>Manage learners & access</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6" ref={formRef}>
                   <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setConfirmOpen(true); }}>

@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AnalyticsSidebar } from "@/components/guardian/AnalyticsSidebar";
 import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
+import { getGuardianSetup } from "@/lib/store";
 
 export default function GuardianAnalyticsDashboard() {
-  const guardianName = "Tree Guardian";
-  const learners = [{ name: "Jake" }, { name: "Mia" }];
+  const setup = getGuardianSetup();
+  const guardianName = setup?.guardianName || "Tree Guardian";
+  const learners = setup?.learners || [{ name: "Jake" }, { name: "Mia" }];
 
   useEffect(() => {
     document.title = "Guardian - Separate";

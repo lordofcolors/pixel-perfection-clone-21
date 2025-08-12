@@ -79,6 +79,20 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
           </Avatar>
           <div className="text-sm font-medium truncate">{learnerName || "Learner"}</div>
         </div>
+        <div className="px-2 pt-2">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isActive('/learner/account')}>
+                <NavLink to="/learner/account">Account</NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isActive('/learner/billing')}>
+                <NavLink to="/learner/billing">Billing</NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
