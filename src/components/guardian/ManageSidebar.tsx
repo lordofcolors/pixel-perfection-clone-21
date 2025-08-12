@@ -37,8 +37,16 @@ interface ManageSidebarProps {
 }
 
 export function ManageSidebar({ learners, guardianName, activeView, onSelectView }: ManageSidebarProps) {
+  const getInitials = (name?: string) => {
+    if (!name) return 'NA';
+    const parts = name.trim().split(/\s+/);
+    const first = parts[0]?.[0] || '';
+    const last = parts[parts.length - 1]?.[0] || '';
+    return (first + last).toUpperCase() || 'NA';
+  };
   const showAll = activeView === "guardian";
   const activeIndex = typeof activeView === "number" ? activeView : 0;
+  const currentName = showAll ? guardianName : (learners[activeIndex]?.name || guardianName);
 
   const renderGroup = (learner: { name: string }, i: number) => (
     <SidebarGroup key={learner.name}>
@@ -84,9 +92,9 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
       <SidebarFooter>
         <div className="flex items-center gap-2 px-2 py-1 rounded-md">
           <Avatar className="h-6 w-6">
-            <AvatarFallback>TG</AvatarFallback>
+            <AvatarFallback>{getInitials(currentName)}</AvatarFallback>
           </Avatar>
-          <div className="text-sm font-medium truncate">{guardianName}</div>
+          <div className="text-sm font-medium truncate">{currentName}</div>
           <div className="ml-auto">
             <DropdownMenu>
               <DropdownMenuTrigger className="text-xs underline" aria-label="Switch viewer">

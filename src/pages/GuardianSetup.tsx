@@ -45,19 +45,8 @@ const GuardianSetup = () => {
   const formRef = useRef<HTMLDivElement>(null);
   const [center, setCenter] = useState(true);
 
-  useEffect(() => {
-    if (typeof learnersCount !== 'number') return;
-    const current = fields.length;
-    const desired = Math.max(1, Math.min(10, learnersCount || 1));
-    // Grow
-    if (desired > current) {
-      for (let i = current; i < desired; i++) append({ fullName: '', email: '' });
-    }
-    // Shrink
-    if (desired < current) {
-      for (let i = current - 1; i >= desired; i--) remove(i);
-    }
-  }, [learnersCount, fields.length, append, remove]);
+  // learnersCount-driven auto add/remove removed in favor of explicit "Add learner" CTA
+
 
   useEffect(() => {
     document.title = 'Guardian Setup - Learners';
@@ -126,21 +115,11 @@ const GuardianSetup = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Your name</Label>
                   <Input id="fullName" placeholder="Full name" {...register('fullName')} />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="learnersCount">How many learners will you support?</Label>
-                  <Input
-                    id="learnersCount"
-                    type="number"
-                    min={1}
-                    max={10}
-                    {...register('learnersCount', { valueAsNumber: true })}
-                  />
-              </div>
               </div>
               <div className="space-y-2">
                 <Label>How will learners sign in?</Label>
@@ -164,6 +143,11 @@ const GuardianSetup = () => {
                 {fields.map((field, index) => (
                   <LearnerRow key={field.id} index={index} register={register} setValue={setValue} showAccountFields={accountMode === 'separate'} />
                 ))}
+                <div className="pt-1">
+                  <Button type="button" variant="outline" onClick={() => append({ fullName: '', email: '' })}>
+                    Add learner
+                  </Button>
+                </div>
               </div>
 
               <div className="flex items-center gap-3 pt-2">

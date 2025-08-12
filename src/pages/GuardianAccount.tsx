@@ -32,22 +32,12 @@ export default function GuardianAccount() {
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: "learners" });
-  const learnersCount = watch("learnersCount");
+  
   const accountMode = watch("accountMode");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (typeof learnersCount !== "number") return;
-    const current = fields.length;
-    const desired = Math.max(1, Math.min(10, learnersCount || 1));
-    if (desired > current) {
-      for (let i = current; i < desired; i++) append({ fullName: "", email: "" });
-    }
-    if (desired < current) {
-      for (let i = current - 1; i >= desired; i--) remove(i);
-    }
-  }, [learnersCount, fields.length, append, remove]);
+  // learnersCount-driven auto add/remove removed; users can add learners explicitly
 
   useEffect(() => {
     document.title = "Guardian - Account Settings";
@@ -95,40 +85,20 @@ export default function GuardianAccount() {
                 </CardHeader>
                 <CardContent className="space-y-6" ref={formRef}>
                   <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setConfirmOpen(true); }}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="fullName">Your name</Label>
                         <Input id="fullName" placeholder="Full name" {...register('fullName')} />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="learnersCount">Number of learners</Label>
-                        <Input id="learnersCount" type="number" min={1} max={10} {...register('learnersCount', { valueAsNumber: true })} />
-                        <p className="text-xs text-muted-foreground">Between 1 and 10 learners.</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label>Account mode</Label>
-                      <RadioGroup
-                        value={accountMode}
-                        onValueChange={(v) => setValue('accountMode', v as 'inhouse' | 'separate')}
-                        className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-                      >
-                        <div className="flex items-center gap-2 rounded-md border border-border bg-card p-3">
-                          <RadioGroupItem value="inhouse" id="mode-inhouse" />
-                          <Label htmlFor="mode-inhouse">Manage in my account</Label>
-                        </div>
-                        <div className="flex items-center gap-2 rounded-md border border-border bg-card p-3">
-                          <RadioGroupItem value="separate" id="mode-separate" />
-                          <Label htmlFor="mode-separate">Separate learner accounts</Label>
-                        </div>
-                      </RadioGroup>
                     </div>
 
                     <div className="space-y-4">
                       {fields.map((field, index) => (
                         <LearnerRow key={field.id} index={index} register={register} setValue={setValue} showAccountFields={accountMode === 'separate'} />
                       ))}
+                      <div className="pt-1">
+                        <Button type="button" variant="outline" onClick={() => append({ fullName: '', email: '' })}>Add learner</Button>
+                      </div>
                     </div>
 
                     <div className="flex justify-end gap-2">

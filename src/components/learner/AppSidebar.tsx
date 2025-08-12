@@ -74,8 +74,7 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
 
       <SidebarFooter>
         <div className="flex items-center gap-2 px-2 py-1 rounded-md">
-          <Avatar className="h-6 w-6">
-            <AvatarFallback>LN</AvatarFallback>
+            <AvatarFallback>{getInitials(learnerName)}</AvatarFallback>
           </Avatar>
           <div className="text-sm font-medium truncate">{learnerName || "Learner"}</div>
         </div>
