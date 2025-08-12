@@ -144,7 +144,7 @@ const GuardianSetup = () => {
                   <LearnerRow key={field.id} index={index} register={register} setValue={setValue} showAccountFields={accountMode === 'separate'} />
                 ))}
                 <div className="pt-1">
-                  <Button type="button" variant="outline" onClick={() => append({ fullName: '', email: '' })}>
+                  <Button type="button" onClick={() => append({ fullName: '', email: '' })}>
                     Add learner
                   </Button>
                 </div>

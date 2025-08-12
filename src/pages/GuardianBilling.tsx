@@ -43,8 +43,10 @@ export default function GuardianBilling() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="text-3xl font-semibold">$0</div>
+                    <div className="text-sm text-muted-foreground mb-2">Family Plan</div>
                     <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
-                      <li>Up to 3 learners</li>
+                      <li>Up to 2 learners</li>
+                      <li>Shared credits for the family</li>
                       <li>Basic analytics</li>
                       <li>Email support</li>
                     </ul>
@@ -57,11 +59,16 @@ export default function GuardianBilling() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="text-3xl font-semibold">$19.99/month</div>
+                    <div className="text-sm text-muted-foreground mb-2">Family Plan</div>
                     <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
-                      <li>Up to 10 learners</li>
+                      <li>Up to 5 learners</li>
+                      <li>Shared credits for the family</li>
                       <li>Advanced analytics</li>
                       <li>Priority support</li>
                     </ul>
+                    <div className="text-xs text-muted-foreground mt-2 p-2 bg-muted/50 rounded">
+                      Credits are shared amongst all family members under your guardian account.
+                    </div>
                     <Button className="mt-2">Upgrade to Pro</Button>
                   </CardContent>
                 </Card>
