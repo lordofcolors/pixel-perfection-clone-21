@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
+import { RefreshCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -44,27 +43,10 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, show
               <Input id={`learner-email-${index}`} placeholder="name@example.com or +15551234567" type="text" {...register(`learners.${index}.email`)} />
             </div>
             <div className="md:col-span-5">
-              <div className="flex gap-2">
-                <div className="flex items-center gap-2 flex-1">
-                  <div className="min-w-[160px]">
-                    <Label className="sr-only" htmlFor={`invite-status-${index}`}>Invite status</Label>
-                    <Select value={inviteStatus} onValueChange={setInviteStatus}>
-                      <SelectTrigger id={`invite-status-${index}`} className="h-10">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {statuses.map((s) => (
-                          <SelectItem key={s} value={s}>{s}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Badge variant="secondary">{inviteStatus}</Badge>
-                </div>
+              <div className="flex items-center gap-2 justify-end">
                 <Button
                   type="button"
-                  variant="secondary"
-                  className="flex-1"
+                  className="min-w-[84px]"
                   onClick={() => {
                     const el = document.getElementById(`learner-email-${index}`) as HTMLInputElement | null;
                     const val = el?.value?.trim() || '';
@@ -75,6 +57,21 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, show
                 >
                   Invite
                 </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Cycle invite status"
+                  title="Cycle status"
+                  onClick={() => {
+                    const i = statuses.indexOf(inviteStatus);
+                    const next = statuses[(i + 1) % statuses.length];
+                    setInviteStatus(next);
+                  }}
+                >
+                  <RefreshCcw className="h-4 w-4" />
+                </Button>
+                <span className="text-sm text-muted-foreground whitespace-nowrap">{inviteStatus}</span>
               </div>
               <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
                 <DialogContent className="sm:max-w-md">

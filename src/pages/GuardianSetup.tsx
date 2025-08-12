@@ -107,7 +107,7 @@ const GuardianSetup = () => {
       <h1 className="sr-only">Guardian setup - learners</h1>
 
       <div ref={wrapperRef} className={`min-h-svh w-full flex ${center ? 'items-center' : 'items-start'}`}>
-        <section className="container max-w-3xl py-10 w-full">
+        <section className="container max-w-5xl py-10 w-full">
           <div ref={formRef}>
         <Card>
           <CardHeader>
