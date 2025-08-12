@@ -14,8 +14,6 @@ import {
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import GoogleLogo from "@/assets/google-g-logo.png";
 import { Lock } from "lucide-react";
 
 const curriculum = [
@@ -80,13 +78,12 @@ export function AnalyticsSidebar({ guardianName, learners }: { guardianName: str
                 <a href="/guardian/billing">Billing</a>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <button type="button" aria-label="Sign out">Sign out</button>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
-        </div>
-        <div className="px-2 pb-2">
-          <Button type="button" variant="google" className="w-full" aria-label="Sign out of Google">
-            <img src={GoogleLogo} alt="Google logo" className="h-5 w-5" />
-            <span>Sign out</span>
-          </Button>
         </div>
       </SidebarFooter>
     </Sidebar>

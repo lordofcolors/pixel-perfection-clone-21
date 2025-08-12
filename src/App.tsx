@@ -25,7 +25,7 @@ const App = () => (
           <Route path="/guardian-setup" element={<GuardianSetup />} />
           <Route path="/learner" element={<LearnerDashboard />} />
           <Route path="/guardian/manage" element={<GuardianManageDashboard />} />
-          <Route path="/guardian/analytics" element={<GuardianAnalyticsDashboard />} />
+          <Route path="/guardian/separate" element={<GuardianAnalyticsDashboard />} />
           <Route path="/guardian/account" element={<GuardianAccount />} />
           <Route path="/guardian/billing" element={<GuardianBilling />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

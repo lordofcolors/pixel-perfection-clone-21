@@ -101,7 +101,7 @@ const GuardianSetup = () => {
     if (data.accountMode === 'inhouse') {
       navigate('/guardian/manage');
     } else {
-      navigate('/guardian/analytics');
+      navigate('/guardian/separate');
     }
   };
 

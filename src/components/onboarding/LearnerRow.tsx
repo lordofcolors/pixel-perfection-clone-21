@@ -24,6 +24,8 @@ interface LearnerRowProps {
 const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, showAccountFields = true }) => {
   const [open, setOpen] = useState(false);
   const [googleEmail, setGoogleEmail] = useState('');
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [inviteTarget, setInviteTarget] = useState('');
 
   const handleGoogleNext = () => {
     if (googleEmail) {
@@ -54,10 +56,10 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, show
         {showAccountFields && (
           <>
             <div className="md:col-span-5 space-y-2">
-              <Label htmlFor={`learner-email-${index}`}>Email</Label>
-              <Input id={`learner-email-${index}`} placeholder="name@example.com" type="email" {...register(`learners.${index}.email`)} />
+              <Label htmlFor={`learner-email-${index}`}>Email or Phone</Label>
+              <Input id={`learner-email-${index}`} placeholder="name@example.com or +1 555 123 4567" type="text" {...register(`learners.${index}.email`)} />
             </div>
-            <div className="md:col-span-3">
+            <div className="md:col-span-3 space-y-2">
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button type="button" variant="google" size="lg" className="w-full" aria-label="Sign in with Google">
@@ -116,6 +118,33 @@ const LearnerRow: React.FC<LearnerRowProps> = ({ index, register, setValue, show
                   <DialogFooter className="hidden" />
                 </DialogContent>
               </Dialog>
+              <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Invite sent</DialogTitle>
+                    <DialogDescription>
+                      We sent an invite to {inviteTarget || 'the provided contact'}. Ask them to check their inbox or messages to proceed.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button type="button" onClick={() => setInviteOpen(false)}>Done</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <Button
+                type="button"
+                variant="secondary"
+                className="w-full"
+                onClick={() => {
+                  const el = document.getElementById(`learner-email-${index}`) as HTMLInputElement | null;
+                  const val = el?.value?.trim() || '';
+                  setInviteTarget(val);
+                  setInviteOpen(true);
+                }}
+                aria-label="Send invite to learner"
+              >
+                Invite
+              </Button>
             </div>
           </>
         )}
