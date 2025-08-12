@@ -31,69 +31,95 @@ export default function LearnerBilling() {
           </header>
           <main className="p-6">
             <section className="container max-w-4xl">
-              <div className="mb-6">
-                <h2 className="text-2xl font-semibold mb-2">Choose Your Plan</h2>
-                <p className="text-muted-foreground">Select an individual plan or have a guardian manage your account.</p>
+              <div className="mb-6 text-center">
+                <h2 className="text-3xl font-semibold mb-3">Choose Your Plan</h2>
+                <p className="text-muted-foreground">Start with a 14-day Pro trial, then continue with the plan that works for you</p>
               </div>
               
               <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <Card>
+                <Card className="border-muted">
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
-                      Free Individual
+                      Free Plan
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="text-3xl font-semibold">$0</div>
-                    <div className="text-sm text-muted-foreground mb-2">Individual Plan</div>
-                    <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
-                      <li>Limited credits per month</li>
-                      <li>Basic learning features</li>
-                      <li>Email support</li>
-                    </ul>
-                    <Button variant="outline" className="mt-2 w-full">Current Plan</Button>
+                  <CardContent className="space-y-4">
+                    <div className="text-4xl font-semibold">$0</div>
+                    <div className="text-sm text-muted-foreground">Perfect for getting started</div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+                        <span>5 minutes of AI assistance per day</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+                        <span>Basic learning features</span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardHeader>
+                <Card className="border-primary/20 bg-primary/5 relative">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                      14-Day Free Trial
+                    </span>
+                  </div>
+                  <CardHeader className="pt-6">
                     <CardTitle className="flex items-center justify-between">
-                      Pro Individual
+                      Pro Plan
+                      <span className="text-lg font-normal">$9.99<span className="text-sm text-muted-foreground">/month</span></span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="text-3xl font-semibold">$9.99/month</div>
-                    <div className="text-sm text-muted-foreground mb-2">Individual Plan</div>
-                    <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
-                      <li>Unlimited credits</li>
-                      <li>Advanced learning features</li>
-                      <li>Priority support</li>
-                      <li>Detailed progress analytics</li>
-                    </ul>
-                    <Button className="mt-2 w-full">Upgrade to Pro</Button>
+                  <CardContent className="space-y-4">
+                    <div className="text-muted-foreground text-sm">Unlimited learning potential</div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-primary rounded-full"></div>
+                        <span>Unlimited AI assistance</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-primary rounded-full"></div>
+                        <span>Premium learning experiences</span>
+                      </div>
+                    </div>
+                    <Button className="w-full bg-primary/80 hover:bg-primary">
+                      Trial Active
+                    </Button>
+                    <div className="text-center text-sm text-muted-foreground">
+                      Trial ends in 14 days
+                    </div>
+                    <div className="text-xs text-muted-foreground text-center">
+                      You'll automatically return to the Free plan unless you upgrade
+                    </div>
                   </CardContent>
                 </Card>
               </div>
 
               <Card className="bg-muted/30">
                 <CardHeader>
-                  <CardTitle className="text-lg">Want someone else to pay?</CardTitle>
+                  <CardTitle className="text-lg">How the 14-Day Trial Works</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    Have a guardian (parent, teacher, or mentor) manage and pay for your account. 
-                    You'll be part of their family plan with shared credits and they'll handle all billing.
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    You're currently enjoying your Pro trial with unlimited AI assistance. After 14 days, you'll 
+                    automatically return to the Free plan. No credit card required, no automatic billing.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Button variant="outline" className="flex-1">
-                      Link to Guardian Account
-                    </Button>
-                    <Button variant="ghost" className="flex-1">
-                      Invite Someone to be Guardian
-                    </Button>
-                  </div>
-                  <div className="text-xs text-muted-foreground p-3 bg-background rounded border">
-                    <strong>Note:</strong> Once linked to a guardian account, they will manage your billing and you'll be part of their family plan.
+                  
+                  <div className="border-t pt-4">
+                    <h3 className="font-medium mb-3">Want someone else to pay?</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Have a guardian (parent, teacher, or mentor) manage and pay for your account. 
+                      You'll be part of their family plan with shared credits.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button variant="outline" className="flex-1">
+                        Link to Guardian Account
+                      </Button>
+                      <Button variant="ghost" className="flex-1">
+                        Invite Someone to be Guardian
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

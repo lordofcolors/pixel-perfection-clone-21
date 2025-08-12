@@ -35,44 +35,99 @@ export default function GuardianBilling() {
             <h1 className="text-base font-semibold">Billing</h1>
           </header>
           <main className="p-6">
-            <section className="container max-w-5xl">
-              <div className="grid gap-6 md:grid-cols-2">
-                <Card>
+            <section className="container max-w-4xl">
+              <div className="mb-6 text-center">
+                <h2 className="text-3xl font-semibold mb-3">Choose Your Plan</h2>
+                <p className="text-muted-foreground">Start with a 14-day Pro trial, then continue with the plan that works for your family</p>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <Card className="border-muted">
                   <CardHeader>
-                    <CardTitle>Free Plan</CardTitle>
+                    <CardTitle className="flex items-center justify-between">
+                      Free Family Plan
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="text-3xl font-semibold">$0</div>
-                    <div className="text-sm text-muted-foreground mb-2">Family Plan</div>
-                    <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
-                      <li>Up to 2 learners</li>
-                      <li>Shared credits for the family</li>
-                      <li>Basic analytics</li>
-                      <li>Email support</li>
-                    </ul>
-                    <Button variant="outline" className="mt-2">Current plan</Button>
+                  <CardContent className="space-y-4">
+                    <div className="text-4xl font-semibold">$0</div>
+                    <div className="text-sm text-muted-foreground">Perfect for getting started</div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+                        <span>Up to 2 learners</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+                        <span>Shared credits for the family</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+                        <span>Basic analytics</span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Pro Plan</CardTitle>
+
+                <Card className="border-primary/20 bg-primary/5 relative">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                      14-Day Free Trial
+                    </span>
+                  </div>
+                  <CardHeader className="pt-6">
+                    <CardTitle className="flex items-center justify-between">
+                      Pro Family Plan
+                      <span className="text-lg font-normal">$19.99<span className="text-sm text-muted-foreground">/month</span></span>
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="text-3xl font-semibold">$19.99/month</div>
-                    <div className="text-sm text-muted-foreground mb-2">Family Plan</div>
-                    <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
-                      <li>Up to 5 learners</li>
-                      <li>Shared credits for the family</li>
-                      <li>Advanced analytics</li>
-                      <li>Priority support</li>
-                    </ul>
-                    <div className="text-xs text-muted-foreground mt-2 p-2 bg-muted/50 rounded">
-                      Credits are shared amongst all family members under your guardian account.
+                  <CardContent className="space-y-4">
+                    <div className="text-muted-foreground text-sm">Unlimited learning potential for your family</div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-primary rounded-full"></div>
+                        <span>Up to 5 learners</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-primary rounded-full"></div>
+                        <span>Shared credits for the family</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-primary rounded-full"></div>
+                        <span>Advanced analytics</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-primary rounded-full"></div>
+                        <span>Priority support</span>
+                      </div>
                     </div>
-                    <Button className="mt-2">Upgrade to Pro</Button>
+                    <Button className="w-full bg-primary/80 hover:bg-primary">
+                      Trial Active
+                    </Button>
+                    <div className="text-center text-sm text-muted-foreground">
+                      Trial ends in 14 days
+                    </div>
+                    <div className="text-xs text-muted-foreground text-center">
+                      You'll automatically return to the Free plan unless you upgrade
+                    </div>
                   </CardContent>
                 </Card>
               </div>
+
+              <Card className="bg-muted/30">
+                <CardHeader>
+                  <CardTitle className="text-lg">How the 14-Day Trial Works</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    You're currently enjoying your Pro Family trial with unlimited learning potential for up to 5 learners. 
+                    After 14 days, you'll automatically return to the Free Family plan. No credit card required, no automatic billing.
+                  </p>
+                  <div className="text-xs text-muted-foreground mt-4 p-3 bg-background rounded border">
+                    <strong>Family Account Benefits:</strong> Credits are shared amongst all family members under your guardian account. 
+                    All billing is managed centrally through your account.
+                  </div>
+                </CardContent>
+              </Card>
             </section>
           </main>
         </SidebarInset>
