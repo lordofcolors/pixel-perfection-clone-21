@@ -17,6 +17,16 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Lock } from "lucide-react";
 
+// Helper: initials from 'First Last'
+const getInitials = (name?: string) => {
+  if (!name) return "L";
+  const parts = name.trim().split(/\s+/);
+  const first = parts[0]?.[0] || "";
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+  const initials = (first + last) || first || "L";
+  return initials.toUpperCase();
+};
+
 const curriculum = [
   { title: "0: Assessment", locked: false },
   { title: "1: Leash Skills and Safety", locked: false },
@@ -74,6 +84,7 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
 
       <SidebarFooter>
         <div className="flex items-center gap-2 px-2 py-1 rounded-md">
+          <Avatar>
             <AvatarFallback>{getInitials(learnerName)}</AvatarFallback>
           </Avatar>
           <div className="text-sm font-medium truncate">{learnerName || "Learner"}</div>
