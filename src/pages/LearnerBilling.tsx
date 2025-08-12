@@ -32,92 +32,69 @@ export default function LearnerBilling() {
           <main className="p-6">
             <section className="container max-w-4xl">
               <div className="mb-6 text-center">
-                <h2 className="text-3xl font-semibold mb-3">Choose Your Plan</h2>
-                <p className="text-muted-foreground">Start with a 14-day Pro trial, then continue with the plan that works for you</p>
+                <h2 className="text-3xl font-semibold mb-3">Your Account is Managed by a Guardian</h2>
+                <p className="text-muted-foreground">Tree Guardian is managing your billing and family plan</p>
               </div>
               
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <Card className="border-muted">
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      Free Plan
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="text-4xl font-semibold">$0</div>
-                    <div className="text-sm text-muted-foreground">Perfect for getting started</div>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm">
-                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
-                        <span>5 minutes of AI assistance per day</span>
+              <Card className="border-primary/20 bg-primary/5 mb-8">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
+                        <span className="text-sm font-medium text-primary">TG</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
-                        <span>Basic learning features</span>
-                      </div>
+                      <span>Tree Guardian's Family Plan</span>
                     </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-primary/20 bg-primary/5 relative">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-                      14-Day Free Trial
-                    </span>
+                    <span className="text-sm text-muted-foreground">Pro Plan Active</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="text-sm text-muted-foreground">
+                    You're part of Tree Guardian's family account with shared credits and premium features.
                   </div>
-                  <CardHeader className="pt-6">
-                    <CardTitle className="flex items-center justify-between">
-                      Pro Plan
-                      <span className="text-lg font-normal">$9.99<span className="text-sm text-muted-foreground">/month</span></span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="text-muted-foreground text-sm">Unlimited learning potential</div>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm">
-                        <div className="w-1 h-1 bg-primary rounded-full"></div>
-                        <span>Unlimited AI assistance</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <div className="w-1 h-1 bg-primary rounded-full"></div>
-                        <span>Premium learning experiences</span>
-                      </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <div className="w-1 h-1 bg-primary rounded-full"></div>
+                      <span>Unlimited AI assistance</span>
                     </div>
-                    <Button className="w-full bg-primary/80 hover:bg-primary">
-                      Trial Active
-                    </Button>
-                    <div className="text-center text-sm text-muted-foreground">
-                      Trial ends in 14 days
+                    <div className="flex items-center gap-2 text-sm">
+                      <div className="w-1 h-1 bg-primary rounded-full"></div>
+                      <span>Premium learning experiences</span>
                     </div>
-                    <div className="text-xs text-muted-foreground text-center">
-                      You'll automatically return to the Free plan unless you upgrade
+                    <div className="flex items-center gap-2 text-sm">
+                      <div className="w-1 h-1 bg-primary rounded-full"></div>
+                      <span>Shared family credits</span>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </div>
+                  <div className="bg-background/50 rounded p-3 border">
+                    <div className="text-sm font-medium mb-1">Family Members</div>
+                    <div className="text-sm text-muted-foreground">Jake, Mia, and you</div>
+                  </div>
+                </CardContent>
+              </Card>
 
               <Card className="bg-muted/30">
                 <CardHeader>
-                  <CardTitle className="text-lg">How the 14-Day Trial Works</CardTitle>
+                  <CardTitle className="text-lg">How Family Accounts Work</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">
-                    You're currently enjoying your Pro trial with unlimited AI assistance. After 14 days, you'll 
-                    automatically return to the Free plan. No credit card required, no automatic billing.
+                    Tree Guardian manages all billing and plan details for your family account. Credits are shared 
+                    among all family members, and you get access to all premium features.
                   </p>
                   
                   <div className="border-t pt-4">
-                    <h3 className="font-medium mb-3">Want someone else to pay?</h3>
+                    <h3 className="font-medium mb-3">Need to change something?</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Have a guardian (parent, teacher, or mentor) manage and pay for your account. 
-                      You'll be part of their family plan with shared credits.
+                      If you need to update your plan or billing, you'll need to contact Tree Guardian who manages 
+                      the family account. You can also disconnect from the family plan to manage your own billing.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3">
                       <Button variant="outline" className="flex-1">
-                        Link to Guardian Account
+                        Contact Tree Guardian
                       </Button>
                       <Button variant="ghost" className="flex-1">
-                        Invite Someone to be Guardian
+                        Leave Family Plan
                       </Button>
                     </div>
                   </div>

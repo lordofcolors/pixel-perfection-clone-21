@@ -54,10 +54,6 @@ export default function GuardianBilling() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm">
                         <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
-                        <span>Up to 2 learners</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
                         <span>Shared credits for the family</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
@@ -83,10 +79,6 @@ export default function GuardianBilling() {
                   <CardContent className="space-y-4">
                     <div className="text-muted-foreground text-sm">Unlimited learning potential for your family</div>
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm">
-                        <div className="w-1 h-1 bg-primary rounded-full"></div>
-                        <span>Up to 5 learners</span>
-                      </div>
                       <div className="flex items-center gap-2 text-sm">
                         <div className="w-1 h-1 bg-primary rounded-full"></div>
                         <span>Shared credits for the family</span>
