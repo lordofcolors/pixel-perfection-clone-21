@@ -115,12 +115,6 @@ const GuardianSetup = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Your name</Label>
-                  <Input id="fullName" placeholder="Full name" {...register('fullName')} />
-                </div>
-              </div>
               <div className="space-y-2">
                 <Label>How will learners sign in?</Label>
                 <RadioGroup
