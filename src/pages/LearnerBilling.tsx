@@ -32,56 +32,87 @@ export default function LearnerBilling() {
           <main className="p-6">
             <section className="container max-w-4xl">
               <div className="mb-6 text-center">
-                <h2 className="text-3xl font-semibold mb-3">Connect with a Parent/Guardian</h2>
-                <p className="text-muted-foreground">Let a parent or guardian manage your billing and get access to family plan benefits</p>
+                <h2 className="text-3xl font-semibold mb-3">Choose Your Plan</h2>
+                <p className="text-muted-foreground">Start with a 14-day Pro trial, then continue with the plan that works for you</p>
               </div>
               
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <Card className="border-muted">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      Free Plan
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="text-4xl font-semibold">$0</div>
+                    <div className="text-sm text-muted-foreground">Perfect for getting started</div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+                        <span>Limited AI assistance</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
+                        <span>Basic learning features</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-primary/20 bg-primary/5 relative">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                      14-Day Free Trial
+                    </span>
+                  </div>
+                  <CardHeader className="pt-6">
+                    <CardTitle className="flex items-center justify-between">
+                      Pro Plan
+                      <span className="text-lg font-normal">$9.99<span className="text-sm text-muted-foreground">/month</span></span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="text-muted-foreground text-sm">Unlimited learning potential</div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-primary rounded-full"></div>
+                        <span>Unlimited AI assistance</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-primary rounded-full"></div>
+                        <span>Premium learning experiences</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-1 h-1 bg-primary rounded-full"></div>
+                        <span>Priority support</span>
+                      </div>
+                    </div>
+                    <Button className="w-full bg-primary/80 hover:bg-primary">
+                      Trial Active
+                    </Button>
+                    <div className="text-center text-sm text-muted-foreground">
+                      Trial ends in 14 days
+                    </div>
+                    <div className="text-xs text-muted-foreground text-center">
+                      You'll automatically return to the Free plan unless you upgrade
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
               <Card className="border-primary/20 bg-primary/5 mb-8">
                 <CardHeader>
-                  <CardTitle className="text-xl">Why Connect with a Parent/Guardian?</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm">
-                      <div className="w-1 h-1 bg-primary rounded-full"></div>
-                      <span>Access to unlimited AI assistance</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <div className="w-1 h-1 bg-primary rounded-full"></div>
-                      <span>Premium learning experiences</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <div className="w-1 h-1 bg-primary rounded-full"></div>
-                      <span>Shared family credits - no individual billing</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <div className="w-1 h-1 bg-primary rounded-full"></div>
-                      <span>Family learning progress tracking</span>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-background/50 rounded p-3 border mt-4">
-                    <div className="text-sm font-medium mb-2">Your 14-day trial expires soon</div>
-                    <div className="text-sm text-muted-foreground">
-                      Connect with a parent/guardian to continue using premium features after your trial ends.
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle className="text-lg">Connect with Parent/Guardian</CardTitle>
+                  <CardTitle className="text-xl">When Your Trial Ends</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground mb-4">
-                    Ask your parent or guardian to add you to their family plan. They can either create a new account 
-                    or add you to an existing family plan.
+                    After your 14-day trial, you can either upgrade to Pro yourself or connect with a parent/guardian 
+                    who can add you to their family plan for shared billing and credits.
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-3">
                     <Button className="flex-1">
-                      Send Connection Request
+                      Connect with Parent/Guardian
                     </Button>
                     <Button variant="outline" className="flex-1">
                       I'll Pay Myself
@@ -92,28 +123,16 @@ export default function LearnerBilling() {
 
               <Card className="bg-muted/30">
                 <CardHeader>
-                  <CardTitle className="text-lg">How It Works</CardTitle>
+                  <CardTitle className="text-lg">How the 14-Day Trial Works</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3 text-sm text-muted-foreground">
-                    <div className="flex gap-3">
-                      <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-medium text-primary">1</span>
-                      </div>
-                      <span>Send a connection request to your parent/guardian's email</span>
-                    </div>
-                    <div className="flex gap-3">
-                      <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-medium text-primary">2</span>
-                      </div>
-                      <span>They'll receive an invitation to add you to their family plan</span>
-                    </div>
-                    <div className="flex gap-3">
-                      <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-medium text-primary">3</span>
-                      </div>
-                      <span>Once connected, you'll have access to all family plan benefits</span>
-                    </div>
+                  <p className="text-sm text-muted-foreground">
+                    You're currently enjoying your Pro trial with unlimited learning potential. 
+                    After 14 days, you'll automatically return to the Free plan. No credit card required, no automatic billing.
+                  </p>
+                  <div className="text-xs text-muted-foreground mt-4 p-3 bg-background rounded border">
+                    <strong>Family Plan Benefits:</strong> If you connect with a parent/guardian, you'll get shared credits 
+                    and they'll manage all billing for the family account.
                   </div>
                 </CardContent>
               </Card>
