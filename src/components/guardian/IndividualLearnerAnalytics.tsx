@@ -729,7 +729,43 @@ export function IndividualLearnerAnalytics({
                 {data.recentSessions.map((session) => (
                   <div 
                     key={session.id}
-                    className={`p-4 border rounded-lg ${session.flagged ? 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950' : ''}`}
+                    className={`p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors ${session.flagged ? 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950' : ''}`}
+                    onClick={() => {
+                      setSelectedSession({
+                        id: session.id,
+                        title: session.title,
+                        duration: session.duration,
+                        messagesCount: Math.floor(Math.random() * 20) + 10,
+                        completionRate: session.engagementScore,
+                        status: session.flagged ? "flagged" : "completed",
+                        learnerName: learnerName,
+                        completedAt: session.timestamp,
+                        transcript: [
+                          {
+                            timestamp: "14:32",
+                            speaker: "You" as const,
+                            content: `Hi! I'd like to learn about ${session.keyTopics[0]}.`
+                          },
+                          {
+                            timestamp: "14:33",
+                            speaker: "Assistant" as const,
+                            content: `Great! Let's start with the basics of ${session.keyTopics[0]}. Here's what you need to know...`
+                          },
+                          {
+                            timestamp: "14:35",
+                            speaker: "You" as const,
+                            content: "That makes sense! Can you give me an example?"
+                          },
+                          {
+                            timestamp: "14:36",
+                            speaker: "Assistant" as const,
+                            content: `Of course! Here's a practical example...`,
+                            flagged: session.flagged
+                          }
+                        ]
+                      });
+                      setIsSessionModalOpen(true);
+                    }}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
@@ -740,14 +776,7 @@ export function IndividualLearnerAnalytics({
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-muted-foreground">{session.timestamp}</span>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => onViewSession(session.id, learnerName)}
-                        >
-                          <Eye className="h-3 w-3 mr-1" />
-                          View
-                        </Button>
+                        <ExternalLink className="h-3 w-3 text-muted-foreground" />
                       </div>
                     </div>
                     
