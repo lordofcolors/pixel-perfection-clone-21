@@ -118,7 +118,7 @@ const mockSafetyIssues = [
 export function AnalyticsContent({ guardianName, learners, activeView, onSelectView }: AnalyticsContentProps) {
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [safetyIssues, setSafetyIssues] = useState(mockSafetyIssues);
+  const [safetyIssues, setSafetyIssues] = useState([...mockSafetyIssues]);
   // Mock data keyed by learner name
   const data = {
     Jake: {
