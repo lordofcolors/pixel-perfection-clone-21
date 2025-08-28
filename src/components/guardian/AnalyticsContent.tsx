@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { IndividualLearnerAnalytics } from "./IndividualLearnerAnalytics";
 import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { SafetyNotificationDropdown } from "./SafetyNotificationDropdown";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 type ViewType = "guardian" | number;
 
@@ -90,9 +91,90 @@ const mockSafetyIssues = [
     learnerName: "Mia",
     lessonTitle: "Pet Training Session",
     flaggedContent: "Sometimes I feel like giving up on everything",
-    severity: "medium" as const,
+    severity: "high" as const,
     timestamp: "2h ago",
     sessionId: "session-2"
+  },
+  {
+    id: "safety-2",
+    learnerName: "Jake",
+    lessonTitle: "Social Skills Basics",
+    flaggedContent: "I hate myself and everyone thinks I'm weird",
+    severity: "high" as const,
+    timestamp: "4h ago",
+    sessionId: "session-1"
+  },
+  {
+    id: "safety-3",
+    learnerName: "Mia",
+    lessonTitle: "Creative Writing",
+    flaggedContent: "I wrote about hurting myself in my story",
+    severity: "medium" as const,
+    timestamp: "1d ago",
+    sessionId: "session-2"
+  },
+  {
+    id: "safety-4",
+    learnerName: "Jake",
+    lessonTitle: "Math Problem Solving",
+    flaggedContent: "This is so stupid, I want to break everything",
+    severity: "medium" as const,
+    timestamp: "2d ago",
+    sessionId: "session-1"
+  },
+  {
+    id: "safety-5",
+    learnerName: "Mia",
+    lessonTitle: "History Discussion",
+    flaggedContent: "Maybe the world would be better without me",
+    severity: "high" as const,
+    timestamp: "3d ago",
+    sessionId: "session-2"
+  },
+  {
+    id: "safety-6",
+    learnerName: "Jake",
+    lessonTitle: "Science Exploration",
+    flaggedContent: "I don't want to live anymore",
+    severity: "high" as const,
+    timestamp: "4d ago",
+    sessionId: "session-1"
+  },
+  {
+    id: "safety-7",
+    learnerName: "Mia",
+    lessonTitle: "Art Therapy",
+    flaggedContent: "Death seems peaceful sometimes",
+    severity: "high" as const,
+    timestamp: "5d ago",
+    sessionId: "session-2"
+  },
+  {
+    id: "safety-8",
+    learnerName: "Jake",
+    lessonTitle: "Reading Comprehension",
+    flaggedContent: "I feel like disappearing forever",
+    severity: "medium" as const,
+    timestamp: "6d ago",
+    sessionId: "session-1"
+  },
+  {
+    id: "safety-9",
+    learnerName: "Mia",
+    lessonTitle: "Music Theory",
+    flaggedContent: "Sometimes I think about ending it all",
+    severity: "high" as const,
+    timestamp: "1w ago",
+    sessionId: "session-2"
+  },
+  {
+    id: "safety-10",
+    learnerName: "Jake",
+    lessonTitle: "Physical Education",
+    flaggedContent: "I hate my body and want to hurt it",
+    severity: "medium" as const,
+    timestamp: "1w ago",
+    sessionId: "session-1"
   }
 ];
 
@@ -292,12 +374,37 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
         />
       </div>
       
-      <IndividualLearnerAnalytics 
-        learners={learners}
-        onViewSession={handleViewSession}
-        activeView={activeView}
-        onSelectView={onSelectView}
-      />
+      {/* Family Aggregation Stats */}
+      {renderSummaryCards()}
+      {renderRecent()}
+      {renderPerLearner()}
+      
+      {/* Individual Child Analytics with Tab Navigation */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Individual Learning Analytics</h2>
+        <Tabs defaultValue={learners[0]?.name || "jake"} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            {learners.map((learner) => (
+              <TabsTrigger key={learner.name} value={learner.name} className="capitalize">
+                {learner.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          
+          {learners.map((learner) => (
+            <TabsContent key={learner.name} value={learner.name} className="space-y-4">
+              <IndividualLearnerAnalytics 
+                learners={[learner]}
+                onViewSession={handleViewSession}
+                activeView={0}
+                onSelectView={() => {}}
+                showOnlyIndividual={true}
+                learnerName={learner.name}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
 
       <SessionTranscriptModal 
         session={selectedSession}

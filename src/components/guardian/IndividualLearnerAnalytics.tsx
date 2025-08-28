@@ -53,13 +53,17 @@ interface IndividualLearnerAnalyticsProps {
   onViewSession: (sessionId: string, learnerName: string) => void;
   activeView: "guardian" | number;
   onSelectView: (view: "guardian" | number) => void;
+  showOnlyIndividual?: boolean;
+  learnerName?: string;
 }
 
 export function IndividualLearnerAnalytics({ 
   learners,
   onViewSession,
   activeView,
-  onSelectView
+  onSelectView,
+  showOnlyIndividual = false,
+  learnerName
 }: IndividualLearnerAnalyticsProps) {
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
 
@@ -477,6 +481,11 @@ export function IndividualLearnerAnalytics({
       </div>
     );
   };
+
+  // If showing only individual analytics (from tabs), just render that learner's data
+  if (showOnlyIndividual && learnerName) {
+    return renderLearnerAnalytics(learnerName);
+  }
 
   if (activeView === "guardian") {
     return renderOverallStats();
