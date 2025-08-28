@@ -50,9 +50,12 @@ export default function GuardianManageDashboard() {
           </header>
 
           <main className="p-6 space-y-6">
-            {activeView === "guardian" ? (
-              <AnalyticsContent guardianName={guardianName} learners={learners} activeView="guardian" />
-            ) : null}
+            <AnalyticsContent 
+              guardianName={guardianName} 
+              learners={learners} 
+              activeView={activeView} 
+              onSelectView={setActiveView}
+            />
           </main>
         </SidebarInset>
       </div>

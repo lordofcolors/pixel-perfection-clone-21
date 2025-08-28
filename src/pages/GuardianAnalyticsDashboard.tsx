@@ -39,7 +39,12 @@ export default function GuardianAnalyticsDashboard() {
             <h1 className="text-base font-semibold">Separate learner accounts</h1>
           </header>
           <main className="p-6 space-y-6">
-            <AnalyticsContent guardianName={guardianName} learners={learners} activeView="guardian" />
+            <AnalyticsContent 
+              guardianName={guardianName} 
+              learners={learners} 
+              activeView="guardian" 
+              onSelectView={() => {}} 
+            />
           </main>
         </SidebarInset>
       </div>

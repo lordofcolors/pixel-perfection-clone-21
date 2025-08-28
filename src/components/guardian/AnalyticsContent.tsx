@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { LessonAnalyticsDashboard } from "./LessonAnalyticsDashboard";
+import { IndividualLearnerAnalytics } from "./IndividualLearnerAnalytics";
 import { SessionTranscriptModal } from "./SessionTranscriptModal";
-import { SafetyAlert } from "./SafetyAlert";
+import { SafetyNotificationDropdown } from "./SafetyNotificationDropdown";
 
 type ViewType = "guardian" | number;
 
@@ -11,6 +11,7 @@ interface AnalyticsContentProps {
   guardianName: string;
   learners: { name: string }[];
   activeView: ViewType;
+  onSelectView: (view: ViewType) => void;
 }
 
 // Mock session data - would come from your analytics service
@@ -95,7 +96,7 @@ const mockSafetyIssues = [
   }
 ];
 
-export function AnalyticsContent({ guardianName, learners, activeView }: AnalyticsContentProps) {
+export function AnalyticsContent({ guardianName, learners, activeView, onSelectView }: AnalyticsContentProps) {
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [safetyIssues, setSafetyIssues] = useState(mockSafetyIssues);
@@ -281,39 +282,29 @@ export function AnalyticsContent({ guardianName, learners, activeView }: Analyti
     );
   };
 
-  // Show the new dashboard for guardian view, old analytics for individual learners
-  if (isGuardian) {
-    return (
-      <div className="space-y-6">
-        <SafetyAlert 
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-end">
+        <SafetyNotificationDropdown 
           issues={safetyIssues}
           onViewSession={handleViewSession}
           onDismiss={handleDismissSafetyIssue}
         />
-        
-        <LessonAnalyticsDashboard 
-          guardianName={guardianName}
-          learners={learners}
-          onViewSession={handleViewSession}
-        />
-
-        <SessionTranscriptModal 
-          session={selectedSession}
-          open={modalOpen}
-          onOpenChange={setModalOpen}
-        />
-        
-        <p className="sr-only">Currently viewing: {viewingLabel}</p>
       </div>
-    );
-  }
+      
+      <IndividualLearnerAnalytics 
+        learners={learners}
+        onViewSession={handleViewSession}
+        activeView={activeView}
+        onSelectView={onSelectView}
+      />
 
-  // Individual learner view - keep existing analytics
-  return (
-    <div className="space-y-6">
-      {renderSummaryCards()}
-      <section>{renderRecent()}</section>
-      {renderPerLearner()}
+      <SessionTranscriptModal 
+        session={selectedSession}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
+      
       <p className="sr-only">Currently viewing: {viewingLabel}</p>
     </div>
   );
