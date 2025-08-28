@@ -376,8 +376,6 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
       
       {/* Family Aggregation Stats */}
       {renderSummaryCards()}
-      {renderRecent()}
-      {renderPerLearner()}
       
       {/* Individual Child Analytics with Tab Navigation */}
       <div className="space-y-4">
