@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { 
   BookOpen, 
   Clock, 
@@ -14,7 +15,8 @@ import {
   Eye,
   Target,
   Award,
-  User
+  User,
+  ExternalLink
 } from "lucide-react";
 
 interface LessonTheme {
@@ -24,6 +26,7 @@ interface LessonTheme {
   avgDuration: string;
   engagementRate: number;
   flaggedSessions: number;
+  sessions: RecentSession[];
 }
 
 interface LearnerData {
@@ -66,6 +69,8 @@ export function IndividualLearnerAnalytics({
   learnerName
 }: IndividualLearnerAnalyticsProps) {
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
+  const [selectedSession, setSelectedSession] = useState<any>(null);
+  const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
 
   // Mock data for each learner
   const learnerData: Record<string, LearnerData> = {
@@ -84,7 +89,36 @@ export function IndividualLearnerAnalytics({
           sessionCount: 18,
           avgDuration: "15m 45s",
           engagementRate: 92,
-          flaggedSessions: 1
+          flaggedSessions: 1,
+          sessions: [
+            {
+              id: "session-1",
+              title: "Basic Dog Walking",
+              duration: "15m 30s",
+              timestamp: "2h ago",
+              engagementScore: 95,
+              keyTopics: ["Leash training", "Safety", "Commands"],
+              flagged: false
+            },
+            {
+              id: "session-7",
+              title: "Teaching Sit Command",
+              duration: "12m 15s",
+              timestamp: "1d ago",
+              engagementScore: 88,
+              keyTopics: ["Basic commands", "Rewards", "Patience"],
+              flagged: false
+            },
+            {
+              id: "session-8",
+              title: "House Training Tips",
+              duration: "18m 45s",
+              timestamp: "3d ago",
+              engagementScore: 85,
+              keyTopics: ["House training", "Schedule", "Consistency"],
+              flagged: true
+            }
+          ]
         },
         {
           category: "Academic Support",
@@ -92,7 +126,27 @@ export function IndividualLearnerAnalytics({
           sessionCount: 15,
           avgDuration: "18m 20s",
           engagementRate: 78,
-          flaggedSessions: 0
+          flaggedSessions: 0,
+          sessions: [
+            {
+              id: "session-3",
+              title: "Algebra Problem Solving",
+              duration: "20m 15s",
+              timestamp: "2d ago",
+              engagementScore: 72,
+              keyTopics: ["Equations", "Variables", "Problem solving"],
+              flagged: true
+            },
+            {
+              id: "session-9",
+              title: "Math Homework Help",
+              duration: "16m 30s",
+              timestamp: "4d ago",
+              engagementScore: 80,
+              keyTopics: ["Math homework", "Step-by-step", "Practice"],
+              flagged: false
+            }
+          ]
         },
         {
           category: "Life Skills",
@@ -100,7 +154,27 @@ export function IndividualLearnerAnalytics({
           sessionCount: 12,
           avgDuration: "22m 10s",
           engagementRate: 85,
-          flaggedSessions: 0
+          flaggedSessions: 0,
+          sessions: [
+            {
+              id: "session-4",
+              title: "Organization Skills",
+              duration: "18m 00s",
+              timestamp: "3d ago",
+              engagementScore: 88,
+              keyTopics: ["Planning", "Time management", "Tools"],
+              flagged: false
+            },
+            {
+              id: "session-10",
+              title: "Communication Practice",
+              duration: "25m 20s",
+              timestamp: "5d ago",
+              engagementScore: 82,
+              keyTopics: ["Communication", "Active listening", "Expression"],
+              flagged: false
+            }
+          ]
         }
       ],
       recentSessions: [
@@ -148,7 +222,27 @@ export function IndividualLearnerAnalytics({
           sessionCount: 20,
           avgDuration: "12m 30s",
           engagementRate: 95,
-          flaggedSessions: 0
+          flaggedSessions: 0,
+          sessions: [
+            {
+              id: "session-2",
+              title: "Color Coordination Basics",
+              duration: "12m 45s",
+              timestamp: "1d ago",
+              engagementScore: 88,
+              keyTopics: ["Color theory", "Outfit planning", "Style tips"],
+              flagged: false
+            },
+            {
+              id: "session-11",
+              title: "Seasonal Fashion Trends",
+              duration: "14m 20s",
+              timestamp: "2d ago",
+              engagementScore: 92,
+              keyTopics: ["Seasonal trends", "Shopping tips", "Budget"],
+              flagged: false
+            }
+          ]
         },
         {
           category: "Academic Support",
@@ -156,7 +250,27 @@ export function IndividualLearnerAnalytics({
           sessionCount: 12,
           avgDuration: "16m 40s",
           engagementRate: 88,
-          flaggedSessions: 1
+          flaggedSessions: 1,
+          sessions: [
+            {
+              id: "session-5",
+              title: "Creative Writing Workshop",
+              duration: "22m 30s",
+              timestamp: "2d ago",
+              engagementScore: 94,
+              keyTopics: ["Storytelling", "Character development", "Plot"],
+              flagged: false
+            },
+            {
+              id: "session-12",
+              title: "Reading Comprehension",
+              duration: "18m 15s",
+              timestamp: "4d ago",
+              engagementScore: 85,
+              keyTopics: ["Reading comprehension", "Analysis", "Discussion"],
+              flagged: true
+            }
+          ]
         },
         {
           category: "Life Skills",
@@ -164,7 +278,27 @@ export function IndividualLearnerAnalytics({
           sessionCount: 6,
           avgDuration: "25m 15s",
           engagementRate: 90,
-          flaggedSessions: 1
+          flaggedSessions: 1,
+          sessions: [
+            {
+              id: "session-6",
+              title: "Emotional Expression",
+              duration: "28m 15s",
+              timestamp: "4d ago",
+              engagementScore: 86,
+              keyTopics: ["Feelings", "Communication", "Self-awareness"],
+              flagged: true
+            },
+            {
+              id: "session-13",
+              title: "Social Skills Practice",
+              duration: "22m 45s",
+              timestamp: "6d ago",
+              engagementScore: 89,
+              keyTopics: ["Social skills", "Conversation", "Empathy"],
+              flagged: false
+            }
+          ]
         }
       ],
       recentSessions: [
@@ -428,8 +562,81 @@ export function IndividualLearnerAnalytics({
 
                   {selectedTheme === theme.category && (
                     <div className="mt-6 pt-4 border-t space-y-4">
+                      {/* Related Sessions */}
+                      <div className="space-y-3">
+                        <h4 className="font-medium flex items-center gap-2">
+                          <MessageCircle className="h-4 w-4" />
+                          Sessions in {theme.category}
+                        </h4>
+                        <div className="grid gap-3">
+                          {theme.sessions.map((session) => (
+                            <div 
+                              key={session.id}
+                              className="p-3 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                              onClick={() => {
+                                setSelectedSession({
+                                  id: session.id,
+                                  title: session.title,
+                                  duration: session.duration,
+                                  messagesCount: Math.floor(Math.random() * 20) + 10,
+                                  completionRate: session.engagementScore,
+                                  status: session.flagged ? "flagged" : "completed",
+                                  learnerName: learnerName,
+                                  completedAt: session.timestamp,
+                                  transcript: [
+                                    {
+                                      timestamp: "14:32",
+                                      speaker: "You" as const,
+                                      content: `Hi! I'd like to learn about ${session.keyTopics[0]}.`
+                                    },
+                                    {
+                                      timestamp: "14:33",
+                                      speaker: "Assistant" as const,
+                                      content: `Great! Let's start with the basics of ${session.keyTopics[0]}. Here's what you need to know...`
+                                    },
+                                    {
+                                      timestamp: "14:35",
+                                      speaker: "You" as const,
+                                      content: "That makes sense! Can you give me an example?"
+                                    },
+                                    {
+                                      timestamp: "14:36",
+                                      speaker: "Assistant" as const,
+                                      content: `Of course! Here's a practical example...`,
+                                      flagged: session.flagged
+                                    }
+                                  ]
+                                });
+                                setIsSessionModalOpen(true);
+                              }}
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <h5 className="font-medium text-sm">{session.title}</h5>
+                                <div className="flex items-center gap-2">
+                                  {session.flagged && (
+                                    <AlertTriangle className="h-3 w-3 text-red-500" />
+                                  )}
+                                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                                <span>{session.duration}</span>
+                                <span>{session.timestamp}</span>
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                {session.keyTopics.map((topic) => (
+                                  <Badge key={topic} variant="secondary" className="text-xs">
+                                    {topic}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
                       {/* Detailed Analysis */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
                         <div className="space-y-3">
                           <h4 className="font-medium text-green-700 dark:text-green-400">Strengths</h4>
                           <ul className="text-sm space-y-1">
@@ -598,6 +805,12 @@ export function IndividualLearnerAnalytics({
       </div>
       
       {renderLearnerAnalytics(selectedLearner.name)}
+      
+      <SessionTranscriptModal
+        session={selectedSession}
+        open={isSessionModalOpen}
+        onOpenChange={setIsSessionModalOpen}
+      />
     </div>
   );
 }
