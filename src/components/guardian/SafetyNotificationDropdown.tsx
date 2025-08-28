@@ -89,30 +89,30 @@ export function SafetyNotificationDropdown({
       
       <DropdownMenuContent 
         align="end" 
-        className="w-96 max-h-96 bg-white dark:bg-slate-950 border shadow-lg z-50"
+        className="w-[480px] max-h-[600px] bg-background border shadow-lg z-50"
       >
-        <div className="p-3 border-b">
+        <div className="p-4 border-b">
           <h3 className="font-semibold flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 text-red-600" />
+            <AlertTriangle className="h-4 w-4 text-destructive" />
             Safety Alerts ({issues.length})
           </h3>
         </div>
         
-        <ScrollArea className="max-h-80">
-          <div className="p-2 space-y-2">
+        <ScrollArea className="h-[520px]">
+          <div className="p-4 space-y-3">
             {issues.map((issue) => (
               <div 
                 key={issue.id} 
-                className="p-3 border rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800"
+                className="p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors"
               >
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Badge variant={getSeverityColor(issue.severity) as any} className="text-xs">
                       {getSeverityText(issue.severity)}
                     </Badge>
                     <span className="text-sm font-medium">{issue.learnerName}</span>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     <span className="text-xs text-muted-foreground">{issue.timestamp}</span>
                     <Button
                       variant="ghost"
@@ -128,11 +128,11 @@ export function SafetyNotificationDropdown({
                   </div>
                 </div>
                 
-                <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">
+                <p className="text-sm text-muted-foreground mb-3">
                   {issue.lessonTitle}
                 </p>
                 
-                <p className="text-sm bg-red-50 dark:bg-red-950 p-2 rounded text-red-800 dark:text-red-200 mb-3">
+                <p className="text-sm bg-destructive/10 border border-destructive/20 p-3 rounded text-destructive-foreground mb-3">
                   "{issue.flaggedContent}"
                 </p>
                 
@@ -146,7 +146,7 @@ export function SafetyNotificationDropdown({
                   }}
                   className="w-full"
                 >
-                  <Eye className="h-3 w-3 mr-1" />
+                  <Eye className="h-3 w-3 mr-2" />
                   View Full Session
                 </Button>
               </div>

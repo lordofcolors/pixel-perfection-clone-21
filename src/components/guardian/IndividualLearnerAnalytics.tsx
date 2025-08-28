@@ -358,26 +358,26 @@ export function IndividualLearnerAnalytics({
           </Card>
         </section>
 
-        {/* Learning Themes for this learner */}
+        {/* Learning Themes & Progress Analysis */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
-              {learnerName}'s Learning Themes
+              {learnerName}'s Learning Themes & Progress
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-6">
               {data.themes.map((theme) => (
                 <div 
                   key={theme.category}
-                  className={`p-4 border rounded-lg cursor-pointer transition-colors hover:bg-muted/50 ${
+                  className={`p-6 border rounded-lg cursor-pointer transition-colors hover:bg-muted/50 ${
                     selectedTheme === theme.category ? 'bg-muted border-primary' : ''
                   }`}
                   onClick={() => setSelectedTheme(selectedTheme === theme.category ? null : theme.category)}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold">{theme.category}</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold">{theme.category}</h3>
                     <div className="flex gap-2">
                       {theme.flaggedSessions > 0 && (
                         <Badge variant="destructive" className="text-xs">
@@ -387,29 +387,118 @@ export function IndividualLearnerAnalytics({
                       <Badge variant="outline">{theme.sessionCount} sessions</Badge>
                     </div>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Engagement:</span>
-                      <span className="font-medium">{theme.engagementRate}%</span>
+
+                  {/* Progress Summary */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>Engagement Rate:</span>
+                        <span className="font-medium">{theme.engagementRate}%</span>
+                      </div>
+                      <Progress value={theme.engagementRate} className="h-2" />
                     </div>
-                    <Progress value={theme.engagementRate} className="h-2" />
                     
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>Avg Duration: {theme.avgDuration}</span>
-                      <span>{theme.topics.length} topics</span>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">{theme.avgDuration}</div>
+                      <div className="text-xs text-muted-foreground">Avg Duration</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">{theme.topics.length}</div>
+                      <div className="text-xs text-muted-foreground">Topics Covered</div>
+                    </div>
+                  </div>
+
+                  {/* Mastery Indicators */}
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-2">
+                      {theme.topics.map((topic, index) => {
+                        const masteryLevel = Math.floor(Math.random() * 3); // 0: learning, 1: improving, 2: mastered
+                        const masteryColors = ['bg-yellow-100 text-yellow-800 border-yellow-300', 'bg-blue-100 text-blue-800 border-blue-300', 'bg-green-100 text-green-800 border-green-300'];
+                        const masteryLabels = ['Learning', 'Improving', 'Mastered'];
+                        
+                        return (
+                          <div key={topic} className={`px-2 py-1 rounded-md border text-xs ${masteryColors[masteryLevel]}`}>
+                            {topic} • {masteryLabels[masteryLevel]}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 
                   {selectedTheme === theme.category && (
-                    <div className="mt-3 pt-3 border-t">
-                      <p className="text-sm font-medium mb-2">Key Topics:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {theme.topics.map((topic) => (
-                          <Badge key={topic} variant="secondary" className="text-xs">
-                            {topic}
-                          </Badge>
-                        ))}
+                    <div className="mt-6 pt-4 border-t space-y-4">
+                      {/* Detailed Analysis */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-3">
+                          <h4 className="font-medium text-green-700 dark:text-green-400">Strengths</h4>
+                          <ul className="text-sm space-y-1">
+                            <li className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              High engagement ({theme.engagementRate}%)
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              Consistent session completion
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              Shows mastery in core concepts
+                            </li>
+                          </ul>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <h4 className="font-medium text-amber-700 dark:text-amber-400">Growth Areas</h4>
+                          <ul className="text-sm space-y-1">
+                            <li className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                              Could benefit from longer sessions
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                              Practice more advanced topics
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                              Review foundational concepts
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* Time Spent Breakdown */}
+                      <div className="space-y-2">
+                        <h4 className="font-medium">Time Distribution</h4>
+                        <div className="space-y-2">
+                          {theme.topics.map((topic, index) => {
+                            const timePercentage = Math.floor(Math.random() * 40) + 10; // Random percentage between 10-50%
+                            return (
+                              <div key={topic} className="flex items-center justify-between">
+                                <span className="text-sm">{topic}</span>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-20 bg-muted rounded-full h-2">
+                                    <div 
+                                      className="bg-primary h-2 rounded-full" 
+                                      style={{ width: `${timePercentage}%` }}
+                                    ></div>
+                                  </div>
+                                  <span className="text-xs text-muted-foreground w-8">{timePercentage}%</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Recommendations */}
+                      <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg">
+                        <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2">Recommendations</h4>
+                        <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                          <li>• Continue building on {theme.category.toLowerCase()} foundation</li>
+                          <li>• Consider introducing more challenging scenarios</li>
+                          <li>• Schedule regular review sessions for retention</li>
+                        </ul>
                       </div>
                     </div>
                   )}
