@@ -44,7 +44,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
     const last = parts[parts.length - 1]?.[0] || '';
     return (first + last).toUpperCase() || 'NA';
   };
-  const showAll = activeView === "guardian";
+  const showAll = activeView === "guardian" || activeView === "dashboard";
   const activeIndex = typeof activeView === "number" ? activeView : 0;
   const currentName = showAll ? guardianName : (learners[activeIndex]?.name || guardianName);
 
