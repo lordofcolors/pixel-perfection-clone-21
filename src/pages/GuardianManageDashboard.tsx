@@ -5,7 +5,7 @@ import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
 import { getGuardianSetup } from "@/lib/store";
 
 export default function GuardianManageDashboard() {
-  const [activeView, setActiveView] = useState<"guardian" | number>("guardian");
+  const [activeView, setActiveView] = useState<"guardian" | "dashboard" | number>("guardian");
   const data = getGuardianSetup();
   const guardianName = data?.guardianName || "Tree Guardian";
   const learners = data?.learners || [{ name: "Jake" }, { name: "Mia" }];
@@ -30,7 +30,9 @@ export default function GuardianManageDashboard() {
     canonical.setAttribute('href', window.location.href);
   }, []);
 
-  const viewingLabel = activeView === "guardian" ? guardianName : learners[activeView].name;
+  const viewingLabel = activeView === "guardian" ? guardianName 
+    : activeView === "dashboard" ? "Family Dashboard"
+    : learners[activeView].name;
 
   return (
     <SidebarProvider>

@@ -6,7 +6,7 @@ import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { SafetyNotificationDropdown } from "./SafetyNotificationDropdown";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
-type ViewType = "guardian" | number;
+type ViewType = "guardian" | "dashboard" | number;
 
 interface AnalyticsContentProps {
   guardianName: string;
@@ -158,7 +158,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
     return d ? d.recent.slice(0, 1).map((r) => ({ who: l.name, ...r })) : [];
   });
 
-  const isGuardian = activeView === "guardian";
+  const isGuardian = activeView === "guardian" || activeView === "dashboard";
   const viewingLabel = isGuardian ? guardianName : learners[activeView].name;
 
   const handleViewSession = (sessionId: string, learnerName: string) => {

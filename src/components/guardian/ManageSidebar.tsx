@@ -27,7 +27,7 @@ const curriculum = [
   { title: "Emergency Situations & First Aid Basics", locked: true },
 ];
 
-type ViewType = "guardian" | number; // number = learner index
+type ViewType = "guardian" | "dashboard" | number; // number = learner index
 
 interface ManageSidebarProps {
   learners: { name: string }[];
@@ -91,11 +91,15 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <NavLink to="/guardian/separate" className="flex items-center gap-2">
+                <SidebarMenuButton 
+                  asChild={false}
+                  onClick={() => onSelectView("dashboard")}
+                  isActive={activeView === "dashboard"}
+                >
+                  <div className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
                     <span>Family Dashboard</span>
-                  </NavLink>
+                  </div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
