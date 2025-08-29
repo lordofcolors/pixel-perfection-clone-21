@@ -13,7 +13,7 @@ import {
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Home, Plus } from "lucide-react";
+import { Home } from "lucide-react";
 
 interface GuardianDashboardSidebarProps {
   guardianName: string;
@@ -38,7 +38,6 @@ export function GuardianDashboardSidebar({ guardianName }: GuardianDashboardSide
       
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
@@ -46,22 +45,6 @@ export function GuardianDashboardSidebar({ guardianName }: GuardianDashboardSide
                   <NavLink to="/guardian/separate" className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
                     <span>Family Dashboard</span>
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>Learning</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <NavLink to="#" className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    <span>Start Learning Session</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
