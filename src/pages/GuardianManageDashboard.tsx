@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { GuardianDashboardSidebar } from "@/components/guardian/GuardianDashboardSidebar";
+import { ManageSidebar } from "@/components/guardian/ManageSidebar";
 import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
 import { getGuardianSetup } from "@/lib/store";
 
@@ -35,12 +35,18 @@ export default function GuardianManageDashboard() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <GuardianDashboardSidebar guardianName={guardianName} />
+        <ManageSidebar
+          learners={learners}
+          guardianName={guardianName}
+          activeView={activeView}
+          onSelectView={setActiveView}
+        />
 
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">
             <SidebarTrigger className="mr-2" />
-            <h1 className="text-base font-semibold">Family Dashboard</h1>
+            <h1 className="text-base font-semibold">Managing</h1>
+            <span className="ml-2 text-muted-foreground">Currently viewing: {viewingLabel}</span>
           </header>
 
           <main className="p-6 space-y-6">

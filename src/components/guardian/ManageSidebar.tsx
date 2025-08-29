@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Lock } from "lucide-react";
+import { Lock, Home } from "lucide-react";
 
 const curriculum = [
   { title: "0: Assessment", locked: false },
@@ -86,6 +86,23 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
       </SidebarHeader>
 
       <SidebarContent>
+        {/* Family Dashboard Link */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/guardian/separate" className="flex items-center gap-2">
+                    <Home className="h-4 w-4" />
+                    <span>Family Dashboard</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Learner Navigation Trees */}
         {showAll ? learners.map((l, i) => renderGroup(l, i)) : renderGroup(learners[activeIndex], activeIndex)}
       </SidebarContent>
 
