@@ -2,9 +2,13 @@ import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { AnalyticsSidebar } from "@/components/guardian/AnalyticsSidebar";
+import { GuardianDashboardSidebar } from "@/components/guardian/GuardianDashboardSidebar";
+import { getGuardianSetup } from "@/lib/store";
 
 export default function GuardianBilling() {
+  const setup = getGuardianSetup();
+  const guardianName = setup?.guardianName || "Tree Guardian";
+
   useEffect(() => {
     document.title = "Guardian - Billing";
     const desc = "Manage your plan and billing details.";
@@ -28,7 +32,7 @@ export default function GuardianBilling() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <AnalyticsSidebar guardianName="Tree Guardian" learners={[{ name: "Jake" }, { name: "Mia" }]} />
+        <GuardianDashboardSidebar guardianName={guardianName} />
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">
             <SidebarTrigger className="mr-2" />

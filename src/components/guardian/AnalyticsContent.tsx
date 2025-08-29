@@ -119,27 +119,30 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [safetyIssues, setSafetyIssues] = useState([...mockSafetyIssues]);
-  // Mock data keyed by learner name
-  const data = {
-    Jake: {
-      completion: 68,
-      completedLessons: 14,
-      streak: 4,
+  // Generate comprehensive mock data for any learner names
+  const generateLearnerData = (learnerName: string, index: number) => {
+    // Create varied but consistent data based on name
+    const nameHash = learnerName.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+    const baseCompletion = 60 + (nameHash % 30); // 60-89%
+    const baseLessons = 10 + (nameHash % 20); // 10-29 lessons
+    const baseStreak = 3 + (nameHash % 8); // 3-10 days
+    
+    return {
+      completion: Math.min(baseCompletion + index * 5, 95),
+      completedLessons: baseLessons + index * 2,
+      streak: baseStreak + index,
       recent: [
-        { label: "1: Leash Skills and Safety", when: "2h ago" },
-        { label: "0: Assessment", when: "2d ago" },
+        { label: `${index + 1}: Leash Skills and Safety`, when: `${index + 1}h ago` },
+        { label: `${index}: Assessment`, when: `${index + 2}d ago` },
       ],
-    },
-    Mia: {
-      completion: 80,
-      completedLessons: 20,
-      streak: 6,
-      recent: [
-        { label: "2: Meeting Other Dogs Safely", when: "1d ago" },
-        { label: "1: Leash Skills and Safety", when: "3d ago" },
-      ],
-    },
-  } as const;
+    };
+  };
+
+  // Create data object for all learners
+  const data = learners.reduce((acc, learner, index) => {
+    acc[learner.name] = generateLearnerData(learner.name, index);
+    return acc;
+  }, {} as Record<string, ReturnType<typeof generateLearnerData>>);
 
   const values = learners
     .map((l) => data[l.name as keyof typeof data])

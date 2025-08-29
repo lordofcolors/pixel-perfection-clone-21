@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { AnalyticsSidebar } from "@/components/guardian/AnalyticsSidebar";
+import { GuardianDashboardSidebar } from "@/components/guardian/GuardianDashboardSidebar";
 import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
 import { getGuardianSetup } from "@/lib/store";
 
@@ -32,7 +32,7 @@ export default function GuardianAnalyticsDashboard() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <AnalyticsSidebar guardianName={guardianName} learners={learners} />
+        <GuardianDashboardSidebar guardianName={guardianName} />
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">
             <SidebarTrigger className="mr-2" />
