@@ -8,8 +8,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Home, Plus } from "lucide-react";
 
 interface GuardianDashboardSidebarProps {
   guardianName: string;
@@ -33,12 +37,37 @@ export function GuardianDashboardSidebar({ guardianName }: GuardianDashboardSide
       </SidebarHeader>
       
       <SidebarContent>
-        <div className="px-2 py-4">
-          <h2 className="text-lg font-semibold text-center">Guardian Dashboard</h2>
-          <p className="text-sm text-muted-foreground text-center mt-2">
-            Monitor all your learners' progress and activity from this unified view.
-          </p>
-        </div>
+        <SidebarGroup>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/guardian/separate" className="flex items-center gap-2">
+                    <Home className="h-4 w-4" />
+                    <span>Family Dashboard</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Learning</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="#" className="flex items-center gap-2">
+                    <Plus className="h-4 w-4" />
+                    <span>Start Learning Session</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter>
