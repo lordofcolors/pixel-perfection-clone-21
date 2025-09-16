@@ -171,6 +171,9 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
       </SidebarHeader>
 
       <SidebarContent>
+        {/* Guardian Skills - Me section first */}
+        {renderGuardianGroup()}
+        
         {/* Family Dashboard Link */}
         <SidebarGroup>
           <SidebarGroupContent>
@@ -190,9 +193,6 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        {/* Guardian Skills */}
-        {renderGuardianGroup()}
         
         {/* Learner Navigation Trees */}
         {showAll ? learners.map((l, i) => renderGroup(l, i)) : renderGroup(learners[activeIndex], activeIndex)}
