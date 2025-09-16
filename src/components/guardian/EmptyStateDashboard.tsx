@@ -28,7 +28,7 @@ export function EmptyStateDashboard({ guardianName, learners, onSelectView }: Em
             <div className="bg-white/50 dark:bg-background/50 rounded-lg p-4 border">
               <h4 className="font-medium mb-2 flex items-center gap-2">
                 <BookOpen className="h-4 w-4" />
-                MVP Features Ready for You:
+                What You Can Track:
               </h4>
               <div className="grid sm:grid-cols-2 gap-2 text-sm">
                 <div className="flex items-center gap-2">
@@ -133,8 +133,8 @@ export function EmptyStateDashboard({ guardianName, learners, onSelectView }: Em
                       
                       <div className="space-y-2">
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Available Curriculum:</span>
-                          <Badge variant="outline">Master Dog Walking</Badge>
+                          <span className="text-muted-foreground">Custom Skills:</span>
+                          <Badge variant="outline">Ready to Create</Badge>
                         </div>
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-muted-foreground">Progress Tracking:</span>
@@ -168,31 +168,31 @@ export function EmptyStateDashboard({ guardianName, learners, onSelectView }: Em
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center text-primary font-bold">1</div>
-                <h4 className="font-medium">Switch Account</h4>
-                <p className="text-sm text-muted-foreground">Click on any child's name in the sidebar or cards above</p>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center text-primary font-bold">1</div>
+                  <h4 className="font-medium">Create First Skill</h4>
+                  <p className="text-sm text-muted-foreground">Click the + button in the sidebar to create a custom learning skill</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center text-primary font-bold">2</div>
+                  <h4 className="font-medium">Switch & Learn</h4>
+                  <p className="text-sm text-muted-foreground">Switch to a child's account and complete their first lesson</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center text-primary font-bold">3</div>
+                  <h4 className="font-medium">View Analytics</h4>
+                  <p className="text-sm text-muted-foreground">Return to this dashboard to see progress and transcripts</p>
+                </div>
               </div>
-              
-              <div className="space-y-2">
-                <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center text-primary font-bold">2</div>
-                <h4 className="font-medium">Start First Lesson</h4>
-                <p className="text-sm text-muted-foreground">Choose a lesson from their curriculum and complete it</p>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center text-primary font-bold">3</div>
-                <h4 className="font-medium">View Analytics</h4>
-                <p className="text-sm text-muted-foreground">Return to this dashboard to see progress and transcripts</p>
-              </div>
-            </div>
             
-            <div className="bg-muted/50 rounded-lg p-4 mt-4">
-              <p className="text-sm text-muted-foreground">
-                💡 <strong>Pro Tip:</strong> Once your children complete their first lessons, you'll see detailed analytics including engagement scores, time spent, and full session transcripts right here in this dashboard.
-              </p>
-            </div>
+              <div className="bg-muted/50 rounded-lg p-4 mt-4">
+                <p className="text-sm text-muted-foreground">
+                  💡 <strong>Pro Tip:</strong> Start by creating a custom skill that fits your family's learning goals. Examples: "Improving Interview Skills", "Public Speaking Confidence", or "Math Problem Solving" - the choice is yours!
+                </p>
+              </div>
           </div>
         </CardContent>
       </Card>

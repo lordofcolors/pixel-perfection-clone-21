@@ -99,113 +99,50 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
         </Card>
       </section>
 
-      {/* Available Curriculum */}
+      {/* No Skills Yet - Call to Action */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
-            Your Learning Path: Master Dog Walking
+            Ready to Start Learning?
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
-            {/* Progress Overview */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Overall Progress</span>
-                <span className="font-medium">0% Complete</span>
-              </div>
-              <Progress value={0} className="h-3" />
-              <p className="text-xs text-muted-foreground">Complete lessons to see your progress grow!</p>
+          <div className="text-center py-8 space-y-6">
+            <div className="space-y-3">
+              <div className="text-6xl">📚</div>
+              <h3 className="text-xl font-semibold">No Skills Created Yet</h3>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                Your parent needs to create your first learning skill. Once they do, you'll see it here and can start learning!
+              </p>
             </div>
 
-            {/* Lesson Categories */}
-            <div className="grid gap-4 md:grid-cols-2">
-              <Card className="border-dashed hover:border-solid hover:border-primary/50 transition-all cursor-pointer">
-                <CardContent className="p-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium">1: Basic Safety & Equipment</h4>
-                      <Badge variant="outline">Ready</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Learn about leash safety, proper equipment, and basic preparation for dog walking.
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <Play className="h-4 w-4 text-primary" />
-                      <span className="text-sm text-primary font-medium">Start Here</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-dashed opacity-60">
-                <CardContent className="p-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium">2: Dog Behavior & Communication</h4>
-                      <Badge variant="secondary">Locked</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Understanding dog body language, signals, and how to communicate effectively.
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">Complete lesson 1 to unlock</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-dashed opacity-60">
-                <CardContent className="p-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium">3: Handling Challenges</h4>
-                      <Badge variant="secondary">Locked</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      What to do when dogs pull, get distracted, or encounter other dogs.
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">Complete lesson 2 to unlock</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-dashed opacity-60">
-                <CardContent className="p-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium">4: Advanced Techniques</h4>
-                      <Badge variant="secondary">Locked</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Professional tips, multiple dog handling, and emergency situations.
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">Complete lesson 3 to unlock</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Call to Action */}
-            <div className="bg-primary/5 rounded-lg p-6 text-center">
-              <div className="space-y-3">
-                <div className="text-4xl">🐕</div>
-                <h3 className="text-lg font-semibold">Ready to Start Learning?</h3>
-                <p className="text-muted-foreground">
-                  Click on "1: Basic Safety & Equipment" in the sidebar to begin your first lesson!
-                </p>
-                <div className="pt-2">
-                  <Button className="w-full sm:w-auto">
-                    <Play className="h-4 w-4 mr-2" />
-                    Go to First Lesson
-                  </Button>
+            <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-6 max-w-md mx-auto">
+              <h4 className="font-medium mb-3">What Your Parent Can Create:</h4>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">Example</Badge>
+                  <span>Improving Interview Skills</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">Example</Badge>
+                  <span>Public Speaking Confidence</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">Example</Badge>
+                  <span>Math Problem Solving</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">Custom</Badge>
+                  <span>Any skill they choose!</span>
                 </div>
               </div>
+            </div>
+
+            <div className="bg-muted/50 rounded-lg p-4 max-w-lg mx-auto">
+              <p className="text-sm text-muted-foreground">
+                💡 <strong>Ask your parent</strong> to click the <strong>+ button</strong> in the sidebar to create your first learning skill!
+              </p>
             </div>
           </div>
         </CardContent>
