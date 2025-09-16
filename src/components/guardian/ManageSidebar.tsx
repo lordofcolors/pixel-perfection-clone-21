@@ -51,6 +51,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
     return (first + last).toUpperCase() || 'NA';
   };
   const showAll = activeView === "guardian" || activeView === "dashboard";
+  const isLearnerView = typeof activeView === "number";
   const activeIndex = typeof activeView === "number" ? activeView : 0;
   const currentName = showAll ? guardianName : (learners[activeIndex]?.name || guardianName);
 
@@ -164,28 +165,30 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
       </SidebarHeader>
 
       <SidebarContent>
-        {/* Guardian Skills - Me section first */}
-        {renderGuardianGroup()}
+        {/* Guardian Skills - Me section first - only show for guardian view */}
+        {!isLearnerView && renderGuardianGroup()}
         
-        {/* Family Dashboard Link */}
-        <SidebarGroup className="pb-2">
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton 
-                  asChild={false}
-                  onClick={() => onSelectView("dashboard")}
-                  isActive={activeView === "dashboard"}
-                >
-                  <div className="flex items-center gap-2">
-                    <Home className="h-4 w-4" />
-                    <span>Family Dashboard</span>
-                  </div>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {/* Family Dashboard Link - only show for guardian view */}
+        {!isLearnerView && (
+          <SidebarGroup className="pb-2">
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton 
+                    asChild={false}
+                    onClick={() => onSelectView("dashboard")}
+                    isActive={activeView === "dashboard"}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Home className="h-4 w-4" />
+                      <span>Family Dashboard</span>
+                    </div>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
         
         {/* Learner Navigation Trees */}
         {showAll ? learners.map((l, i) => renderGroup(l, i)) : renderGroup(learners[activeIndex], activeIndex)}
