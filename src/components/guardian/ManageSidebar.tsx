@@ -27,16 +27,17 @@ const curriculum = [
   { title: "Emergency Situations & First Aid Basics", locked: true },
 ];
 
-type ViewType = "guardian" | "dashboard" | number; // number = learner index
+type ViewType = "guardian" | "dashboard" | "skillSelection" | number; // number = learner index
 
 interface ManageSidebarProps {
   learners: { name: string }[];
   guardianName: string;
   activeView: ViewType;
   onSelectView: (view: ViewType) => void;
+  onCreateSkill: () => void;
 }
 
-export function ManageSidebar({ learners, guardianName, activeView, onSelectView }: ManageSidebarProps) {
+export function ManageSidebar({ learners, guardianName, activeView, onSelectView, onCreateSkill }: ManageSidebarProps) {
   const getInitials = (name?: string) => {
     if (!name) return 'NA';
     const parts = name.trim().split(/\s+/);
@@ -85,6 +86,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
           <button 
             className="p-2 rounded-md hover:bg-muted transition-colors"
             aria-label="Add new learning session"
+            onClick={onCreateSkill}
           >
             <div className="relative">
               <Plus className="h-4 w-4" />

@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { ManageSidebar } from "@/components/guardian/ManageSidebar";
 import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
+import { SkillSelectionView } from "@/components/guardian/SkillSelectionView";
 import { getGuardianSetup } from "@/lib/store";
 
 export default function GuardianManageDashboard() {
-  const [activeView, setActiveView] = useState<"guardian" | "dashboard" | number>("guardian");
+  const [activeView, setActiveView] = useState<"guardian" | "dashboard" | "skillSelection" | number>("guardian");
   const data = getGuardianSetup();
   const guardianName = data?.guardianName || "Tree Guardian";
   const learners = data?.learners || [{ name: "Jake" }, { name: "Mia" }];
@@ -32,6 +33,7 @@ export default function GuardianManageDashboard() {
 
   const viewingLabel = activeView === "guardian" ? guardianName 
     : activeView === "dashboard" ? "Family Dashboard"
+    : activeView === "skillSelection" ? "New Skill"
     : learners[activeView].name;
 
   return (
@@ -42,6 +44,7 @@ export default function GuardianManageDashboard() {
           guardianName={guardianName}
           activeView={activeView}
           onSelectView={setActiveView}
+          onCreateSkill={() => setActiveView("skillSelection")}
         />
 
         <SidebarInset>
@@ -52,12 +55,20 @@ export default function GuardianManageDashboard() {
           </header>
 
           <main className="p-6 space-y-6">
-            <AnalyticsContent 
-              guardianName={guardianName} 
-              learners={learners} 
-              activeView={activeView} 
-              onSelectView={setActiveView}
-            />
+            {activeView === "skillSelection" ? (
+              <SkillSelectionView
+                guardianName={guardianName}
+                learners={learners}
+                onBack={() => setActiveView("guardian")}
+              />
+            ) : (
+              <AnalyticsContent 
+                guardianName={guardianName} 
+                learners={learners} 
+                activeView={activeView} 
+                onSelectView={setActiveView}
+              />
+            )}
           </main>
         </SidebarInset>
       </div>
