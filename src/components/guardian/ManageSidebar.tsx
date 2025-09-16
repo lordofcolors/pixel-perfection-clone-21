@@ -16,18 +16,12 @@ import {
 } from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Lock, Home } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Lock, Home, Plus } from "lucide-react";
 import { getGuardianSetup } from "@/lib/store";
 import circlePlusIcon from "@/assets/circle-plus.svg";
 
-const defaultCurriculum = [
-  { title: "0: Assessment", locked: false },
-  { title: "1: Leash Skills and Safety", locked: false },
-  { title: "2: Meeting Other Dogs Safely", locked: false },
-  { title: "3: Fun Activities for Dogs on Walks", locked: true },
-  { title: "4: Handling Dog Walking Challenges", locked: true },
-  { title: "Emergency Situations & First Aid Basics", locked: true },
-];
+// Removed default curriculum - children start with empty skills
 
 type ViewType = "guardian" | "dashboard" | "skillSelection" | number; // number = learner index
 
@@ -87,26 +81,25 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
               </SidebarMenuItem>
             ))}
             
-            {/* Default Master Dog Walking skill */}
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive>
-                <NavLink to="#">
-                  <span>Master Dog Walking</span>
-                </NavLink>
-              </SidebarMenuButton>
-              <SidebarMenuSub>
-                {defaultCurriculum.map((item, idx) => (
-                  <li key={idx}>
-                    <SidebarMenuSubButton asChild isActive={false} aria-disabled={false}>
-                      <a href="#" onClick={(e) => e.preventDefault()}>
-                        {item.locked ? <Lock className="opacity-70" size={14} /> : null}
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuSubButton>
-                  </li>
-                ))}
-              </SidebarMenuSub>
-            </SidebarMenuItem>
+            {/* Create First Skill button when no skills exist */}
+            {!hasCustomSkills && (
+              <SidebarMenuItem>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="w-full justify-start h-8 px-2 text-xs font-normal"
+                  onClick={() => {
+                    // Switch to this learner's view and go to skill creation
+                    onSelectView(i);
+                    // Small delay to ensure view switch, then trigger skill creation
+                    setTimeout(() => onCreateSkill(), 100);
+                  }}
+                >
+                  <Plus className="h-3 w-3 mr-1" />
+                  Create First Skill
+                </Button>
+              </SidebarMenuItem>
+            )}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
