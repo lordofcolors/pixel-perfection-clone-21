@@ -57,7 +57,7 @@ export function SkillSelectionView({ guardianName, learners, onBack, onSkillCrea
             <SelectValue placeholder="Select a person" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={guardianName}>{guardianName} (Guardian)</SelectItem>
+            <SelectItem value={guardianName}>Me ({guardianName})</SelectItem>
             {learners.map((learner) => (
               <SelectItem key={learner.name} value={learner.name}>
                 {learner.name}

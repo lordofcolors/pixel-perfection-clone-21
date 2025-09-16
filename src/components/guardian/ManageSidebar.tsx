@@ -117,7 +117,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
     
     return (
       <SidebarGroup key={guardianName}>
-        <SidebarGroupLabel>{guardianName} (Guardian)</SidebarGroupLabel>
+        <SidebarGroupLabel>Me ({guardianName})</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             {guardianSkills.map((skill, skillIdx) => (
