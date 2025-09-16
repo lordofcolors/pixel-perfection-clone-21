@@ -58,7 +58,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
     const hasCustomSkills = personSkills.length > 0;
     
     return (
-      <SidebarGroup key={learner.name}>
+      <SidebarGroup key={learner.name} className="pt-2">
         <SidebarGroupLabel>{learner.name}</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
@@ -175,7 +175,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
         {renderGuardianGroup()}
         
         {/* Family Dashboard Link */}
-        <SidebarGroup>
+        <SidebarGroup className="pb-2">
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
