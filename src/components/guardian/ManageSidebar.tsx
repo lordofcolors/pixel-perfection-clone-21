@@ -16,8 +16,9 @@ import {
 } from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Lock, Home, Sparkles, Plus } from "lucide-react";
+import { Lock, Home } from "lucide-react";
 import { getGuardianSetup } from "@/lib/store";
+import circlePlusIcon from "@/assets/circle-plus.svg";
 
 const defaultCurriculum = [
   { title: "0: Assessment", locked: false },
@@ -150,22 +151,14 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="px-2 flex items-center gap-2">
+        <div className="px-2 flex items-center justify-between gap-2">
           <SidebarInput placeholder="Search" aria-label="Search" className="flex-1" />
           <button 
-            className="p-2 rounded-md hover:bg-muted transition-colors"
+            className="p-1 rounded-md hover:bg-muted transition-colors flex-shrink-0"
             aria-label="Add new learning session"
             onClick={onCreateSkill}
           >
-            <div className="relative">
-              <Plus className="h-4 w-4" />
-              <Sparkles className="h-2 w-2 absolute -top-0.5 -right-0.5 text-rainbow animate-pulse" style={{
-                background: 'linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }} />
-            </div>
+            <img src={circlePlusIcon} alt="Add" className="h-6 w-6" />
           </button>
         </div>
       </SidebarHeader>
