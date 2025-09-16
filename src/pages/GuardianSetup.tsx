@@ -32,7 +32,7 @@ const GuardianSetup = () => {
     defaultValues: {
       fullName: firstNameFromPrev,
       learnersCount: 1,
-      accountMode: 'separate',
+      accountMode: 'inhouse',
       learners: [{ fullName: '', email: '' }],
     },
 });
