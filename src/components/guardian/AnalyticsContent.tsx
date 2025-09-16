@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { IndividualLearnerAnalytics } from "./IndividualLearnerAnalytics";
 import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { SafetyNotificationDropdown } from "./SafetyNotificationDropdown";
+import { EmptyStateDashboard } from "./EmptyStateDashboard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 type ViewType = "guardian" | "dashboard" | number;
@@ -119,6 +120,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [safetyIssues, setSafetyIssues] = useState([...mockSafetyIssues]);
+  const [hasCompletedFirstLesson, setHasCompletedFirstLesson] = useState(false); // MVP: Track if any lessons completed
   // Generate comprehensive mock data for any learner names
   const generateLearnerData = (learnerName: string, index: number) => {
     // Create varied but consistent data based on name
@@ -175,6 +177,36 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
 
   const renderSummaryCards = () => {
     if (isGuardian) {
+      // MVP: Show empty state if no lessons completed
+      if (!hasCompletedFirstLesson) {
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle>Welcome to Your Family Dashboard</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center py-8">
+              <div className="space-y-4">
+                <div className="text-6xl">👋</div>
+                <h3 className="text-lg font-semibold">Ready to Start Learning?</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  Switch to one of your children's accounts and complete their first lesson to see progress analytics here.
+                </p>
+                <div className="pt-4">
+                  <p className="text-sm font-medium text-primary">
+                    📍 Next Steps:
+                  </p>
+                  <ol className="text-sm text-muted-foreground mt-2 space-y-1">
+                    <li>1. Click on a child's name in the sidebar</li>
+                    <li>2. Start their first lesson</li>
+                    <li>3. Return here to view their progress</li>
+                  </ol>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      }
+      
       return (
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Card>
@@ -244,6 +276,26 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
 
   const renderRecent = () => {
     if (isGuardian) {
+      // MVP: Show empty state if no lessons completed
+      if (!hasCompletedFirstLesson) {
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center py-6">
+              <div className="space-y-3">
+                <div className="text-4xl">📚</div>
+                <h4 className="font-medium">No Activity Yet</h4>
+                <p className="text-sm text-muted-foreground">
+                  Recent lesson activity will appear here once your children start learning.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      }
+      
       return (
         <Card>
           <CardHeader>
@@ -282,6 +334,40 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
 
   const renderPerLearner = () => {
     if (!isGuardian) return null;
+    
+    // MVP: Show empty state if no lessons completed
+    if (!hasCompletedFirstLesson) {
+      return (
+        <section className="grid gap-4 sm:grid-cols-2">
+          {learners.map((l) => (
+            <Card key={l.name} className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => onSelectView(learners.indexOf(l))}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  {l.name} • Ready to Start
+                  <span className="text-sm font-normal text-primary">Click to switch →</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="text-center py-4">
+                  <div className="text-3xl mb-2">🎯</div>
+                  <p className="text-sm text-muted-foreground">
+                    No lessons completed yet. Switch to {l.name}'s account to get started!
+                  </p>
+                </div>
+                <div className="border-t pt-3">
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <div>📊 Progress tracking: Ready</div>
+                    <div>📝 Transcript access: Ready</div>
+                    <div>⏱️ Time tracking: Ready</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+      );
+    }
+    
     return (
       <section className="grid gap-4 sm:grid-cols-2">
         {learners.map((l) => {
@@ -304,6 +390,35 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
     );
   };
 
+  // MVP: Show empty state dashboard initially
+  if (!hasCompletedFirstLesson && isGuardian) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-end">
+          <SafetyNotificationDropdown 
+            issues={[]} // No safety issues in empty state
+            onViewSession={handleViewSession}
+            onDismiss={handleDismissSafetyIssue}
+          />
+        </div>
+        
+        <EmptyStateDashboard 
+          guardianName={guardianName}
+          learners={learners}
+          onSelectView={onSelectView}
+        />
+
+        <SessionTranscriptModal 
+          session={selectedSession}
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+        />
+        
+        <p className="sr-only">Currently viewing: {viewingLabel}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
@@ -317,32 +432,40 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
       {/* Family Aggregation Stats */}
       {renderSummaryCards()}
       
+      {/* Recent Activity */}
+      {renderRecent()}
+      
+      {/* Per Learner Overview */}
+      {renderPerLearner()}
+      
       {/* Individual Child Analytics with Tab Navigation */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Individual Learning Analytics</h2>
-        <Tabs defaultValue={learners[0]?.name || "jake"} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+      {hasCompletedFirstLesson && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Individual Learning Analytics</h2>
+          <Tabs defaultValue={learners[0]?.name || "jake"} className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              {learners.map((learner) => (
+                <TabsTrigger key={learner.name} value={learner.name} className="capitalize">
+                  {learner.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            
             {learners.map((learner) => (
-              <TabsTrigger key={learner.name} value={learner.name} className="capitalize">
-                {learner.name}
-              </TabsTrigger>
+              <TabsContent key={learner.name} value={learner.name} className="space-y-4">
+                <IndividualLearnerAnalytics 
+                  learners={[learner]}
+                  onViewSession={handleViewSession}
+                  activeView={0}
+                  onSelectView={() => {}}
+                  showOnlyIndividual={true}
+                  learnerName={learner.name}
+                />
+              </TabsContent>
             ))}
-          </TabsList>
-          
-          {learners.map((learner) => (
-            <TabsContent key={learner.name} value={learner.name} className="space-y-4">
-              <IndividualLearnerAnalytics 
-                learners={[learner]}
-                onViewSession={handleViewSession}
-                activeView={0}
-                onSelectView={() => {}}
-                showOnlyIndividual={true}
-                learnerName={learner.name}
-              />
-            </TabsContent>
-          ))}
-        </Tabs>
-      </div>
+          </Tabs>
+        </div>
+      )}
 
       <SessionTranscriptModal 
         session={selectedSession}

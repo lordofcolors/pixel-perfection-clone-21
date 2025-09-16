@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/learner/AppSidebar";
+import { EmptyLearnerDashboard } from "@/components/learner/EmptyLearnerDashboard";
 import { useLocation } from "react-router-dom";
 import { getOnboardingName } from "@/lib/store";
 
@@ -41,10 +42,7 @@ export default function LearnerDashboard() {
           </header>
 
           <main className="p-6">
-            <h1 className="text-xl font-semibold mb-2">Welcome back</h1>
-            <p className="text-muted-foreground">
-              Select a lesson from the left to continue.
-            </p>
+            <EmptyLearnerDashboard learnerName={learnerName || "Learner"} />
           </main>
         </SidebarInset>
       </div>
