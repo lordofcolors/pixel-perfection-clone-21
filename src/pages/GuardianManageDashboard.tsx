@@ -7,6 +7,7 @@ import { getGuardianSetup } from "@/lib/store";
 
 export default function GuardianManageDashboard() {
   const [activeView, setActiveView] = useState<"guardian" | "dashboard" | "skillSelection" | number>("guardian");
+  const [previousView, setPreviousView] = useState<"guardian" | "dashboard" | number>("guardian");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const data = getGuardianSetup();
   const guardianName = data?.guardianName || "Tree Guardian";
@@ -44,8 +45,18 @@ export default function GuardianManageDashboard() {
           learners={learners}
           guardianName={guardianName}
           activeView={activeView}
-          onSelectView={setActiveView}
-          onCreateSkill={() => setActiveView("skillSelection")}
+          onSelectView={(view) => {
+            if (view !== "skillSelection") {
+              setPreviousView(activeView !== "skillSelection" ? activeView : previousView);
+            }
+            setActiveView(view);
+          }}
+          onCreateSkill={() => {
+            if (activeView !== "skillSelection") {
+              setPreviousView(activeView);
+            }
+            setActiveView("skillSelection");
+          }}
           refreshTrigger={refreshTrigger}
         />
 
@@ -61,8 +72,9 @@ export default function GuardianManageDashboard() {
               <SkillSelectionView
                 guardianName={guardianName}
                 learners={learners}
-                onBack={() => setActiveView("guardian")}
+                onBack={() => setActiveView(previousView)}
                 onSkillCreated={() => setRefreshTrigger(prev => prev + 1)}
+                activeView={previousView}
               />
             ) : (
               <AnalyticsContent 

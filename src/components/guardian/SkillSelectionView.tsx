@@ -9,6 +9,7 @@ interface SkillSelectionViewProps {
   learners: { name: string }[];
   onBack: () => void;
   onSkillCreated: () => void;
+  activeView?: "guardian" | "dashboard" | "skillSelection" | number;
 }
 
 const skillOptions = [
@@ -18,15 +19,21 @@ const skillOptions = [
   "I want to start a new skill"
 ];
 
-export function SkillSelectionView({ guardianName, learners, onBack, onSkillCreated }: SkillSelectionViewProps) {
-  const [selectedPerson, setSelectedPerson] = useState<string>("");
+export function SkillSelectionView({ guardianName, learners, onBack, onSkillCreated, activeView }: SkillSelectionViewProps) {
+  const isLearnerView = typeof activeView === "number";
+  const currentLearnerName = isLearnerView ? learners[activeView]?.name : "";
+  
+  const [selectedPerson, setSelectedPerson] = useState<string>(
+    isLearnerView ? currentLearnerName : ""
+  );
 
   const handleSkillSelect = (skill: string) => {
-    if (!selectedPerson) {
+    const targetPerson = isLearnerView ? currentLearnerName : selectedPerson;
+    if (!targetPerson) {
       return;
     }
     
-    addSkillToPerson(selectedPerson, skill);
+    addSkillToPerson(targetPerson, skill);
     onSkillCreated();
     onBack();
   };
@@ -47,25 +54,27 @@ export function SkillSelectionView({ guardianName, learners, onBack, onSkillCrea
         What skill would you like to learn today?
       </h1>
 
-      {/* Person selector */}
-      <div className="w-full max-w-md space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">
-          Assign this skill to:
-        </label>
-        <Select value={selectedPerson} onValueChange={setSelectedPerson}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a person" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={guardianName}>Me ({guardianName})</SelectItem>
-            {learners.map((learner) => (
-              <SelectItem key={learner.name} value={learner.name}>
-                {learner.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      {/* Person selector - only show for guardian view */}
+      {!isLearnerView && (
+        <div className="w-full max-w-md space-y-2">
+          <label className="text-sm font-medium text-muted-foreground">
+            Assign this skill to:
+          </label>
+          <Select value={selectedPerson} onValueChange={setSelectedPerson}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a person" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={guardianName}>Me ({guardianName})</SelectItem>
+              {learners.map((learner) => (
+                <SelectItem key={learner.name} value={learner.name}>
+                  {learner.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {/* Skill options */}
       <div className="w-full max-w-md space-y-3">
@@ -75,7 +84,7 @@ export function SkillSelectionView({ guardianName, learners, onBack, onSkillCrea
             variant="outline"
             className="w-full h-auto p-4 text-left justify-start bg-card hover:bg-muted border-border"
             onClick={() => handleSkillSelect(skill)}
-            disabled={!selectedPerson}
+            disabled={!isLearnerView && !selectedPerson}
           >
             <span className="text-wrap">{skill}</span>
           </Button>
