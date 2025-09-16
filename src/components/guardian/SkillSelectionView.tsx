@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { addSkillToPerson } from "@/lib/store";
+import acircleLogo from "@/assets/acircle-logo.png";
 
 interface SkillSelectionViewProps {
   guardianName: string;
   learners: { name: string }[];
   onBack: () => void;
+  onSkillCreated: () => void;
 }
 
 const skillOptions = [
@@ -16,24 +18,16 @@ const skillOptions = [
   "I want to start a new skill"
 ];
 
-export function SkillSelectionView({ guardianName, learners, onBack }: SkillSelectionViewProps) {
+export function SkillSelectionView({ guardianName, learners, onBack, onSkillCreated }: SkillSelectionViewProps) {
   const [selectedPerson, setSelectedPerson] = useState<string>("");
-  
-  const getInitials = (name: string) => {
-    const parts = name.trim().split(/\s+/);
-    const first = parts[0]?.[0] || '';
-    const last = parts[parts.length - 1]?.[0] || '';
-    return (first + last).toUpperCase();
-  };
 
   const handleSkillSelect = (skill: string) => {
     if (!selectedPerson) {
-      // Could show a toast or validation message
       return;
     }
     
-    console.log(`Selected skill: ${skill} for ${selectedPerson}`);
-    // TODO: Add skill creation logic here
+    addSkillToPerson(selectedPerson, skill);
+    onSkillCreated();
     onBack();
   };
 
@@ -41,11 +35,11 @@ export function SkillSelectionView({ guardianName, learners, onBack }: SkillSele
     <div className="min-h-[600px] flex flex-col items-center justify-center space-y-8 p-8">
       {/* Avatar */}
       <div className="relative">
-        <Avatar className="h-24 w-24 bg-gradient-to-br from-pink-200 via-blue-200 to-purple-200">
-          <AvatarFallback className="text-2xl font-semibold text-primary">
-            {getInitials(guardianName)}
-          </AvatarFallback>
-        </Avatar>
+        <img 
+          src={acircleLogo} 
+          alt="Acircle Logo" 
+          className="h-24 w-24 rounded-full"
+        />
       </div>
 
       {/* Main heading */}

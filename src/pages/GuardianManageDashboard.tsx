@@ -7,6 +7,7 @@ import { getGuardianSetup } from "@/lib/store";
 
 export default function GuardianManageDashboard() {
   const [activeView, setActiveView] = useState<"guardian" | "dashboard" | "skillSelection" | number>("guardian");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const data = getGuardianSetup();
   const guardianName = data?.guardianName || "Tree Guardian";
   const learners = data?.learners || [{ name: "Jake" }, { name: "Mia" }];
@@ -45,6 +46,7 @@ export default function GuardianManageDashboard() {
           activeView={activeView}
           onSelectView={setActiveView}
           onCreateSkill={() => setActiveView("skillSelection")}
+          refreshTrigger={refreshTrigger}
         />
 
         <SidebarInset>
@@ -60,6 +62,7 @@ export default function GuardianManageDashboard() {
                 guardianName={guardianName}
                 learners={learners}
                 onBack={() => setActiveView("guardian")}
+                onSkillCreated={() => setRefreshTrigger(prev => prev + 1)}
               />
             ) : (
               <AnalyticsContent 

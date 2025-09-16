@@ -17,8 +17,9 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Lock, Home, Sparkles, Plus } from "lucide-react";
+import { getGuardianSetup } from "@/lib/store";
 
-const curriculum = [
+const defaultCurriculum = [
   { title: "0: Assessment", locked: false },
   { title: "1: Leash Skills and Safety", locked: false },
   { title: "2: Meeting Other Dogs Safely", locked: false },
@@ -35,9 +36,12 @@ interface ManageSidebarProps {
   activeView: ViewType;
   onSelectView: (view: ViewType) => void;
   onCreateSkill: () => void;
+  refreshTrigger?: number;
 }
 
-export function ManageSidebar({ learners, guardianName, activeView, onSelectView, onCreateSkill }: ManageSidebarProps) {
+export function ManageSidebar({ learners, guardianName, activeView, onSelectView, onCreateSkill, refreshTrigger }: ManageSidebarProps) {
+  const data = getGuardianSetup();
+  const skills = data?.skills || {};
   const getInitials = (name?: string) => {
     if (!name) return 'NA';
     const parts = name.trim().split(/\s+/);
@@ -49,34 +53,99 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
   const activeIndex = typeof activeView === "number" ? activeView : 0;
   const currentName = showAll ? guardianName : (learners[activeIndex]?.name || guardianName);
 
-  const renderGroup = (learner: { name: string }, i: number) => (
-    <SidebarGroup key={learner.name}>
-      <SidebarGroupLabel>{learner.name}</SidebarGroupLabel>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive>
-              <NavLink to="#">
-                <span>Master Dog Walking</span>
-              </NavLink>
-            </SidebarMenuButton>
-            <SidebarMenuSub>
-              {curriculum.map((item, idx) => (
-                <li key={idx}>
-                  <SidebarMenuSubButton asChild isActive={false} aria-disabled={false}>
-                    <a href="#" onClick={(e) => e.preventDefault()}>
-                      {item.locked ? <Lock className="opacity-70" size={14} /> : null}
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuSubButton>
-                </li>
-              ))}
-            </SidebarMenuSub>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
-  );
+  const renderGroup = (learner: { name: string }, i: number) => {
+    const personSkills = skills[learner.name] || [];
+    const hasCustomSkills = personSkills.length > 0;
+    
+    return (
+      <SidebarGroup key={learner.name}>
+        <SidebarGroupLabel>{learner.name}</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {/* Custom skills */}
+            {personSkills.map((skill, skillIdx) => (
+              <SidebarMenuItem key={skillIdx}>
+                <SidebarMenuButton asChild isActive>
+                  <NavLink to="#">
+                    <span>{skill.title}</span>
+                  </NavLink>
+                </SidebarMenuButton>
+                <SidebarMenuSub>
+                  {skill.lessons.map((lesson, lessonIdx) => (
+                    <li key={lessonIdx}>
+                      <SidebarMenuSubButton asChild isActive={false} aria-disabled={false}>
+                        <a href="#" onClick={(e) => e.preventDefault()}>
+                          {lesson.locked ? <Lock className="opacity-70" size={14} /> : null}
+                          <span>{lesson.title}</span>
+                        </a>
+                      </SidebarMenuSubButton>
+                    </li>
+                  ))}
+                </SidebarMenuSub>
+              </SidebarMenuItem>
+            ))}
+            
+            {/* Default Master Dog Walking skill */}
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive>
+                <NavLink to="#">
+                  <span>Master Dog Walking</span>
+                </NavLink>
+              </SidebarMenuButton>
+              <SidebarMenuSub>
+                {defaultCurriculum.map((item, idx) => (
+                  <li key={idx}>
+                    <SidebarMenuSubButton asChild isActive={false} aria-disabled={false}>
+                      <a href="#" onClick={(e) => e.preventDefault()}>
+                        {item.locked ? <Lock className="opacity-70" size={14} /> : null}
+                        <span>{item.title}</span>
+                      </a>
+                    </SidebarMenuSubButton>
+                  </li>
+                ))}
+              </SidebarMenuSub>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    );
+  };
+
+  const renderGuardianGroup = () => {
+    const guardianSkills = skills[guardianName] || [];
+    if (guardianSkills.length === 0) return null;
+    
+    return (
+      <SidebarGroup key={guardianName}>
+        <SidebarGroupLabel>{guardianName} (Guardian)</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {guardianSkills.map((skill, skillIdx) => (
+              <SidebarMenuItem key={skillIdx}>
+                <SidebarMenuButton asChild isActive>
+                  <NavLink to="#">
+                    <span>{skill.title}</span>
+                  </NavLink>
+                </SidebarMenuButton>
+                <SidebarMenuSub>
+                  {skill.lessons.map((lesson, lessonIdx) => (
+                    <li key={lessonIdx}>
+                      <SidebarMenuSubButton asChild isActive={false} aria-disabled={false}>
+                        <a href="#" onClick={(e) => e.preventDefault()}>
+                          {lesson.locked ? <Lock className="opacity-70" size={14} /> : null}
+                          <span>{lesson.title}</span>
+                        </a>
+                      </SidebarMenuSubButton>
+                    </li>
+                  ))}
+                </SidebarMenuSub>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    );
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -122,6 +191,9 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {/* Guardian Skills */}
+        {renderGuardianGroup()}
+        
         {/* Learner Navigation Trees */}
         {showAll ? learners.map((l, i) => renderGroup(l, i)) : renderGroup(learners[activeIndex], activeIndex)}
       </SidebarContent>
