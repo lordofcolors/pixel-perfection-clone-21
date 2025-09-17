@@ -89,10 +89,10 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
                   size="sm"
                   className="w-full justify-start h-8 px-2 text-xs font-normal"
                   onClick={() => {
-                    // Switch to this learner's view and go to skill creation
+                    // Immediately switch to child's account view
                     onSelectView(i);
-                    // Small delay to ensure view switch, then trigger skill creation
-                    setTimeout(() => onCreateSkill(), 100);
+                    // Trigger skill creation from child's perspective
+                    onCreateSkill();
                   }}
                 >
                   <Plus className="h-3 w-3 mr-1" />
