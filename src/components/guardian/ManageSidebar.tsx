@@ -30,11 +30,12 @@ interface ManageSidebarProps {
   guardianName: string;
   activeView: ViewType;
   onSelectView: (view: ViewType) => void;
-  onCreateSkill: () => void;
+  onCreateSkill: (targetIndex?: number) => void;
   refreshTrigger?: number;
+  createForIndex?: number;
 }
 
-export function ManageSidebar({ learners, guardianName, activeView, onSelectView, onCreateSkill, refreshTrigger }: ManageSidebarProps) {
+export function ManageSidebar({ learners, guardianName, activeView, onSelectView, onCreateSkill, refreshTrigger, createForIndex }: ManageSidebarProps) {
   const data = getGuardianSetup();
   const skills = data?.skills || {};
   const getInitials = (name?: string) => {
@@ -45,8 +46,10 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
     return (first + last).toUpperCase() || 'NA';
   };
   const showAll = activeView === "guardian" || activeView === "dashboard";
-  const isLearnerView = typeof activeView === "number";
-  const activeIndex = typeof activeView === "number" ? activeView : 0;
+  const isLearnerView = typeof activeView === "number" || activeView === "skillSelection";
+  const activeIndex = typeof activeView === "number" 
+    ? activeView 
+    : (activeView === "skillSelection" && typeof createForIndex === "number" ? createForIndex : 0);
   const currentName = showAll ? guardianName : (learners[activeIndex]?.name || guardianName);
 
   const renderGroup = (learner: { name: string }, i: number) => {
@@ -89,10 +92,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
                   size="sm"
                   className="w-full justify-start h-8 px-2 text-xs font-normal"
                   onClick={() => {
-                    // Immediately switch to child's account view
-                    onSelectView(i);
-                    // Trigger skill creation from child's perspective
-                    onCreateSkill();
+                    onCreateSkill(i);
                   }}
                 >
                   <Plus className="h-3 w-3 mr-1" />
@@ -150,7 +150,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
           <button 
             className="p-1 rounded-md hover:bg-muted transition-colors flex-shrink-0"
             aria-label="Add new learning session"
-            onClick={onCreateSkill}
+            onClick={() => onCreateSkill(isLearnerView ? activeIndex : undefined)}
           >
             <img src={circlePlusIcon} alt="Add" className="h-6 w-6" />
           </button>

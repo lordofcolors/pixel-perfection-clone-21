@@ -158,37 +158,33 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {learners.map((learner) => {
-            const hasLearnerSkill = skills[learner.name]?.length > 0;
-            if (!hasLearnerSkill) return null;
+          {learners.flatMap((learner) => {
+            const learnerSkills = skills[learner.name] || [];
+            if (learnerSkills.length === 0) return [] as JSX.Element[];
             
-            const firstSkill = skills[learner.name]?.[0];
-            const skillName = typeof firstSkill === 'object' && firstSkill?.title 
-              ? firstSkill.title 
-              : "First Skill";
-            
-            return (
+            return learnerSkills.slice(0, 2).map((sk, idx) => (
               <div 
-                key={learner.name} 
+                key={`${learner.name}-${idx}`} 
                 className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer"
                 onClick={() => handleViewSession("session-1", learner.name)}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium">{skillName}</h4>
+                  <h4 className="font-medium">{sk.title}</h4>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span>15m 30s</span>
                     <span>•</span>
-                    <span>1h ago</span>
+                    <span>{idx === 0 ? '1h ago' : '2h ago'}</span>
                   </div>
                 </div>
                 <div className="flex gap-2 flex-wrap">
-                  <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">First lesson</span>
+                  <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">Lesson {idx + 1}</span>
                   <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded">Completed</span>
                   <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded">Basic concepts</span>
                 </div>
               </div>
-            );
+            ));
           })}
+
         </CardContent>
       </Card>
       

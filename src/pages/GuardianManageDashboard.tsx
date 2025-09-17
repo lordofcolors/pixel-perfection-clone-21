@@ -51,13 +51,15 @@ export default function GuardianManageDashboard() {
             }
             setActiveView(view);
           }}
-          onCreateSkill={() => {
-            if (activeView !== "skillSelection") {
-              setPreviousView(activeView);
-            }
+          onCreateSkill={(targetIndex?: number) => {
+            const nextIndex = typeof targetIndex === 'number'
+              ? targetIndex
+              : (typeof activeView === 'number' ? activeView : 0);
+            setPreviousView(nextIndex);
             setActiveView("skillSelection");
           }}
           refreshTrigger={refreshTrigger}
+          createForIndex={typeof previousView === 'number' ? previousView : (typeof activeView === 'number' ? activeView : undefined)}
         />
 
         <SidebarInset>
