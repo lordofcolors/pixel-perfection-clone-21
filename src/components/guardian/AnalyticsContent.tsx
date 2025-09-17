@@ -6,6 +6,7 @@ import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { SafetyNotificationDropdown } from "./SafetyNotificationDropdown";
 import { EmptyStateDashboard } from "./EmptyStateDashboard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { getGuardianSetup } from "@/lib/store";
 
 type ViewType = "guardian" | "dashboard" | number;
 
@@ -120,7 +121,34 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [safetyIssues, setSafetyIssues] = useState([...mockSafetyIssues]);
-  const [hasCompletedFirstLesson, setHasCompletedFirstLesson] = useState(false); // MVP: Track if any lessons completed
+  
+  // Check if any skills exist across all learners
+  const setupData = getGuardianSetup();
+  const skills = setupData?.skills || {};
+  const hasAnySkills = Object.keys(skills).some(person => skills[person]?.length > 0);
+  
+  const isChildView = typeof activeView === "number";
+  const isParentView = activeView === "guardian" || activeView === "dashboard";
+
+  // For child views, show empty state. For parent views, show data if skills exist
+  if (isChildView) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Card className="w-full max-w-md">
+          <CardContent className="text-center py-8">
+            <div className="space-y-4">
+              <div className="text-6xl">🎯</div>
+              <h3 className="text-lg font-semibold">Ready to Learn!</h3>
+              <p className="text-muted-foreground">
+                Your learning space is ready. Complete your first lesson to see your progress here.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   // Generate comprehensive mock data for any learner names
   const generateLearnerData = (learnerName: string, index: number) => {
     // Create varied but consistent data based on name
@@ -141,14 +169,14 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   };
 
   // Create data object for all learners
-  const data = learners.reduce((acc, learner, index) => {
+  const mockData = learners.reduce((acc, learner, index) => {
     acc[learner.name] = generateLearnerData(learner.name, index);
     return acc;
   }, {} as Record<string, ReturnType<typeof generateLearnerData>>);
 
   const values = learners
-    .map((l) => data[l.name as keyof typeof data])
-    .filter(Boolean) as Array<(typeof data)[keyof typeof data]>;
+    .map((l) => mockData[l.name as keyof typeof mockData])
+    .filter(Boolean) as Array<(typeof mockData)[keyof typeof mockData]>;
 
   const avgCompletion = values.length
     ? Math.round(values.reduce((a, b) => a + b.completion, 0) / values.length)
@@ -156,7 +184,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   const totalCompleted = values.reduce((a, b) => a + b.completedLessons, 0);
 
   const combinedRecent = learners.flatMap((l) => {
-    const d = data[l.name as keyof typeof data];
+    const d = mockData[l.name as keyof typeof mockData];
     return d ? d.recent.slice(0, 1).map((r) => ({ who: l.name, ...r })) : [];
   });
 
@@ -177,8 +205,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
 
   const renderSummaryCards = () => {
     if (isGuardian) {
-      // MVP: Show empty state if no lessons completed
-      if (!hasCompletedFirstLesson) {
+      // Show empty state if no skills exist
+      if (!hasAnySkills) {
         return (
           <Card>
             <CardHeader>
@@ -240,8 +268,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
       );
     }
 
-    const key = learners[activeView].name as keyof typeof data;
-    const d = data[key];
+    const key = learners[activeView].name as keyof typeof mockData;
+    const d = mockData[key];
     return (
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
@@ -276,8 +304,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
 
   const renderRecent = () => {
     if (isGuardian) {
-      // MVP: Show empty state if no lessons completed
-      if (!hasCompletedFirstLesson) {
+      // Show empty state if no skills exist
+      if (!hasAnySkills) {
         return (
           <Card>
             <CardHeader>
@@ -313,8 +341,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
       );
     }
 
-    const key = learners[activeView].name as keyof typeof data;
-    const d = data[key];
+    const key = learners[activeView].name as keyof typeof mockData;
+    const d = mockData[key];
     return (
       <Card>
         <CardHeader>
@@ -335,8 +363,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   const renderPerLearner = () => {
     if (!isGuardian) return null;
     
-    // MVP: Show empty state if no lessons completed
-    if (!hasCompletedFirstLesson) {
+    // Show empty state if no skills exist
+    if (!hasAnySkills) {
       return (
         <section className="grid gap-4 sm:grid-cols-2">
           {learners.map((l) => (
@@ -371,8 +399,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
     return (
       <section className="grid gap-4 sm:grid-cols-2">
         {learners.map((l) => {
-          const k = l.name as keyof typeof data;
-          const d = data[k];
+          const k = l.name as keyof typeof mockData;
+          const d = mockData[k];
           return (
             <Card key={l.name}>
               <CardHeader>
@@ -390,8 +418,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
     );
   };
 
-  // MVP: Show empty state dashboard initially
-  if (!hasCompletedFirstLesson && isGuardian) {
+  // Show empty state dashboard if no skills exist
+  if (!hasAnySkills && isGuardian) {
     return (
       <div className="space-y-6">
         <div className="flex justify-end">
@@ -439,7 +467,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
       {renderPerLearner()}
       
       {/* Individual Child Analytics with Tab Navigation */}
-      {hasCompletedFirstLesson && (
+      {hasAnySkills && (
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Individual Learning Analytics</h2>
           <Tabs defaultValue={learners[0]?.name || "jake"} className="w-full">
