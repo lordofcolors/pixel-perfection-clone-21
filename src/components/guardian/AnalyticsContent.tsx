@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SessionTranscriptModal } from "./SessionTranscriptModal";
-import { SafetyNotificationDropdown } from "./SafetyNotificationDropdown";
 import { EmptyStateDashboard } from "./EmptyStateDashboard";
 import { getGuardianSetup } from "@/lib/store";
 
@@ -71,7 +70,6 @@ const mockSafetyIssues = [
 export function AnalyticsContent({ guardianName, learners, activeView, onSelectView }: AnalyticsContentProps) {
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [safetyIssues, setSafetyIssues] = useState([...mockSafetyIssues]);
   
   // Check if any skills exist across all learners
   const setupData = getGuardianSetup();
@@ -108,22 +106,10 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
     }
   };
 
-  const handleDismissSafetyIssue = (issueId: string) => {
-    setSafetyIssues(issues => issues.filter(issue => issue.id !== issueId));
-  };
-
   // Show empty state dashboard if no skills exist
   if (!hasAnySkills && isParentView) {
     return (
       <div className="space-y-6">
-        <div className="flex justify-end">
-          <SafetyNotificationDropdown 
-            issues={[]} // No safety issues in empty state
-            onViewSession={handleViewSession}
-            onDismiss={handleDismissSafetyIssue}
-          />
-        </div>
-        
         <EmptyStateDashboard 
           guardianName={guardianName}
           learners={learners}
@@ -142,13 +128,45 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   // Simplified dashboard for when skills exist
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
-        <SafetyNotificationDropdown 
-          issues={safetyIssues}
-          onViewSession={handleViewSession}
-          onDismiss={handleDismissSafetyIssue}
-        />
-      </div>
+      {/* Learning Progress Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            📊 Learning Progress
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {learners.map((learner) => {
+            const learnerSkills = skills[learner.name] || [];
+            if (learnerSkills.length === 0) return null;
+            
+            return (
+              <div key={learner.name} className="border rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium">{learner.name}</h4>
+                  <div className="text-sm text-muted-foreground">
+                    {learnerSkills.length} skill{learnerSkills.length > 1 ? 's' : ''} in progress
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <div className="font-medium">Total Time</div>
+                    <div className="text-muted-foreground">{learnerSkills.length * 15}m 30s</div>
+                  </div>
+                  <div>
+                    <div className="font-medium">Messages</div>
+                    <div className="text-muted-foreground">{learnerSkills.length * 12} exchanged</div>
+                  </div>
+                  <div>
+                    <div className="font-medium">Completion</div>
+                    <div className="text-muted-foreground">95%</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
       
       {/* Session Overview */}
       <Card>
@@ -162,24 +180,30 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
             const learnerSkills = skills[learner.name] || [];
             if (learnerSkills.length === 0) return [] as JSX.Element[];
             
-            return learnerSkills.slice(0, 2).map((sk, idx) => (
+            return learnerSkills.slice(0, 3).map((sk, idx) => (
               <div 
                 key={`${learner.name}-${idx}`} 
                 className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer"
                 onClick={() => handleViewSession("session-1", learner.name)}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium">{sk.title}</h4>
+                  <div>
+                    <h4 className="font-medium">{sk.title}</h4>
+                    <p className="text-sm text-muted-foreground">{learner.name}</p>
+                  </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span>15m 30s</span>
                     <span>•</span>
-                    <span>{idx === 0 ? '1h ago' : '2h ago'}</span>
+                    <span>{idx === 0 ? '1h ago' : idx === 1 ? '2h ago' : '1d ago'}</span>
                   </div>
                 </div>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap mb-2">
                   <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">Lesson {idx + 1}</span>
-                  <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded">Completed</span>
-                  <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded">Basic concepts</span>
+                  <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
+                  <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded">12 messages</span>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  95% completion rate • Active engagement
                 </div>
               </div>
             ));
