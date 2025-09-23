@@ -250,75 +250,77 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                         </div>
                       ) : (
                         // Populated State Layout
-                        <>
-                          {/* Stats */}
-                          <div className="grid grid-cols-3 gap-4 text-sm">
-                            <div className="text-center">
-                              <div className="font-semibold text-primary">{learnerSkills.length}</div>
-                              <div className="text-muted-foreground">Skills</div>
+                        <div className="flex flex-col justify-between min-h-[300px]">
+                          <div className="flex-1 space-y-4">
+                            {/* Stats */}
+                            <div className="grid grid-cols-3 gap-4 text-sm">
+                              <div className="text-center">
+                                <div className="font-semibold text-primary">{learnerSkills.length}</div>
+                                <div className="text-muted-foreground">Skills</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-semibold text-primary">{learnerSkills.length}</div>
+                                <div className="text-muted-foreground">Lessons</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-semibold text-primary">{learnerSkills.length * 15}m</div>
+                                <div className="text-muted-foreground">Time</div>
+                              </div>
                             </div>
-                            <div className="text-center">
-                              <div className="font-semibold text-primary">{learnerSkills.length}</div>
-                              <div className="text-muted-foreground">Lessons</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="font-semibold text-primary">{learnerSkills.length * 15}m</div>
-                              <div className="text-muted-foreground">Time</div>
-                            </div>
-                          </div>
 
-                          {/* Recent Sessions */}
-                          <div className="border-t pt-3 space-y-3">
-                            <div className="text-sm font-medium">Recent Sessions:</div>
-                            <div className="space-y-2">
-                              {learnerSkills.slice(0, 2).map((skill, idx) => {
-                                const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
-                                return (
-                                  <div 
-                                    key={idx} 
-                                    className="border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all duration-200 group"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleViewSession("session-1", learner.name);
-                                    }}
-                                  >
-                                    <div className="flex items-center justify-between mb-2">
-                                      <div className="font-medium text-sm">{skillName}</div>
-                                      <div className="text-xs text-primary group-hover:underline">View transcript →</div>
-                                    </div>
-                                    
-                                    <div className="grid grid-cols-3 gap-2 text-xs">
-                                      <div className="text-center">
-                                        <div className="font-medium text-primary">15m</div>
-                                        <div className="text-muted-foreground">Duration</div>
+                            {/* Recent Sessions */}
+                            <div className="border-t pt-3 space-y-3">
+                              <div className="text-sm font-medium">Recent Sessions:</div>
+                              <div className="space-y-2">
+                                {learnerSkills.slice(0, 2).map((skill, idx) => {
+                                  const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
+                                  return (
+                                    <div 
+                                      key={idx} 
+                                      className="border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all duration-200 group"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleViewSession("session-1", learner.name);
+                                      }}
+                                    >
+                                      <div className="flex items-center justify-between mb-2">
+                                        <div className="font-medium text-sm">{skillName}</div>
+                                        <div className="text-xs text-primary group-hover:underline">View transcript →</div>
                                       </div>
-                                      <div className="text-center">
-                                        <div className="font-medium text-primary">12</div>
-                                        <div className="text-muted-foreground">Messages</div>
+                                      
+                                      <div className="grid grid-cols-3 gap-2 text-xs">
+                                        <div className="text-center">
+                                          <div className="font-medium text-primary">15m</div>
+                                          <div className="text-muted-foreground">Duration</div>
+                                        </div>
+                                        <div className="text-center">
+                                          <div className="font-medium text-primary">12</div>
+                                          <div className="text-muted-foreground">Messages</div>
+                                        </div>
+                                        <div className="text-center">
+                                          <div className="font-medium text-primary">95%</div>
+                                          <div className="text-muted-foreground">Complete</div>
+                                        </div>
                                       </div>
-                                      <div className="text-center">
-                                        <div className="font-medium text-primary">95%</div>
-                                        <div className="text-muted-foreground">Complete</div>
+                                      
+                                      <div className="mt-2 flex items-center gap-2">
+                                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
+                                        <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
                                       </div>
                                     </div>
-                                    
-                                    <div className="mt-2 flex items-center gap-2">
-                                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
-                                      <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
-                                    </div>
-                                  </div>
-                                );
-                              })}
+                                  );
+                                })}
+                              </div>
                             </div>
                           </div>
 
                           <Button 
-                            className="w-full" 
+                            className="w-full mt-auto" 
                             onClick={() => onSelectView(learners.indexOf(learner))}
                           >
                             Switch to {learner.name}'s Account
                           </Button>
-                        </>
+                        </div>
                       )}
                     </div>
                   </CardContent>
