@@ -71,6 +71,7 @@ const mockSafetyIssues = [
 export function AnalyticsContent({ guardianName, learners, activeView, onSelectView }: AnalyticsContentProps) {
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [showAllLessons, setShowAllLessons] = useState<{[key: string]: boolean}>({});
   
   // Check if any skills exist across all learners
   const setupData = getGuardianSetup();
@@ -268,11 +269,24 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                               </div>
                             </div>
 
-                            {/* Recent Sessions */}
+                            {/* Recent Lessons */}
                             <div className="border-t pt-3 space-y-3">
-                              <div className="text-sm font-medium">Recent Sessions:</div>
+                              <div className="flex items-center justify-between">
+                                <div className="text-sm font-medium">Recent Lessons:</div>
+                                {learnerSkills.length > 3 && (
+                                  <button 
+                                    className="text-xs text-primary hover:underline"
+                                    onClick={() => setShowAllLessons(prev => ({
+                                      ...prev,
+                                      [learner.name]: !prev[learner.name]
+                                    }))}
+                                  >
+                                    {showAllLessons[learner.name] ? 'Show Less' : 'View All'}
+                                  </button>
+                                )}
+                              </div>
                               <div className="space-y-2">
-                                {learnerSkills.slice(0, 2).map((skill, idx) => {
+                                {learnerSkills.slice(0, showAllLessons[learner.name] ? learnerSkills.length : 3).map((skill, idx) => {
                                   const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
                                   return (
                                     <div 
