@@ -191,6 +191,12 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-primary">{skillsInProgress}</div>
+            <div className="text-sm text-muted-foreground">Skills in Progress</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-primary">{totalLessons}</div>
             <div className="text-sm text-muted-foreground">Total Lessons Completed</div>
           </CardContent>
@@ -199,12 +205,6 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-primary">{totalLearningTime}</div>
             <div className="text-sm text-muted-foreground">Learning Time</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{skillsInProgress}</div>
-            <div className="text-sm text-muted-foreground">Skills in Progress</div>
           </CardContent>
         </Card>
       </div>
@@ -230,88 +230,96 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                         <h3 className="text-lg font-semibold">{learner.name}</h3>
                       </div>
                       
-                      <div className="space-y-3">
-                        {!hasLearnerSkill && (
-                          <div className="text-center py-4">
-                            <div className="text-4xl mb-2">🎯</div>
-                            <p className="text-sm text-muted-foreground">
-                              Ready to start their learning journey
-                            </p>
-                          </div>
-                        )}
-                        
-                        {hasLearnerSkill ? (
-                          <div className="space-y-3">
-                            {/* Stats */}
-                            <div className="grid grid-cols-3 gap-4 text-sm">
-                              <div className="text-center">
-                                <div className="font-semibold text-primary">{learnerSkills.length}</div>
-                                <div className="text-muted-foreground">Skills</div>
-                              </div>
-                              <div className="text-center">
-                                <div className="font-semibold text-primary">{learnerSkills.length * 15}m</div>
-                                <div className="text-muted-foreground">Time</div>
-                              </div>
-                              <div className="text-center">
-                                <div className="font-semibold text-primary">95%</div>
-                                <div className="text-muted-foreground">Completion</div>
-                              </div>
+                      {!hasLearnerSkill ? (
+                        // Empty State Layout
+                        <div className="flex flex-col justify-between min-h-[300px]">
+                          <div className="flex-1 flex flex-col justify-center">
+                            <div className="text-center py-4">
+                              <div className="text-4xl mb-2">🎯</div>
+                              <p className="text-sm text-muted-foreground">
+                                Ready to start their learning journey
+                              </p>
                             </div>
+                          </div>
+                          <Button 
+                            className="w-full mt-auto" 
+                            onClick={() => onSelectView(learners.indexOf(learner))}
+                          >
+                            Switch to {learner.name}'s Account
+                          </Button>
+                        </div>
+                      ) : (
+                        // Populated State Layout
+                        <>
+                          {/* Stats */}
+                          <div className="grid grid-cols-3 gap-4 text-sm">
+                            <div className="text-center">
+                              <div className="font-semibold text-primary">{learnerSkills.length}</div>
+                              <div className="text-muted-foreground">Skills</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-semibold text-primary">{learnerSkills.length}</div>
+                              <div className="text-muted-foreground">Lessons</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-semibold text-primary">{learnerSkills.length * 15}m</div>
+                              <div className="text-muted-foreground">Time</div>
+                            </div>
+                          </div>
 
-                            {/* Recent Sessions */}
-                            <div className="border-t pt-3 space-y-3">
-                              <div className="text-sm font-medium">Recent Sessions:</div>
-                              <div className="space-y-2">
-                                {learnerSkills.slice(0, 2).map((skill, idx) => {
-                                  const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
-                                  return (
-                                    <div 
-                                      key={idx} 
-                                      className="border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all duration-200 group"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleViewSession("session-1", learner.name);
-                                      }}
-                                    >
-                                      <div className="flex items-center justify-between mb-2">
-                                        <div className="font-medium text-sm">{skillName}</div>
-                                        <div className="text-xs text-primary group-hover:underline">View transcript →</div>
+                          {/* Recent Sessions */}
+                          <div className="border-t pt-3 space-y-3">
+                            <div className="text-sm font-medium">Recent Sessions:</div>
+                            <div className="space-y-2">
+                              {learnerSkills.slice(0, 2).map((skill, idx) => {
+                                const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
+                                return (
+                                  <div 
+                                    key={idx} 
+                                    className="border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all duration-200 group"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleViewSession("session-1", learner.name);
+                                    }}
+                                  >
+                                    <div className="flex items-center justify-between mb-2">
+                                      <div className="font-medium text-sm">{skillName}</div>
+                                      <div className="text-xs text-primary group-hover:underline">View transcript →</div>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-3 gap-2 text-xs">
+                                      <div className="text-center">
+                                        <div className="font-medium text-primary">15m</div>
+                                        <div className="text-muted-foreground">Duration</div>
                                       </div>
-                                      
-                                      <div className="grid grid-cols-3 gap-2 text-xs">
-                                        <div className="text-center">
-                                          <div className="font-medium text-primary">15m</div>
-                                          <div className="text-muted-foreground">Duration</div>
-                                        </div>
-                                        <div className="text-center">
-                                          <div className="font-medium text-primary">12</div>
-                                          <div className="text-muted-foreground">Messages</div>
-                                        </div>
-                                        <div className="text-center">
-                                          <div className="font-medium text-primary">95%</div>
-                                          <div className="text-muted-foreground">Complete</div>
-                                        </div>
+                                      <div className="text-center">
+                                        <div className="font-medium text-primary">12</div>
+                                        <div className="text-muted-foreground">Messages</div>
                                       </div>
-                                      
-                                      <div className="mt-2 flex items-center gap-2">
-                                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
-                                        <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
+                                      <div className="text-center">
+                                        <div className="font-medium text-primary">95%</div>
+                                        <div className="text-muted-foreground">Complete</div>
                                       </div>
                                     </div>
-                                  );
-                                })}
-                              </div>
+                                    
+                                    <div className="mt-2 flex items-center gap-2">
+                                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
+                                      <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
+                                    </div>
+                                  </div>
+                                );
+                              })}
                             </div>
                           </div>
-                        ) : null}
-                      </div>
-                      
-                      <Button 
-                        className="w-full" 
-                        onClick={() => onSelectView(learners.indexOf(learner))}
-                      >
-                        Switch to {learner.name}'s Account
-                      </Button>
+
+                          <Button 
+                            className="w-full" 
+                            onClick={() => onSelectView(learners.indexOf(learner))}
+                          >
+                            Switch to {learner.name}'s Account
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
