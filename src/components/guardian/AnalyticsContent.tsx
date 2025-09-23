@@ -302,20 +302,16 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                                         <div className="text-xs text-primary group-hover:underline">View transcript →</div>
                                       </div>
                                       
-                                      <div className="grid grid-cols-3 gap-2 text-xs">
-                                        <div className="text-center">
-                                          <div className="font-medium text-primary">15m</div>
-                                          <div className="text-muted-foreground">Duration</div>
-                                        </div>
-                                        <div className="text-center">
-                                          <div className="font-medium text-primary">12</div>
-                                          <div className="text-muted-foreground">Messages</div>
-                                        </div>
-                                        <div className="text-center">
-                                          <div className="font-medium text-primary">95%</div>
-                                          <div className="text-muted-foreground">Complete</div>
-                                        </div>
-                                      </div>
+                                       <div className="grid grid-cols-2 gap-2 text-xs">
+                                         <div className="text-center">
+                                           <div className="font-medium text-primary">15m</div>
+                                           <div className="text-muted-foreground">Duration</div>
+                                         </div>
+                                         <div className="text-center">
+                                           <div className="font-medium text-primary">12</div>
+                                           <div className="text-muted-foreground">Messages</div>
+                                         </div>
+                                       </div>
                                       
                                       <div className="mt-2 flex items-center gap-2">
                                         <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
