@@ -218,22 +218,22 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 items-stretch">{/* Added items-stretch for equal heights */}
             {learners.map((learner) => {
               const learnerSkills = skills[learner.name] || [];
               const hasLearnerSkill = learnerSkills.length > 0;
               
               return (
-                <Card key={learner.name} className="border-2">
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
+                <Card key={learner.name} className="border-2 h-full">
+                  <CardContent className="p-6 h-full">
+                    <div className="flex flex-col h-full">
+                      <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold">{learner.name}</h3>
                       </div>
                       
                       {!hasLearnerSkill ? (
                         // Empty State Layout
-                        <div className="flex flex-col justify-between min-h-[300px]">
+                        <div className="flex flex-col flex-1 min-h-[400px]">
                           <div className="flex-1 flex flex-col justify-center">
                             <div className="text-center py-4">
                               <div className="text-4xl mb-2">🎯</div>
@@ -251,7 +251,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                         </div>
                       ) : (
                         // Populated State Layout
-                        <div className="flex flex-col justify-between min-h-[300px]">
+                        <div className="flex flex-col flex-1 min-h-[400px]">
                           <div className="flex-1 space-y-4">
                             {/* Stats */}
                             <div className="grid grid-cols-3 gap-4 text-sm">
@@ -302,16 +302,16 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                                         <div className="text-xs text-primary group-hover:underline">View transcript →</div>
                                       </div>
                                       
-                                       <div className="grid grid-cols-2 gap-2 text-xs">
-                                         <div className="text-center">
-                                           <div className="font-medium text-primary">15m</div>
-                                           <div className="text-muted-foreground">Duration</div>
-                                         </div>
-                                         <div className="text-center">
-                                           <div className="font-medium text-primary">12</div>
-                                           <div className="text-muted-foreground">Messages</div>
-                                         </div>
-                                       </div>
+                                      <div className="grid grid-cols-2 gap-2 text-xs">
+                                        <div className="text-center">
+                                          <div className="font-medium text-primary">15m</div>
+                                          <div className="text-muted-foreground">Duration</div>
+                                        </div>
+                                        <div className="text-center">
+                                          <div className="font-medium text-primary">12</div>
+                                          <div className="text-muted-foreground">Messages</div>
+                                        </div>
+                                      </div>
                                       
                                       <div className="mt-2 flex items-center gap-2">
                                         <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
