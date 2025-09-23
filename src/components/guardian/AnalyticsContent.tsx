@@ -130,13 +130,14 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   }
 
   // Dashboard with stats when skills exist
-  const totalSessions = learners.reduce((acc, learner) => {
+  const totalLessons = learners.reduce((acc, learner) => {
     const learnerSkills = skills[learner.name] || [];
     return acc + learnerSkills.length;
   }, 0);
   
   const activeLearners = learners.filter(learner => (skills[learner.name] || []).length > 0).length;
-  const totalLearningTime = `${totalSessions * 15}m 30s`;
+  const totalLearningTime = `${totalLessons * 15}m 30s`;
+  const skillsInProgress = totalLessons;
   
   return (
     <div className="space-y-6">
@@ -184,14 +185,14 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{totalSessions}</div>
-            <div className="text-sm text-muted-foreground">Total Sessions</div>
+            <div className="text-2xl font-bold text-primary">{activeLearners}</div>
+            <div className="text-sm text-muted-foreground">Active Learners</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">95%</div>
-            <div className="text-sm text-muted-foreground">Average Engagement</div>
+            <div className="text-2xl font-bold text-primary">{totalLessons}</div>
+            <div className="text-sm text-muted-foreground">Total Lessons Completed</div>
           </CardContent>
         </Card>
         <Card>
@@ -202,8 +203,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{activeLearners}</div>
-            <div className="text-sm text-muted-foreground">Active Learners</div>
+            <div className="text-2xl font-bold text-primary">{skillsInProgress}</div>
+            <div className="text-sm text-muted-foreground">Skills in Progress</div>
           </CardContent>
         </Card>
       </div>
