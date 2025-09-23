@@ -125,103 +125,63 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
     );
   }
 
-  // Simplified dashboard for when skills exist
+  // Dashboard with stats when skills exist
+  const totalSessions = learners.reduce((acc, learner) => {
+    const learnerSkills = skills[learner.name] || [];
+    return acc + learnerSkills.length;
+  }, 0);
+  
+  const activeLearners = learners.filter(learner => (skills[learner.name] || []).length > 0).length;
+  const totalLearningTime = `${totalSessions * 15}m 30s`;
+  
   return (
     <div className="space-y-6">
-      {/* Learning Progress Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            📊 Learning Progress
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {learners.map((learner) => {
-            const learnerSkills = skills[learner.name] || [];
-            if (learnerSkills.length === 0) return null;
-            
-            return (
-              <div key={learner.name} className="border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium">{learner.name}</h4>
-                  <div className="text-sm text-muted-foreground">
-                    {learnerSkills.length} skill{learnerSkills.length > 1 ? 's' : ''} in progress
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <div className="font-medium">Total Time</div>
-                    <div className="text-muted-foreground">{learnerSkills.length * 15}m 30s</div>
-                  </div>
-                  <div>
-                    <div className="font-medium">Messages</div>
-                    <div className="text-muted-foreground">{learnerSkills.length * 12} exchanged</div>
-                  </div>
-                  <div>
-                    <div className="font-medium">Completion</div>
-                    <div className="text-muted-foreground">95%</div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </CardContent>
-      </Card>
-      
-      {/* Session Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            💬 Sessions in Learning
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {learners.flatMap((learner) => {
-            const learnerSkills = skills[learner.name] || [];
-            if (learnerSkills.length === 0) return [] as JSX.Element[];
-            
-            return learnerSkills.slice(0, 3).map((sk, idx) => (
-              <div 
-                key={`${learner.name}-${idx}`} 
-                className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer"
-                onClick={() => handleViewSession("session-1", learner.name)}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <h4 className="font-medium">{sk.title}</h4>
-                    <p className="text-sm text-muted-foreground">{learner.name}</p>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span>15m 30s</span>
-                    <span>•</span>
-                    <span>{idx === 0 ? '1h ago' : idx === 1 ? '2h ago' : '1d ago'}</span>
-                  </div>
-                </div>
-                <div className="flex gap-2 flex-wrap mb-2">
-                  <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">Lesson {idx + 1}</span>
-                  <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
-                  <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded">12 messages</span>
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  95% completion rate • Active engagement
-                </div>
-              </div>
-            ));
-          })}
+      {/* Welcome Header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-2xl font-bold">Welcome to Parent Dashboard, {guardianName}! 🌳</h1>
+        <p className="text-muted-foreground">Track your family's learning journey</p>
+      </div>
 
-        </CardContent>
-      </Card>
+      {/* Stats Overview */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-primary">{totalSessions}</div>
+            <div className="text-sm text-muted-foreground">Total Sessions</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-primary">95%</div>
+            <div className="text-sm text-muted-foreground">Average Engagement</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-primary">{totalLearningTime}</div>
+            <div className="text-sm text-muted-foreground">Learning Time</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-primary">{activeLearners}</div>
+            <div className="text-sm text-muted-foreground">Active Learners</div>
+          </CardContent>
+        </Card>
+      </div>
       
-      {/* Per Learner Overview */}
+      {/* Learner Progress Cards */}
       <section className="grid gap-4 sm:grid-cols-2">
-        {learners.map((l) => {
-          const hasLearnerSkill = skills[l.name]?.length > 0;
+        {learners.map((learner) => {
+          const learnerSkills = skills[learner.name] || [];
+          const hasLearnerSkill = learnerSkills.length > 0;
+          
           if (!hasLearnerSkill) {
             return (
-              <Card key={l.name} className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => onSelectView(learners.indexOf(l))}>
+              <Card key={learner.name} className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => onSelectView(learners.indexOf(learner))}>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    {l.name} • Ready to Start
+                    {learner.name} • Ready to Start
                     <span className="text-sm font-normal text-primary">Click to switch →</span>
                   </CardTitle>
                 </CardHeader>
@@ -229,7 +189,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                   <div className="text-center py-4">
                     <div className="text-3xl mb-2">🎯</div>
                     <p className="text-sm text-muted-foreground">
-                      No lessons completed yet. Switch to {l.name}'s account to get started!
+                      No lessons completed yet. Switch to {learner.name}'s account to get started!
                     </p>
                   </div>
                 </CardContent>
@@ -237,31 +197,51 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
             );
           }
           
-          const firstSkill = skills[l.name]?.[0];
-          const skillName = typeof firstSkill === 'object' && firstSkill?.title 
-            ? firstSkill.title 
-            : "First Skill";
-          
           return (
-            <Card key={l.name} className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => onSelectView(learners.indexOf(l))}>
+            <Card key={learner.name} className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => onSelectView(learners.indexOf(learner))}>
               <CardHeader>
-                <CardTitle>{l.name} • Currently Learning</CardTitle>
+                <CardTitle className="flex items-center justify-between">
+                  {learner.name} • Learning Progress
+                  <span className="text-sm font-normal text-primary">View details →</span>
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="space-y-2">
-                  <div className="font-medium">{skillName}</div>
-                  <div className="text-sm text-muted-foreground">1 lesson completed • 15m 30s</div>
+              <CardContent className="space-y-4">
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div className="text-center">
+                    <div className="font-semibold text-primary">{learnerSkills.length}</div>
+                    <div className="text-muted-foreground">Skills</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-semibold text-primary">{learnerSkills.length * 15}m</div>
+                    <div className="text-muted-foreground">Time</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-semibold text-primary">95%</div>
+                    <div className="text-muted-foreground">Completion</div>
+                  </div>
                 </div>
-                <div className="border-t pt-3">
-                  <button 
-                    className="text-sm text-primary hover:underline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleViewSession("session-1", l.name);
-                    }}
-                  >
-                    View lesson transcript →
-                  </button>
+                
+                {/* Recent Sessions */}
+                <div className="border-t pt-3 space-y-2">
+                  <div className="text-sm font-medium">Recent Sessions:</div>
+                  {learnerSkills.slice(0, 2).map((skill, idx) => {
+                    const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
+                    return (
+                      <div key={idx} className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{skillName}</span>
+                        <button 
+                          className="text-primary hover:underline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewSession("session-1", learner.name);
+                          }}
+                        >
+                          View transcript
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
