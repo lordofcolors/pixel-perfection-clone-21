@@ -74,7 +74,10 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   // Check if any skills exist across all learners
   const setupData = getGuardianSetup();
   const skills = setupData?.skills || {};
+  console.log('AnalyticsContent - setupData:', setupData);
+  console.log('AnalyticsContent - skills:', skills);
   const hasAnySkills = Object.keys(skills).some(person => skills[person]?.length > 0);
+  console.log('AnalyticsContent - hasAnySkills:', hasAnySkills);
   
   const isChildView = typeof activeView === "number";
   const isParentView = activeView === "guardian" || activeView === "dashboard";
