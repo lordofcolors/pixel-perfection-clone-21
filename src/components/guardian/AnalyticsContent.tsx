@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { EmptyStateDashboard } from "./EmptyStateDashboard";
 import { getGuardianSetup } from "@/lib/store";
@@ -139,11 +140,45 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   
   return (
     <div className="space-y-6">
-      {/* Welcome Header */}
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold">Welcome to Parent Dashboard, {guardianName}! 🌳</h1>
-        <p className="text-muted-foreground">Track your family's learning journey</p>
-      </div>
+      {/* Welcome Header - Always show */}
+      <Card className="bg-gradient-to-r from-primary/5 to-secondary/5">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <div className="text-2xl">🎯</div>
+            Welcome to Your Parent Dashboard, {guardianName}!
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p className="text-muted-foreground">
+              Your family's learning journey starts here. Track progress, view lesson transcripts, and monitor engagement across all your children's accounts.
+            </p>
+            <div className="bg-white/50 dark:bg-background/50 rounded-lg p-4 border">
+              <h4 className="font-medium mb-2 flex items-center gap-2">
+                📚 What You Can Track:
+              </h4>
+              <div className="grid sm:grid-cols-2 gap-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  Real-time progress tracking
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  Lesson completion analytics
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  Session transcript access
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  Time spent monitoring
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -181,31 +216,35 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
           
           if (!hasLearnerSkill) {
             return (
-              <Card key={learner.name} className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => onSelectView(learners.indexOf(learner))}>
+              <Card key={learner.name}>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     {learner.name} • Ready to Start
-                    <span className="text-sm font-normal text-primary">Click to switch →</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="text-center py-4">
                     <div className="text-3xl mb-2">🎯</div>
                     <p className="text-sm text-muted-foreground">
-                      No lessons completed yet. Switch to {learner.name}'s account to get started!
+                      No lessons completed yet. 
                     </p>
                   </div>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => onSelectView(learners.indexOf(learner))}
+                  >
+                    Switch to {learner.name}'s Account
+                  </Button>
                 </CardContent>
               </Card>
             );
           }
           
           return (
-            <Card key={learner.name} className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => onSelectView(learners.indexOf(learner))}>
+            <Card key={learner.name}>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   {learner.name} • Learning Progress
-                  <span className="text-sm font-normal text-primary">View details →</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -268,6 +307,17 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                       );
                     })}
                   </div>
+                </div>
+
+                {/* Switch Account CTA */}
+                <div className="border-t pt-3">
+                  <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={() => onSelectView(learners.indexOf(learner))}
+                  >
+                    Switch to {learner.name}'s Account
+                  </Button>
                 </div>
               </CardContent>
             </Card>
