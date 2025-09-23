@@ -130,21 +130,6 @@ export function EmptyStateDashboard({ guardianName, learners, onSelectView }: Em
                           Ready to start their learning journey
                         </p>
                       </div>
-                      
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Custom Skills:</span>
-                          <Badge variant="outline">Ready to Create</Badge>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Progress Tracking:</span>
-                          <Badge variant="secondary">Ready</Badge>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Analytics:</span>
-                          <Badge variant="secondary">Enabled</Badge>
-                        </div>
-                      </div>
                     </div>
                     
                     <Button className="w-full" onClick={(e) => {
