@@ -126,7 +126,7 @@ const GuardianSetup = () => {
                     <RadioGroupItem value="inhouse" id="mode-inhouse" />
                     <Label htmlFor="mode-inhouse">Manage in my account</Label>
                   </div>
-                  <div className="flex items-center gap-2 rounded-md border border-border bg-card p-3">
+                  <div className="hidden flex items-center gap-2 rounded-md border border-border bg-card p-3">
                     <RadioGroupItem value="separate" id="mode-separate" />
                     <Label htmlFor="mode-separate">Create separate learner accounts</Label>
                   </div>
@@ -149,7 +149,7 @@ const GuardianSetup = () => {
                 <Button type="submit" className="ml-auto">Save</Button>
               </div>
             </form>
-            <div className="pt-4">
+            <div className="hidden pt-4">
               <div className="h-px bg-border my-2" />
               <div className="text-sm text-muted-foreground flex items-center justify-center gap-1">
                 <span>Does your learner already have an account?</span>
