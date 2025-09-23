@@ -108,7 +108,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
 
   const renderGuardianGroup = () => {
     const guardianSkills = skills[guardianName] || [];
-    if (guardianSkills.length === 0) return null;
+    const hasGuardianSkills = guardianSkills.length > 0;
     
     return (
       <SidebarGroup key={guardianName}>
@@ -136,6 +136,23 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
                 </SidebarMenuSub>
               </SidebarMenuItem>
             ))}
+            
+            {/* Create First Skill button for guardian when no skills exist and in parent view */}
+            {!hasGuardianSkills && !isLearnerView && (
+              <SidebarMenuItem>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="w-full justify-start h-8 px-2 text-xs font-normal"
+                  onClick={() => {
+                    onCreateSkill();
+                  }}
+                >
+                  <Plus className="h-3 w-3 mr-1" />
+                  Create First Skill
+                </Button>
+              </SidebarMenuItem>
+            )}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -158,7 +175,7 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
       </SidebarHeader>
 
       <SidebarContent>
-        {/* Guardian Skills - Me section first - only show for guardian view */}
+        {/* Guardian Skills - Me section first - always show in parent view */}
         {!isLearnerView && renderGuardianGroup()}
         
         {/* Family Dashboard Link - only show for guardian view */}
@@ -183,8 +200,8 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
           </SidebarGroup>
         )}
         
-        {/* Learner Navigation Trees */}
-        {showAll ? learners.map((l, i) => renderGroup(l, i)) : renderGroup(learners[activeIndex], activeIndex)}
+        {/* Learner Navigation Trees - hide in parent view */}
+        {isLearnerView && (showAll ? learners.map((l, i) => renderGroup(l, i)) : renderGroup(learners[activeIndex], activeIndex))}
       </SidebarContent>
 
       <SidebarFooter>
