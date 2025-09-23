@@ -115,12 +115,9 @@ export function SessionTranscriptModal({ session, open, onOpenChange }: SessionT
           </div>
 
           {/* Actions */}
-          <div className="flex justify-between pt-4">
+          <div className="flex justify-end pt-4">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Close
-            </Button>
-            <Button>
-              Start New Session
             </Button>
           </div>
         </div>
