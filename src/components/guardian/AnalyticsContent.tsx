@@ -231,15 +231,14 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                       </div>
                       
                       <div className="space-y-3">
-                        <div className="text-center py-4">
-                          <div className="text-4xl mb-2">🎯</div>
-                          <p className="text-sm text-muted-foreground">
-                            {hasLearnerSkill 
-                              ? `Currently learning ${learnerSkills.length} skill${learnerSkills.length > 1 ? 's' : ''}`
-                              : "Ready to start their learning journey"
-                            }
-                          </p>
-                        </div>
+                        {!hasLearnerSkill && (
+                          <div className="text-center py-4">
+                            <div className="text-4xl mb-2">🎯</div>
+                            <p className="text-sm text-muted-foreground">
+                              Ready to start their learning journey
+                            </p>
+                          </div>
+                        )}
                         
                         {hasLearnerSkill ? (
                           <div className="space-y-3">
