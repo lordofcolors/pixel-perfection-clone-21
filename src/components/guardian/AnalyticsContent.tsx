@@ -314,7 +314,11 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                                       </div>
                                       
                                       <div className="mt-2 flex items-center gap-2">
-                                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
+                                        {idx === 0 ? (
+                                          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">In Progress</span>
+                                        ) : (
+                                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
+                                        )}
                                         <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
                                       </div>
                                     </div>
