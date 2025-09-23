@@ -209,122 +209,117 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
         </Card>
       </div>
       
-      {/* Learner Progress Cards */}
-      <section className="grid gap-4 sm:grid-cols-2">
-        {learners.map((learner) => {
-          const learnerSkills = skills[learner.name] || [];
-          const hasLearnerSkill = learnerSkills.length > 0;
-          
-          if (!hasLearnerSkill) {
-            return (
-              <Card key={learner.name}>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    {learner.name} • Ready to Start
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="text-center py-4">
-                    <div className="text-3xl mb-2">🎯</div>
-                    <p className="text-sm text-muted-foreground">
-                      No lessons completed yet. 
-                    </p>
-                  </div>
-                  <Button 
-                    className="w-full" 
-                    onClick={() => onSelectView(learners.indexOf(learner))}
-                  >
-                    Switch to {learner.name}'s Account
-                  </Button>
-                </CardContent>
-              </Card>
-            );
-          }
-          
-          return (
-            <Card key={learner.name}>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  {learner.name} • Learning Progress
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div className="text-center">
-                    <div className="font-semibold text-primary">{learnerSkills.length}</div>
-                    <div className="text-muted-foreground">Skills</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-semibold text-primary">{learnerSkills.length * 15}m</div>
-                    <div className="text-muted-foreground">Time</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-semibold text-primary">95%</div>
-                    <div className="text-muted-foreground">Completion</div>
-                  </div>
-                </div>
-                
-                {/* Recent Sessions */}
-                <div className="border-t pt-3 space-y-3">
-                  <div className="text-sm font-medium">Recent Sessions:</div>
-                  <div className="space-y-2">
-                    {learnerSkills.slice(0, 2).map((skill, idx) => {
-                      const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
-                      return (
-                        <div 
-                          key={idx} 
-                          className="border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all duration-200 group"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleViewSession("session-1", learner.name);
-                          }}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="font-medium text-sm">{skillName}</div>
-                            <div className="text-xs text-primary group-hover:underline">View transcript →</div>
+      {/* Learners Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            👥 Your Learners - Learning Progress
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {learners.map((learner) => {
+              const learnerSkills = skills[learner.name] || [];
+              const hasLearnerSkill = learnerSkills.length > 0;
+              
+              return (
+                <Card key={learner.name} className="border-2">
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold">{learner.name}</h3>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="text-center py-4">
+                          <div className="text-4xl mb-2">🎯</div>
+                          <p className="text-sm text-muted-foreground">
+                            {hasLearnerSkill 
+                              ? `Currently learning ${learnerSkills.length} skill${learnerSkills.length > 1 ? 's' : ''}`
+                              : "Ready to start their learning journey"
+                            }
+                          </p>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Custom Skills:</span>
+                            <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded">
+                              {hasLearnerSkill ? `${learnerSkills.length} Active` : "Ready to Create"}
+                            </span>
                           </div>
-                          
-                          <div className="grid grid-cols-3 gap-2 text-xs">
-                            <div className="text-center">
-                              <div className="font-medium text-primary">15m</div>
-                              <div className="text-muted-foreground">Duration</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="font-medium text-primary">12</div>
-                              <div className="text-muted-foreground">Messages</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="font-medium text-primary">95%</div>
-                              <div className="text-muted-foreground">Complete</div>
-                            </div>
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Progress Tracking:</span>
+                            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Ready</span>
                           </div>
-                          
-                          <div className="mt-2 flex items-center gap-2">
-                            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
-                            <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Analytics:</span>
+                            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Enabled</span>
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
 
-                {/* Switch Account CTA */}
-                <div className="border-t pt-3">
-                  <Button 
-                    variant="outline" 
-                    className="w-full" 
-                    onClick={() => onSelectView(learners.indexOf(learner))}
-                  >
-                    Switch to {learner.name}'s Account
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </section>
+                        {/* Recent Sessions - Only show if learner has skills */}
+                        {hasLearnerSkill && (
+                          <div className="border-t pt-3 space-y-3">
+                            <div className="text-sm font-medium">Recent Sessions:</div>
+                            <div className="space-y-2">
+                              {learnerSkills.slice(0, 2).map((skill, idx) => {
+                                const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
+                                return (
+                                  <div 
+                                    key={idx} 
+                                    className="border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all duration-200 group"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleViewSession("session-1", learner.name);
+                                    }}
+                                  >
+                                    <div className="flex items-center justify-between mb-2">
+                                      <div className="font-medium text-sm">{skillName}</div>
+                                      <div className="text-xs text-primary group-hover:underline">View transcript →</div>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-3 gap-2 text-xs">
+                                      <div className="text-center">
+                                        <div className="font-medium text-primary">15m</div>
+                                        <div className="text-muted-foreground">Duration</div>
+                                      </div>
+                                      <div className="text-center">
+                                        <div className="font-medium text-primary">12</div>
+                                        <div className="text-muted-foreground">Messages</div>
+                                      </div>
+                                      <div className="text-center">
+                                        <div className="font-medium text-primary">95%</div>
+                                        <div className="text-muted-foreground">Complete</div>
+                                      </div>
+                                    </div>
+                                    
+                                    <div className="mt-2 flex items-center gap-2">
+                                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
+                                      <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <Button 
+                        className="w-full" 
+                        onClick={() => onSelectView(learners.indexOf(learner))}
+                      >
+                        Switch to {learner.name}'s Account
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
       <SessionTranscriptModal 
         session={selectedSession}
