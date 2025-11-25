@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { EmptyStateDashboard } from "./EmptyStateDashboard";
+import { AssignmentDialog } from "./AssignmentDialog";
 import { getGuardianSetup } from "@/lib/store";
 
 type ViewType = "guardian" | "dashboard" | number;
@@ -72,6 +74,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [showAllLessons, setShowAllLessons] = useState<{[key: string]: boolean}>({});
+  const [assignmentDialogOpen, setAssignmentDialogOpen] = useState(false);
   
   // Check if any skills exist across all learners
   const setupData = getGuardianSetup();
@@ -142,6 +145,21 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   
   return (
     <div className="space-y-6">
+      {/* Header with Assign Button */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">Analytics Overview</h2>
+          <p className="text-muted-foreground">Track progress and assign skills to your children</p>
+        </div>
+        <Button 
+          onClick={() => setAssignmentDialogOpen(true)}
+          className="gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Assign Skill or Lesson
+        </Button>
+      </div>
+
       {/* Welcome Header - Always show */}
       <Card className="bg-gradient-to-r from-primary/5 to-secondary/5">
         <CardHeader>
@@ -349,6 +367,12 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
         session={selectedSession}
         open={modalOpen}
         onOpenChange={setModalOpen}
+      />
+
+      <AssignmentDialog 
+        open={assignmentDialogOpen}
+        onOpenChange={setAssignmentDialogOpen}
+        learners={learners}
       />
     </div>
   );
