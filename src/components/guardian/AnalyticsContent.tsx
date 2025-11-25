@@ -269,7 +269,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                           </div>
                           <Button 
                             className="w-full mt-auto" 
-                            onClick={() => navigate('/learner-dashboard', { state: { firstName: learner.name } })}
+                            onClick={() => navigate('/learner', { state: { firstName: learner.name } })}
                           >
                             Switch to {learner.name}'s Account
                           </Button>
@@ -355,7 +355,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
 
                           <Button 
                             className="w-full mt-auto" 
-                            onClick={() => navigate('/learner-dashboard', { state: { firstName: learner.name } })}
+                            onClick={() => navigate('/learner', { state: { firstName: learner.name } })}
                           >
                             Switch to {learner.name}'s Account
                           </Button>
