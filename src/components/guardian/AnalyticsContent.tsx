@@ -148,7 +148,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold">Analytics Overview</h2>
+        <h2 className="text-2xl font-bold">Family Dashboard</h2>
         <p className="text-muted-foreground">Track progress and assign lessons to your children</p>
       </div>
 
@@ -237,29 +237,21 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                 <Card key={learner.name} className="border-2 h-full">
                   <CardContent className="p-6 h-full">
                     <div className="flex flex-col h-full">
-                      {/* Header with both CTAs */}
+                      {/* Header with Assign CTA */}
                       <div className="flex items-start justify-between mb-4">
                         <h3 className="text-lg font-semibold">{learner.name}</h3>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedLearnerForAssignment(learner.name);
-                              setAssignmentDialogOpen(true);
-                            }}
-                            className="gap-2"
-                          >
-                            <Plus className="h-4 w-4" />
-                            Assign
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            onClick={() => onSelectView(learners.indexOf(learner))}
-                          >
-                            Switch Account
-                          </Button>
-                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedLearnerForAssignment(learner.name);
+                            setAssignmentDialogOpen(true);
+                          }}
+                          className="gap-2"
+                        >
+                          <Plus className="h-4 w-4" />
+                          Assign
+                        </Button>
                       </div>
                       
                       {!hasLearnerSkill ? (
@@ -273,6 +265,12 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                               </p>
                             </div>
                           </div>
+                          <Button 
+                            className="w-full mt-auto" 
+                            onClick={() => onSelectView(learners.indexOf(learner))}
+                          >
+                            Switch to {learner.name}'s Account
+                          </Button>
                         </div>
                       ) : (
                         // Populated State Layout
@@ -352,6 +350,13 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                               </div>
                             </div>
                           </div>
+
+                          <Button 
+                            className="w-full mt-auto" 
+                            onClick={() => onSelectView(learners.indexOf(learner))}
+                          >
+                            Switch to {learner.name}'s Account
+                          </Button>
                         </div>
                       )}
                     </div>

@@ -10,7 +10,7 @@ export default function GuardianAnalyticsDashboard() {
   const learners = setup?.learners || [{ name: "Jake" }, { name: "Mia" }];
 
   useEffect(() => {
-    document.title = "Guardian - Separate";
+    document.title = "Guardian - Family Dashboard";
     const desc = "Overview of learners' progress and activity.";
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) {
@@ -36,7 +36,7 @@ export default function GuardianAnalyticsDashboard() {
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">
             <SidebarTrigger className="mr-2" />
-            <h1 className="text-base font-semibold">Separate learner accounts</h1>
+            <h1 className="text-base font-semibold">Family Dashboard</h1>
           </header>
           <main className="p-6 space-y-6">
             <AnalyticsContent 
