@@ -1,1 +1,4 @@
 project_id = "esswcholtgetcfkcchva"
+
+[functions.speech-to-text]
+verify_jwt = false
