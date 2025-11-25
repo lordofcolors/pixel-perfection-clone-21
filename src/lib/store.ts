@@ -122,8 +122,8 @@ export function addSkillToPerson(personName: string, skillTemplate: string) {
     skills: {
       ...currentData.skills,
       [personName]: [
-        ...(currentData.skills?.[personName] || []),
-        newSkill
+        newSkill, // Add new skills at the top
+        ...(currentData.skills?.[personName] || [])
       ]
     }
   };

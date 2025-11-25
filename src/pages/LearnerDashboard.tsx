@@ -38,13 +38,13 @@ export default function LearnerDashboard() {
 
         <SidebarInset>
           <header className="h-16 flex items-center justify-between border-b px-3">
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               <SidebarTrigger className="mr-2" />
-              <nav aria-label="Breadcrumb" className="text-sm opacity-90">
-                <span>Master Dog Walking</span>
-              </nav>
+              <h1 className="text-lg font-semibold">Learner Dashboard</h1>
             </div>
-            <AssignmentNotifications learnerName={learnerName || "Learner"} />
+            <div className="flex items-center">
+              <AssignmentNotifications learnerName={learnerName || "Learner"} />
+            </div>
           </header>
 
           <main className="p-6">
