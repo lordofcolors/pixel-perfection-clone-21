@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { AppSidebar } from "@/components/learner/AppSidebar";
 import { EmptyLearnerDashboard } from "@/components/learner/EmptyLearnerDashboard";
 import { LearnerAssignments } from "@/components/learner/LearnerAssignments";
+import { AssignmentNotifications } from "@/components/learner/AssignmentNotifications";
 import { useLocation } from "react-router-dom";
 import { getOnboardingName, getAssignmentsForLearner } from "@/lib/store";
 
@@ -36,11 +37,14 @@ export default function LearnerDashboard() {
         <AppSidebar learnerName={learnerName} />
 
         <SidebarInset>
-          <header className="h-16 flex items-center border-b px-3">
-            <SidebarTrigger className="mr-2" />
-            <nav aria-label="Breadcrumb" className="text-sm opacity-90">
-              <span>Master Dog Walking</span>
-            </nav>
+          <header className="h-16 flex items-center justify-between border-b px-3">
+            <div className="flex items-center">
+              <SidebarTrigger className="mr-2" />
+              <nav aria-label="Breadcrumb" className="text-sm opacity-90">
+                <span>Master Dog Walking</span>
+              </nav>
+            </div>
+            <AssignmentNotifications learnerName={learnerName || "Learner"} />
           </header>
 
           <main className="p-6">
