@@ -7,8 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getGuardianSetup, type Skill, saveGuardianSetup, assignLessonToPerson } from "@/lib/store";
-import { Plus, Mic, MicOff, Loader2, Calendar } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { getGuardianSetup, type Skill, type Lesson, saveGuardianSetup, assignLessonToPerson } from "@/lib/store";
+import { Plus, Mic, MicOff, Loader2, Calendar, RefreshCw, Sparkles } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { AudioRecorder } from "@/utils/audioRecorder";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,11 +25,13 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
   const [customSkillText, setCustomSkillText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [recorder] = useState(() => new AudioRecorder());
   const [selectedLessons, setSelectedLessons] = useState<{[key: string]: string[]}>({});
   const [dueDate, setDueDate] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewLessons, setPreviewLessons] = useState<Lesson[]>([]);
   const [showAdjustDialog, setShowAdjustDialog] = useState(false);
-  const [createdSkillTitle, setCreatedSkillTitle] = useState("");
   const [adjustmentPrompt, setAdjustmentPrompt] = useState("");
   
   const setup = getGuardianSetup();
@@ -86,7 +89,7 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
     onOpenChange(false);
   };
 
-  const handleCustomSkillSubmit = () => {
+  const generateLessons = async (adjusting = false) => {
     if (!customSkillText.trim()) {
       toast({
         title: "Enter a skill",
@@ -96,19 +99,49 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
       return;
     }
 
+    setIsGenerating(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-lessons', {
+        body: { 
+          skillDescription: customSkillText,
+          adjustmentPrompt: adjusting ? adjustmentPrompt : undefined
+        }
+      });
+
+      if (error) throw error;
+
+      setPreviewLessons(data.lessons);
+      setShowPreview(true);
+      
+      if (adjusting) {
+        setShowAdjustDialog(false);
+        setAdjustmentPrompt("");
+      }
+
+      toast({
+        title: "Lessons generated!",
+        description: "Review the lesson structure below.",
+      });
+    } catch (error) {
+      console.error('Failed to generate lessons:', error);
+      toast({
+        title: "Generation failed",
+        description: error instanceof Error ? error.message : "Could not generate lessons",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleApproveSkill = () => {
     const currentData = getGuardianSetup();
     if (!currentData) return;
 
     const newSkill: Skill = {
       title: customSkillText.trim(),
-      lessons: [
-        { title: "0: Introduction & Goal Setting", locked: false },
-        { title: "1: Foundation & Basics", locked: false },
-        { title: "2: Practice & Application", locked: false },
-        { title: "3: Intermediate Skills", locked: true },
-        { title: "4: Advanced Techniques", locked: true },
-        { title: "5: Mastery & Review", locked: true },
-      ]
+      lessons: previewLessons
     };
 
     const updatedData = {
@@ -124,37 +157,14 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
 
     saveGuardianSetup(updatedData);
 
-    setCreatedSkillTitle(customSkillText.trim());
-    setCustomSkillText("");
-    setShowAdjustDialog(true);
-  };
-
-  const handleAdjustSkill = async () => {
-    if (!adjustmentPrompt.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter what you'd like to adjust",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    toast({
-      title: "Adjusting skill...",
-      description: "This feature will use AI to refine the skill structure soon!",
-    });
-
-    setAdjustmentPrompt("");
-    setShowAdjustDialog(false);
-    setActiveTab("existing");
-  };
-
-  const handleSkipAdjustment = () => {
     toast({
       title: "Skill created!",
-      description: `"${createdSkillTitle}" has been added to ${learnerName}'s skills. You can now assign lessons.`,
+      description: `"${customSkillText.trim()}" has been added to ${learnerName}'s skills. You can now assign lessons.`,
     });
-    setShowAdjustDialog(false);
+
+    setCustomSkillText("");
+    setPreviewLessons([]);
+    setShowPreview(false);
     setActiveTab("existing");
   };
 
@@ -228,7 +238,7 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                 </TabsTrigger>
               </TabsList>
 
-              {/* Assign Lessons from Existing Skills Tab */}
+              {/* Assign Lessons Tab */}
               <TabsContent value="existing" className="mt-4">
                 {learnerSkills.length > 0 ? (
                   <>
@@ -302,66 +312,138 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                 )}
               </TabsContent>
 
-              {/* New Skill Tab - Direct Custom Form */}
+              {/* New Skill Tab */}
               <TabsContent value="new" className="mt-4">
-                <div className="space-y-4">
-                  <div className="space-y-3">
-                    <Label htmlFor="customSkill">Describe the skill you want to create</Label>
-                    <p className="text-sm text-muted-foreground">
-                      We'll generate a lesson structure for this skill. You can adjust it after creation.
-                    </p>
-                    <Textarea
-                      id="customSkill"
-                      placeholder="E.g., 'Learn to write persuasive essays' or 'Master multiplication tables'..."
-                      value={customSkillText}
-                      onChange={(e) => setCustomSkillText(e.target.value)}
-                      rows={5}
-                      className="resize-none"
-                    />
-                    
-                    <div className="flex gap-2">
-                      {!isRecording && !isTranscribing && (
-                        <Button
-                          variant="outline"
-                          onClick={handleStartRecording}
-                          className="flex-1"
-                          size="lg"
-                        >
-                          <Mic className="h-4 w-4 mr-2" />
-                          Use Voice Input
-                        </Button>
-                      )}
+                {!showPreview ? (
+                  <div className="space-y-4">
+                    <div className="space-y-3">
+                      <Label htmlFor="customSkill">Describe the skill you want to create</Label>
+                      <p className="text-sm text-muted-foreground">
+                        AI will generate a personalized lesson structure for this skill.
+                      </p>
+                      <Textarea
+                        id="customSkill"
+                        placeholder="E.g., 'Learn to write persuasive essays' or 'Master multiplication tables'..."
+                        value={customSkillText}
+                        onChange={(e) => setCustomSkillText(e.target.value)}
+                        rows={5}
+                        className="resize-none"
+                      />
                       
-                      {isRecording && (
-                        <Button
-                          variant="destructive"
-                          onClick={handleStopRecording}
-                          className="flex-1"
-                          size="lg"
-                        >
-                          <MicOff className="h-4 w-4 mr-2" />
-                          Stop Recording
-                        </Button>
-                      )}
+                      <div className="flex gap-2">
+                        {!isRecording && !isTranscribing && (
+                          <Button
+                            variant="outline"
+                            onClick={handleStartRecording}
+                            className="flex-1"
+                            size="lg"
+                          >
+                            <Mic className="h-4 w-4 mr-2" />
+                            Use Voice Input
+                          </Button>
+                        )}
+                        
+                        {isRecording && (
+                          <Button
+                            variant="destructive"
+                            onClick={handleStopRecording}
+                            className="flex-1"
+                            size="lg"
+                          >
+                            <MicOff className="h-4 w-4 mr-2" />
+                            Stop Recording
+                          </Button>
+                        )}
+                        
+                        {isTranscribing && (
+                          <Button variant="outline" disabled className="flex-1" size="lg">
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Transcribing...
+                          </Button>
+                        )}
+                      </div>
                       
-                      {isTranscribing && (
-                        <Button variant="outline" disabled className="flex-1" size="lg">
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Transcribing...
-                        </Button>
-                      )}
+                      <Button 
+                        onClick={() => generateLessons(false)}
+                        className="w-full"
+                        size="lg"
+                        disabled={!customSkillText.trim() || isGenerating}
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Generating Lessons...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="h-4 w-4 mr-2" />
+                            Generate Lesson Structure
+                          </>
+                        )}
+                      </Button>
                     </div>
-                    
-                    <Button 
-                      onClick={handleCustomSkillSubmit}
-                      className="w-full"
-                      size="lg"
-                      disabled={!customSkillText.trim()}
-                    >
-                      Create Skill
-                    </Button>
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold">Generated Lesson Structure</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Review the lessons for: {customSkillText}
+                        </p>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowAdjustDialog(true)}
+                      >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Not what you're looking for?
+                      </Button>
+                    </div>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <ScrollArea className="h-[300px]">
+                          <div className="space-y-2">
+                            {previewLessons.map((lesson, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center gap-3 p-3 rounded border"
+                              >
+                                <div className="flex-1">
+                                  <div className="font-medium text-sm">{lesson.title}</div>
+                                  {lesson.locked && (
+                                    <div className="text-xs text-muted-foreground">Unlocks after completing previous lessons</div>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </ScrollArea>
+                      </CardContent>
+                    </Card>
+
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowPreview(false);
+                          setPreviewLessons([]);
+                        }}
+                        className="flex-1"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleApproveSkill}
+                        className="flex-1"
+                      >
+                        Approve & Create Skill
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </TabsContent>
             </Tabs>
           </div>
@@ -372,9 +454,9 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
       <Dialog open={showAdjustDialog} onOpenChange={setShowAdjustDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Adjust Skill Structure?</DialogTitle>
+            <DialogTitle>Adjust Lesson Structure</DialogTitle>
             <DialogDescription>
-              We've created "{createdSkillTitle}" with a default lesson structure. Would you like to adjust it?
+              Tell us what you'd like to change about the lessons
             </DialogDescription>
           </DialogHeader>
           
@@ -392,18 +474,28 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
             
             <div className="flex gap-2">
               <Button
-                onClick={handleSkipAdjustment}
+                onClick={() => setShowAdjustDialog(false)}
                 variant="outline"
                 className="flex-1"
               >
-                Looks Good
+                Cancel
               </Button>
               <Button
-                onClick={handleAdjustSkill}
-                disabled={!adjustmentPrompt.trim()}
+                onClick={() => generateLessons(true)}
+                disabled={!adjustmentPrompt.trim() || isGenerating}
                 className="flex-1"
               >
-                Adjust Skill
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Regenerating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Regenerate Lessons
+                  </>
+                )}
               </Button>
             </div>
           </div>
