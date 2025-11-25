@@ -149,8 +149,8 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
       skills: {
         ...currentData.skills,
         [learnerName]: [
-          ...(currentData.skills?.[learnerName] || []),
-          newSkill
+          newSkill, // Add new custom skills at the top
+          ...(currentData.skills?.[learnerName] || [])
         ]
       }
     };
@@ -240,25 +240,9 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
 
               {/* Assign Lessons Tab */}
               <TabsContent value="existing" className="mt-4">
-                {learnerSkills.length > 0 ? (
-                  <>
-                    <div className="space-y-3 mb-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="dueDate" className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          Due Date (Optional)
-                        </Label>
-                        <Input
-                          id="dueDate"
-                          type="date"
-                          value={dueDate}
-                          onChange={(e) => setDueDate(e.target.value)}
-                          min={new Date().toISOString().split('T')[0]}
-                        />
-                      </div>
-                    </div>
-
-                    <ScrollArea className="h-[350px] pr-4 mb-4">
+              {learnerSkills.length > 0 ? (
+                <>
+                  <ScrollArea className="h-[350px] pr-4 mb-4">
                       <div className="space-y-4">
                         {learnerSkills.map((skill, skillIdx) => (
                           <div key={skillIdx} className="space-y-2 border rounded-lg p-4">
@@ -288,14 +272,31 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                         ))}
                       </div>
                     </ScrollArea>
-                    <Button 
-                      onClick={handleAssignSelectedLessons}
-                      className="w-full"
-                      size="lg"
-                      disabled={Object.values(selectedLessons).every(lessons => lessons.length === 0)}
-                    >
-                      Assign Selected Lessons ({Object.values(selectedLessons).reduce((sum, lessons) => sum + lessons.length, 0)})
-                    </Button>
+                    
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="dueDate" className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          Due Date (Optional)
+                        </Label>
+                        <Input
+                          id="dueDate"
+                          type="date"
+                          value={dueDate}
+                          onChange={(e) => setDueDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                        />
+                      </div>
+                      
+                      <Button 
+                        onClick={handleAssignSelectedLessons}
+                        className="w-full"
+                        size="lg"
+                        disabled={Object.values(selectedLessons).every(lessons => lessons.length === 0)}
+                      >
+                        Assign Selected Lessons ({Object.values(selectedLessons).reduce((sum, lessons) => sum + lessons.length, 0)})
+                      </Button>
+                    </div>
                   </>
                 ) : (
                   <div className="h-[400px] flex flex-col items-center justify-center text-center text-muted-foreground space-y-3">

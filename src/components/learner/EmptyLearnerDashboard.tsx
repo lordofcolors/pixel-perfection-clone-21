@@ -104,7 +104,7 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
-            Ready to Start Learning?
+            Learner Dashboard
           </CardTitle>
         </CardHeader>
         <CardContent>
