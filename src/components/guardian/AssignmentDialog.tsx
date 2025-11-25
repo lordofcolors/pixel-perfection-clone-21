@@ -3,11 +3,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { SKILL_TEMPLATES, addSkillToPerson, getGuardianSetup, type Skill, saveGuardianSetup, assignLessonToPerson } from "@/lib/store";
-import { BookOpen, Plus, CheckSquare, Mic, MicOff, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { getGuardianSetup, type Skill, saveGuardianSetup, assignLessonToPerson } from "@/lib/store";
+import { Plus, Mic, MicOff, Loader2, Calendar } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { AudioRecorder } from "@/utils/audioRecorder";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,48 +20,38 @@ type AssignmentDialogProps = {
 };
 
 export function AssignmentDialog({ open, onOpenChange, learnerName }: AssignmentDialogProps) {
-  const [activeTab, setActiveTab] = useState<"new" | "existing">("new");
-  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [activeTab, setActiveTab] = useState<"existing" | "new">("existing");
   const [customSkillText, setCustomSkillText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [recorder] = useState(() => new AudioRecorder());
   const [selectedLessons, setSelectedLessons] = useState<{[key: string]: string[]}>({});
+  const [dueDate, setDueDate] = useState("");
+  const [showAdjustDialog, setShowAdjustDialog] = useState(false);
+  const [createdSkillTitle, setCreatedSkillTitle] = useState("");
+  const [adjustmentPrompt, setAdjustmentPrompt] = useState("");
   
   const setup = getGuardianSetup();
   const learnerSkills = setup?.skills?.[learnerName] || [];
 
-  const handleAssignNewSkill = (skillTemplateKey: string) => {
-    // Check if this is the custom skill template
-    if (skillTemplateKey === "I want to start a new skill") {
-      setShowCustomInput(true);
-      return;
-    }
-
-    addSkillToPerson(learnerName, skillTemplateKey);
-    
-    toast({
-      title: "Skill added!",
-      description: `${SKILL_TEMPLATES[skillTemplateKey as keyof typeof SKILL_TEMPLATES].title} has been added to ${learnerName}'s skills. You can now assign specific lessons.`,
-    });
-    
-    setActiveTab("existing");
-  };
-
-  const toggleLessonSelection = (skillTitle: string, lessonTitle: string) => {
+  const toggleLessonSelection = (skillTitle: string, lessonTitle: string, allLessons: string[]) => {
     setSelectedLessons(prev => {
       const skillLessons = prev[skillTitle] || [];
+      const lessonIndex = allLessons.indexOf(lessonTitle);
       const isSelected = skillLessons.includes(lessonTitle);
       
       if (isSelected) {
+        // Uncheck this and all following lessons
         return {
           ...prev,
-          [skillTitle]: skillLessons.filter(l => l !== lessonTitle)
+          [skillTitle]: skillLessons.filter(l => allLessons.indexOf(l) < lessonIndex)
         };
       } else {
+        // Check this and all preceding lessons
+        const newLessons = allLessons.slice(0, lessonIndex + 1);
         return {
           ...prev,
-          [skillTitle]: [...skillLessons, lessonTitle]
+          [skillTitle]: newLessons
         };
       }
     });
@@ -71,7 +62,7 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
     
     Object.entries(selectedLessons).forEach(([skillTitle, lessons]) => {
       lessons.forEach(lessonTitle => {
-        assignLessonToPerson(learnerName, skillTitle, lessonTitle);
+        assignLessonToPerson(learnerName, skillTitle, lessonTitle, dueDate || undefined);
         assignedCount++;
       });
     });
@@ -87,10 +78,11 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
 
     toast({
       title: "Lessons assigned!",
-      description: `${assignedCount} lesson${assignedCount > 1 ? 's' : ''} assigned to ${learnerName}.`,
+      description: `${assignedCount} lesson${assignedCount > 1 ? 's' : ''} assigned to ${learnerName}${dueDate ? ` (Due: ${new Date(dueDate).toLocaleDateString()})` : ''}.`,
     });
 
     setSelectedLessons({});
+    setDueDate("");
     onOpenChange(false);
   };
 
@@ -98,7 +90,7 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
     if (!customSkillText.trim()) {
       toast({
         title: "Enter a skill",
-        description: "Please describe the skill you want to assign.",
+        description: "Please describe the skill you want to create.",
         variant: "destructive",
       });
       return;
@@ -132,13 +124,37 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
 
     saveGuardianSetup(updatedData);
 
+    setCreatedSkillTitle(customSkillText.trim());
+    setCustomSkillText("");
+    setShowAdjustDialog(true);
+  };
+
+  const handleAdjustSkill = async () => {
+    if (!adjustmentPrompt.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter what you'd like to adjust",
+        variant: "destructive",
+      });
+      return;
+    }
+
     toast({
-      title: "Custom skill created!",
-      description: `"${customSkillText.trim()}" has been added to ${learnerName}'s skills. You can now assign specific lessons.`,
+      title: "Adjusting skill...",
+      description: "This feature will use AI to refine the skill structure soon!",
     });
 
-    setCustomSkillText("");
-    setShowCustomInput(false);
+    setAdjustmentPrompt("");
+    setShowAdjustDialog(false);
+    setActiveTab("existing");
+  };
+
+  const handleSkipAdjustment = () => {
+    toast({
+      title: "Skill created!",
+      description: `"${createdSkillTitle}" has been added to ${learnerName}'s skills. You can now assign lessons.`,
+    });
+    setShowAdjustDialog(false);
     setActiveTab("existing");
   };
 
@@ -189,54 +205,117 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
     }
   };
 
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh]">
-        <DialogHeader>
-          <DialogTitle>Assign Lessons to {learnerName}</DialogTitle>
-          <DialogDescription>
-            Add skills and assign specific lessons to {learnerName}
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={open && !showAdjustDialog} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-2xl max-h-[85vh]">
+          <DialogHeader>
+            <DialogTitle>Assign to {learnerName}</DialogTitle>
+            <DialogDescription>
+              Assign lessons from existing skills or create a new custom skill
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="space-y-4">
-          {/* Tabs for New vs Existing Skills */}
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "new" | "existing")}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="new" className="flex items-center gap-2">
-                <Plus className="h-4 w-4" />
-                Add New Skill
-              </TabsTrigger>
-              <TabsTrigger value="existing" className="flex items-center gap-2" disabled={learnerSkills.length === 0}>
-                <CheckSquare className="h-4 w-4" />
-                Assign Lessons
-              </TabsTrigger>
-            </TabsList>
+          <div className="space-y-4">
+            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "existing" | "new")}>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="existing">
+                  Assign Lessons
+                </TabsTrigger>
+                <TabsTrigger value="new">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add New Skill
+                </TabsTrigger>
+              </TabsList>
 
-            {/* New Skill Tab */}
-            <TabsContent value="new" className="mt-4">
-              {showCustomInput ? (
+              {/* Assign Lessons from Existing Skills Tab */}
+              <TabsContent value="existing" className="mt-4">
+                {learnerSkills.length > 0 ? (
+                  <>
+                    <div className="space-y-3 mb-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="dueDate" className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          Due Date (Optional)
+                        </Label>
+                        <Input
+                          id="dueDate"
+                          type="date"
+                          value={dueDate}
+                          onChange={(e) => setDueDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                        />
+                      </div>
+                    </div>
+
+                    <ScrollArea className="h-[350px] pr-4 mb-4">
+                      <div className="space-y-4">
+                        {learnerSkills.map((skill, skillIdx) => (
+                          <div key={skillIdx} className="space-y-2 border rounded-lg p-4">
+                            <h4 className="font-semibold">{skill.title}</h4>
+                            <p className="text-xs text-muted-foreground mb-2">
+                              Select lessons in order - checking a lesson will assign all previous lessons too
+                            </p>
+                            <div className="space-y-2">
+                              {skill.lessons.map((lesson, lessonIdx) => {
+                                const isSelected = selectedLessons[skill.title]?.includes(lesson.title);
+                                return (
+                                  <div
+                                    key={lessonIdx}
+                                    className="flex items-center gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer"
+                                    onClick={() => toggleLessonSelection(skill.title, lesson.title, skill.lessons.map(l => l.title))}
+                                  >
+                                    <Checkbox
+                                      checked={isSelected}
+                                      onCheckedChange={() => toggleLessonSelection(skill.title, lesson.title, skill.lessons.map(l => l.title))}
+                                    />
+                                    <span className="text-sm flex-1">{lesson.title}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                    <Button 
+                      onClick={handleAssignSelectedLessons}
+                      className="w-full"
+                      size="lg"
+                      disabled={Object.values(selectedLessons).every(lessons => lessons.length === 0)}
+                    >
+                      Assign Selected Lessons ({Object.values(selectedLessons).reduce((sum, lessons) => sum + lessons.length, 0)})
+                    </Button>
+                  </>
+                ) : (
+                  <div className="h-[400px] flex flex-col items-center justify-center text-center text-muted-foreground space-y-3">
+                    <div className="text-4xl">📚</div>
+                    <div>
+                      <p className="font-medium">No skills available yet</p>
+                      <p className="text-sm">Create a new custom skill first!</p>
+                    </div>
+                    <Button onClick={() => setActiveTab("new")} variant="outline">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create New Skill
+                    </Button>
+                  </div>
+                )}
+              </TabsContent>
+
+              {/* New Skill Tab - Direct Custom Form */}
+              <TabsContent value="new" className="mt-4">
                 <div className="space-y-4">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => {
-                      setShowCustomInput(false);
-                      setCustomSkillText("");
-                    }}
-                    className="mb-2"
-                  >
-                    ← Back to templates
-                  </Button>
-                  
                   <div className="space-y-3">
-                    <label className="text-sm font-medium">Describe the skill</label>
+                    <Label htmlFor="customSkill">Describe the skill you want to create</Label>
+                    <p className="text-sm text-muted-foreground">
+                      We'll generate a lesson structure for this skill. You can adjust it after creation.
+                    </p>
                     <Textarea
-                      placeholder="E.g., I want to learn how to make new friends at school"
+                      id="customSkill"
+                      placeholder="E.g., 'Learn to write persuasive essays' or 'Master multiplication tables'..."
                       value={customSkillText}
                       onChange={(e) => setCustomSkillText(e.target.value)}
-                      rows={4}
+                      rows={5}
                       className="resize-none"
                     />
                     
@@ -246,6 +325,7 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                           variant="outline"
                           onClick={handleStartRecording}
                           className="flex-1"
+                          size="lg"
                         >
                           <Mic className="h-4 w-4 mr-2" />
                           Use Voice Input
@@ -257,6 +337,7 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                           variant="destructive"
                           onClick={handleStopRecording}
                           className="flex-1"
+                          size="lg"
                         >
                           <MicOff className="h-4 w-4 mr-2" />
                           Stop Recording
@@ -264,7 +345,7 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                       )}
                       
                       {isTranscribing && (
-                        <Button variant="outline" disabled className="flex-1">
+                        <Button variant="outline" disabled className="flex-1" size="lg">
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                           Transcribing...
                         </Button>
@@ -274,96 +355,60 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                     <Button 
                       onClick={handleCustomSkillSubmit}
                       className="w-full"
+                      size="lg"
                       disabled={!customSkillText.trim()}
                     >
-                      Create & Assign Skill
+                      Create Skill
                     </Button>
                   </div>
                 </div>
-              ) : (
-                <ScrollArea className="h-[400px] pr-4">
-                  <div className="space-y-3">
-                    {Object.entries(SKILL_TEMPLATES).map(([key, skill]) => (
-                      <div
-                        key={key}
-                        className="border rounded-lg p-4 hover:border-primary transition-colors cursor-pointer group"
-                        onClick={() => handleAssignNewSkill(key)}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h4 className="font-semibold mb-1 group-hover:text-primary transition-colors">
-                              {skill.title}
-                            </h4>
-                            <p className="text-sm text-muted-foreground mb-2">
-                              {key}
-                            </p>
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <BookOpen className="h-3 w-3" />
-                              {skill.lessons.length} lessons
-                            </div>
-                          </div>
-                          <Button size="sm" variant="ghost" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                            {key === "I want to start a new skill" ? "Customize" : "Assign"}
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              )}
-            </TabsContent>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-            {/* Assign Lessons from Existing Skills Tab */}
-            <TabsContent value="existing" className="mt-4">
-              {learnerSkills.length > 0 ? (
-                <>
-                  <ScrollArea className="h-[350px] pr-4 mb-4">
-                    <div className="space-y-4">
-                      {learnerSkills.map((skill, skillIdx) => (
-                        <div key={skillIdx} className="space-y-2 border rounded-lg p-4">
-                          <h4 className="font-semibold">{skill.title}</h4>
-                          <div className="space-y-2">
-                            {skill.lessons.map((lesson, lessonIdx) => {
-                              const isSelected = selectedLessons[skill.title]?.includes(lesson.title);
-                              return (
-                                <div
-                                  key={lessonIdx}
-                                  className="flex items-center gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer"
-                                  onClick={() => toggleLessonSelection(skill.title, lesson.title)}
-                                >
-                                  <Checkbox
-                                    checked={isSelected}
-                                    onCheckedChange={() => toggleLessonSelection(skill.title, lesson.title)}
-                                  />
-                                  <span className="text-sm flex-1">{lesson.title}</span>
-                                  {lesson.locked && (
-                                    <Badge variant="secondary" className="text-xs">Locked</Badge>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                  <Button 
-                    onClick={handleAssignSelectedLessons}
-                    className="w-full"
-                    disabled={Object.values(selectedLessons).every(lessons => lessons.length === 0)}
-                  >
-                    Assign Selected Lessons ({Object.values(selectedLessons).reduce((sum, lessons) => sum + lessons.length, 0)})
-                  </Button>
-                </>
-              ) : (
-                <div className="h-[400px] flex items-center justify-center text-muted-foreground">
-                  No skills available yet. Add a new skill first.
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
-      </DialogContent>
-    </Dialog>
+      {/* Adjustment Dialog */}
+      <Dialog open={showAdjustDialog} onOpenChange={setShowAdjustDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Adjust Skill Structure?</DialogTitle>
+            <DialogDescription>
+              We've created "{createdSkillTitle}" with a default lesson structure. Would you like to adjust it?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="adjustment">What would you like to adjust?</Label>
+              <Textarea
+                id="adjustment"
+                placeholder="E.g., 'Make the lessons more beginner-friendly' or 'Add more practice exercises' or 'Focus on practical applications'..."
+                value={adjustmentPrompt}
+                onChange={(e) => setAdjustmentPrompt(e.target.value)}
+                className="min-h-[100px]"
+              />
+            </div>
+            
+            <div className="flex gap-2">
+              <Button
+                onClick={handleSkipAdjustment}
+                variant="outline"
+                className="flex-1"
+              >
+                Looks Good
+              </Button>
+              <Button
+                onClick={handleAdjustSkill}
+                disabled={!adjustmentPrompt.trim()}
+                className="flex-1"
+              >
+                Adjust Skill
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
