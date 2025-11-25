@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/learner/AppSidebar";
 import { EmptyLearnerDashboard } from "@/components/learner/EmptyLearnerDashboard";
+import { LearnerAssignments } from "@/components/learner/LearnerAssignments";
 import { useLocation } from "react-router-dom";
-import { getOnboardingName } from "@/lib/store";
+import { getOnboardingName, getAssignmentsForLearner } from "@/lib/store";
 
 export default function LearnerDashboard() {
   useEffect(() => {
@@ -27,6 +28,7 @@ export default function LearnerDashboard() {
   }, []);
   const location = useLocation();
   const learnerName = ((location.state as any)?.firstName as string | undefined) || getOnboardingName();
+  const hasAssignments = getAssignmentsForLearner(learnerName || "").length > 0;
 
   return (
     <SidebarProvider>
@@ -42,7 +44,17 @@ export default function LearnerDashboard() {
           </header>
 
           <main className="p-6">
-            <EmptyLearnerDashboard learnerName={learnerName || "Learner"} />
+            {hasAssignments ? (
+              <div className="space-y-6">
+                <div>
+                  <h1 className="text-2xl font-bold">My Assignments</h1>
+                  <p className="text-muted-foreground">Lessons assigned by your parent</p>
+                </div>
+                <LearnerAssignments learnerName={learnerName || "Learner"} />
+              </div>
+            ) : (
+              <EmptyLearnerDashboard learnerName={learnerName || "Learner"} />
+            )}
           </main>
         </SidebarInset>
       </div>

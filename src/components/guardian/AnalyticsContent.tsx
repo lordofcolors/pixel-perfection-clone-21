@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { EmptyStateDashboard } from "./EmptyStateDashboard";
 import { AssignmentDialog } from "./AssignmentDialog";
-import { getGuardianSetup } from "@/lib/store";
+import { getGuardianSetup, getAssignmentsForLearner } from "@/lib/store";
 
 type ViewType = "guardian" | "dashboard" | number;
 
@@ -75,6 +75,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   const [modalOpen, setModalOpen] = useState(false);
   const [showAllLessons, setShowAllLessons] = useState<{[key: string]: boolean}>({});
   const [assignmentDialogOpen, setAssignmentDialogOpen] = useState(false);
+  const [selectedLearnerForAssignment, setSelectedLearnerForAssignment] = useState<string>("");
   
   // Check if any skills exist across all learners
   const setupData = getGuardianSetup();
@@ -145,19 +146,10 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   
   return (
     <div className="space-y-6">
-      {/* Header with Assign Button */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Analytics Overview</h2>
-          <p className="text-muted-foreground">Track progress and assign skills to your children</p>
-        </div>
-        <Button 
-          onClick={() => setAssignmentDialogOpen(true)}
-          className="gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          Assign Skill or Lesson
-        </Button>
+      {/* Header */}
+      <div>
+        <h2 className="text-2xl font-bold">Analytics Overview</h2>
+        <p className="text-muted-foreground">Track progress and assign lessons to your children</p>
       </div>
 
       {/* Welcome Header - Always show */}
@@ -247,6 +239,18 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                     <div className="flex flex-col h-full">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold">{learner.name}</h3>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedLearnerForAssignment(learner.name);
+                            setAssignmentDialogOpen(true);
+                          }}
+                          className="gap-2"
+                        >
+                          <Plus className="h-4 w-4" />
+                          Assign
+                        </Button>
                       </div>
                       
                       {!hasLearnerSkill ? (
@@ -372,7 +376,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
       <AssignmentDialog 
         open={assignmentDialogOpen}
         onOpenChange={setAssignmentDialogOpen}
-        learners={learners}
+        learnerName={selectedLearnerForAssignment}
       />
     </div>
   );

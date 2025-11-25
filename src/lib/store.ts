@@ -14,11 +14,22 @@ export type PersonSkills = {
   [personName: string]: Skill[];
 };
 
+export type Assignment = {
+  id: string;
+  learnerName: string;
+  skillTitle: string;
+  lessonTitle: string;
+  status: 'pending' | 'in-progress' | 'completed';
+  assignedDate: string;
+  dueDate?: string;
+};
+
 export type GuardianSetupData = {
   guardianName: string;
   learners: { name: string }[];
   accountMode?: 'inhouse' | 'separate';
   skills?: PersonSkills;
+  assignments?: Assignment[];
 };
 
 const KEYS = {
@@ -115,6 +126,56 @@ export function addSkillToPerson(personName: string, skillTemplate: string) {
         newSkill
       ]
     }
+  };
+
+  saveGuardianSetup(updatedData);
+}
+
+export function assignLessonToPerson(
+  learnerName: string,
+  skillTitle: string,
+  lessonTitle: string,
+  dueDate?: string
+) {
+  const currentData = getGuardianSetup();
+  if (!currentData) return;
+
+  const newAssignment: Assignment = {
+    id: `assignment-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    learnerName,
+    skillTitle,
+    lessonTitle,
+    status: 'pending',
+    assignedDate: new Date().toISOString(),
+    dueDate,
+  };
+
+  const updatedData = {
+    ...currentData,
+    assignments: [
+      ...(currentData.assignments || []),
+      newAssignment
+    ]
+  };
+
+  saveGuardianSetup(updatedData);
+}
+
+export function getAssignmentsForLearner(learnerName: string): Assignment[] {
+  const data = getGuardianSetup();
+  if (!data?.assignments) return [];
+  return data.assignments.filter(a => a.learnerName === learnerName);
+}
+
+export function updateAssignmentStatus(assignmentId: string, status: Assignment['status']) {
+  const currentData = getGuardianSetup();
+  if (!currentData?.assignments) return;
+
+  const updatedData = {
+    ...currentData,
+    assignments: currentData.assignments.map(a =>
+      a.id === assignmentId ? { ...a, status } : a
+    )
   };
 
   saveGuardianSetup(updatedData);
