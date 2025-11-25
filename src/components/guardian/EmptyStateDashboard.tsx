@@ -136,7 +136,7 @@ export function EmptyStateDashboard({ guardianName, learners, onSelectView }: Em
                     
                     <Button className="w-full" onClick={(e) => {
                       e.stopPropagation();
-                      navigate('/learner-dashboard', { state: { firstName: learner.name } });
+                      navigate('/learner', { state: { firstName: learner.name } });
                     }}>
                       Switch to {learner.name}'s Account
                     </Button>
