@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -71,6 +72,7 @@ const mockSafetyIssues = [
 ];
 
 export function AnalyticsContent({ guardianName, learners, activeView, onSelectView }: AnalyticsContentProps) {
+  const navigate = useNavigate();
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [showAllLessons, setShowAllLessons] = useState<{[key: string]: boolean}>({});
@@ -267,7 +269,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                           </div>
                           <Button 
                             className="w-full mt-auto" 
-                            onClick={() => onSelectView(learners.indexOf(learner))}
+                            onClick={() => navigate('/learner-dashboard', { state: { firstName: learner.name } })}
                           >
                             Switch to {learner.name}'s Account
                           </Button>
@@ -353,7 +355,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
 
                           <Button 
                             className="w-full mt-auto" 
-                            onClick={() => onSelectView(learners.indexOf(learner))}
+                            onClick={() => navigate('/learner-dashboard', { state: { firstName: learner.name } })}
                           >
                             Switch to {learner.name}'s Account
                           </Button>

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +11,7 @@ interface EmptyStateDashboardProps {
 }
 
 export function EmptyStateDashboard({ guardianName, learners, onSelectView }: EmptyStateDashboardProps) {
+  const navigate = useNavigate();
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
@@ -134,7 +136,7 @@ export function EmptyStateDashboard({ guardianName, learners, onSelectView }: Em
                     
                     <Button className="w-full" onClick={(e) => {
                       e.stopPropagation();
-                      onSelectView(index);
+                      navigate('/learner-dashboard', { state: { firstName: learner.name } });
                     }}>
                       Switch to {learner.name}'s Account
                     </Button>
