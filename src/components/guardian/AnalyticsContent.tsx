@@ -237,20 +237,29 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                 <Card key={learner.name} className="border-2 h-full">
                   <CardContent className="p-6 h-full">
                     <div className="flex flex-col h-full">
-                      <div className="flex items-center justify-between mb-4">
+                      {/* Header with both CTAs */}
+                      <div className="flex items-start justify-between mb-4">
                         <h3 className="text-lg font-semibold">{learner.name}</h3>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            setSelectedLearnerForAssignment(learner.name);
-                            setAssignmentDialogOpen(true);
-                          }}
-                          className="gap-2"
-                        >
-                          <Plus className="h-4 w-4" />
-                          Assign
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedLearnerForAssignment(learner.name);
+                              setAssignmentDialogOpen(true);
+                            }}
+                            className="gap-2"
+                          >
+                            <Plus className="h-4 w-4" />
+                            Assign
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            onClick={() => onSelectView(learners.indexOf(learner))}
+                          >
+                            Switch Account
+                          </Button>
+                        </div>
                       </div>
                       
                       {!hasLearnerSkill ? (
@@ -264,12 +273,6 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                               </p>
                             </div>
                           </div>
-                          <Button 
-                            className="w-full mt-auto" 
-                            onClick={() => onSelectView(learners.indexOf(learner))}
-                          >
-                            Switch to {learner.name}'s Account
-                          </Button>
                         </div>
                       ) : (
                         // Populated State Layout
@@ -349,13 +352,6 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                               </div>
                             </div>
                           </div>
-
-                          <Button 
-                            className="w-full mt-auto" 
-                            onClick={() => onSelectView(learners.indexOf(learner))}
-                          >
-                            Switch to {learner.name}'s Account
-                          </Button>
                         </div>
                       )}
                     </div>
