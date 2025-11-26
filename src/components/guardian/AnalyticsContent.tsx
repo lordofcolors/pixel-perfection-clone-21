@@ -90,25 +90,6 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   const isChildView = typeof activeView === "number";
   const isParentView = activeView === "guardian" || activeView === "dashboard";
 
-  // For child views, show empty state
-  if (isChildView) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Card className="w-full max-w-md">
-          <CardContent className="text-center py-8">
-            <div className="space-y-4">
-              <div className="text-6xl">🎯</div>
-              <h3 className="text-lg font-semibold">Ready to Learn!</h3>
-              <p className="text-muted-foreground">
-                Your learning space is ready. Complete your first lesson to see your progress here.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   const handleViewSession = (sessionId: string, learnerName: string) => {
     const session = mockSessionData[sessionId as keyof typeof mockSessionData];
     if (session) {
