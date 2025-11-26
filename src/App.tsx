@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import GuardianSetup from "./pages/GuardianSetup";
 import LearnerDashboard from "./pages/LearnerDashboard";
+import LearnerSkillSelection from "./pages/LearnerSkillSelection";
 import LearnerAccount from "./pages/LearnerAccount";
 import LearnerBilling from "./pages/LearnerBilling";
 import GuardianManageDashboard from "./pages/GuardianManageDashboard";
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/guardian-setup" element={<GuardianSetup />} />
           <Route path="/learner" element={<LearnerDashboard />} />
+          <Route path="/learner/add-skill" element={<LearnerSkillSelection />} />
           <Route path="/learner/account" element={<LearnerAccount />} />
           <Route path="/learner/billing" element={<LearnerBilling />} />
           <Route path="/guardian/manage" element={<GuardianManageDashboard />} />

@@ -1,5 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -18,7 +17,6 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Lock, Plus } from "lucide-react";
-import { AssignmentDialog } from "@/components/guardian/AssignmentDialog";
 
 // Helper: initials from 'First Last'
 const getInitials = (name?: string) => {
@@ -41,25 +39,28 @@ const curriculum = [
 
 export function AppSidebar({ learnerName }: { learnerName?: string }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = (path: string) => location.pathname === path;
-  const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+
+  const handleAddSkill = () => {
+    navigate('/learner/add-skill', { state: { firstName: learnerName } });
+  };
 
   return (
-    <>
-      <Sidebar collapsible="icon" className="bg-sidebar">
-        <SidebarHeader>
-          <div className="px-2 space-y-2">
-            <SidebarInput placeholder="Search" aria-label="Search" />
-            <Button 
-              onClick={() => setAssignDialogOpen(true)} 
-              className="w-full" 
-              size="sm"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Create Skill
-            </Button>
-          </div>
-        </SidebarHeader>
+    <Sidebar collapsible="icon" className="bg-sidebar">
+      <SidebarHeader>
+        <div className="px-2 space-y-2">
+          <SidebarInput placeholder="Search" aria-label="Search" />
+          <Button 
+            onClick={handleAddSkill} 
+            className="w-full" 
+            size="sm"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Skill
+          </Button>
+        </div>
+      </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
@@ -118,12 +119,5 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
         </div>
       </SidebarFooter>
     </Sidebar>
-    
-    <AssignmentDialog 
-      open={assignDialogOpen} 
-      onOpenChange={setAssignDialogOpen} 
-      learnerName={learnerName || "Learner"} 
-    />
-    </>
   );
 }
