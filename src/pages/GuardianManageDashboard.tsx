@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { ManageSidebar } from "@/components/guardian/ManageSidebar";
+import { AppSidebar } from "@/components/learner/AppSidebar";
 import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
 import { SkillSelectionView } from "@/components/guardian/SkillSelectionView";
+import { EmptyLearnerDashboard } from "@/components/learner/EmptyLearnerDashboard";
+import { AssignmentNotifications } from "@/components/learner/AssignmentNotifications";
 import { getGuardianSetup } from "@/lib/store";
 
 export default function GuardianManageDashboard() {
@@ -38,39 +41,61 @@ export default function GuardianManageDashboard() {
     : activeView === "skillSelection" ? "New Skill"
     : learners[activeView].name;
 
+  const isLearnerView = typeof activeView === "number";
+  const currentLearner = isLearnerView ? learners[activeView] : null;
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <ManageSidebar
-          learners={learners}
-          guardianName={guardianName}
-          activeView={activeView}
-          onSelectView={(view) => {
-            if (view !== "skillSelection") {
-              setPreviousView(activeView !== "skillSelection" ? activeView : previousView);
-            }
-            setActiveView(view);
-          }}
-          onCreateSkill={(targetIndex?: number) => {
-            const nextIndex = typeof targetIndex === 'number'
-              ? targetIndex
-              : (typeof activeView === 'number' ? activeView : 0);
-            setPreviousView(nextIndex);
-            setActiveView("skillSelection");
-          }}
-          refreshTrigger={refreshTrigger}
-          createForIndex={typeof previousView === 'number' ? previousView : (typeof activeView === 'number' ? activeView : undefined)}
-        />
+        {isLearnerView ? (
+          <AppSidebar learnerName={currentLearner?.name} />
+        ) : (
+          <ManageSidebar
+            learners={learners}
+            guardianName={guardianName}
+            activeView={activeView}
+            onSelectView={(view) => {
+              if (view !== "skillSelection") {
+                setPreviousView(activeView !== "skillSelection" ? activeView : previousView);
+              }
+              setActiveView(view);
+            }}
+            onCreateSkill={(targetIndex?: number) => {
+              const nextIndex = typeof targetIndex === 'number'
+                ? targetIndex
+                : (typeof activeView === 'number' ? activeView : 0);
+              setPreviousView(nextIndex);
+              setActiveView("skillSelection");
+            }}
+            refreshTrigger={refreshTrigger}
+            createForIndex={typeof previousView === 'number' ? previousView : (typeof activeView === 'number' ? activeView : undefined)}
+          />
+        )}
 
         <SidebarInset>
-          <header className="h-16 flex items-center border-b px-3">
-            <SidebarTrigger className="mr-2" />
-            <h1 className="text-base font-semibold">Managing</h1>
-            <span className="ml-2 text-muted-foreground">Currently viewing: {viewingLabel}</span>
+          <header className="h-16 flex items-center justify-between border-b px-3">
+            <div className="flex items-center gap-2">
+              <SidebarTrigger className="mr-2" />
+              {isLearnerView ? (
+                <h1 className="text-lg font-semibold">Learner Dashboard</h1>
+              ) : (
+                <>
+                  <h1 className="text-base font-semibold">Managing</h1>
+                  <span className="ml-2 text-muted-foreground">Currently viewing: {viewingLabel}</span>
+                </>
+              )}
+            </div>
+            {isLearnerView && currentLearner && (
+              <div className="flex items-center">
+                <AssignmentNotifications learnerName={currentLearner.name} />
+              </div>
+            )}
           </header>
 
-          <main className="p-6 space-y-6">
-            {activeView === "skillSelection" ? (
+          <main className="p-6">
+            {isLearnerView ? (
+              <EmptyLearnerDashboard learnerName={currentLearner?.name || "Learner"} />
+            ) : activeView === "skillSelection" ? (
               <SkillSelectionView
                 guardianName={guardianName}
                 learners={learners}
