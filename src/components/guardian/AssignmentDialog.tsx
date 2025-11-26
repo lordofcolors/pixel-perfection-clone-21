@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { getGuardianSetup, type Skill, type Lesson, saveGuardianSetup, assignLessonToPerson } from "@/lib/store";
-import { Plus, Mic, MicOff, Loader2, Calendar, RefreshCw, Sparkles } from "lucide-react";
+import { Plus, Mic, MicOff, Loader2, Calendar, RefreshCw, Sparkles, Lock } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { AudioRecorder } from "@/utils/audioRecorder";
 import { supabase } from "@/integrations/supabase/client";
@@ -253,6 +253,7 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                             <div className="space-y-2">
                               {skill.lessons.map((lesson, lessonIdx) => {
                                 const isSelected = selectedLessons[skill.title]?.includes(lesson.title);
+                                const isLocked = lessonIdx > 0;
                                 return (
                                   <div
                                     key={lessonIdx}
@@ -263,7 +264,15 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                                       checked={isSelected}
                                       onCheckedChange={() => toggleLessonSelection(skill.title, lesson.title, skill.lessons.map(l => l.title))}
                                     />
-                                    <span className="text-sm flex-1">{lesson.title}</span>
+                                    <div className="flex-1 flex items-center gap-2">
+                                      {isLocked && (
+                                        <Lock className="h-3 w-3 text-muted-foreground" />
+                                      )}
+                                      <span className="text-sm">{lesson.title}</span>
+                                    </div>
+                                    {isLocked && (
+                                      <span className="text-xs text-muted-foreground">Unlocks after previous</span>
+                                    )}
                                   </div>
                                 );
                               })}
@@ -274,6 +283,15 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                     </ScrollArea>
                     
                     <div className="space-y-3">
+                      <Button 
+                        onClick={handleAssignSelectedLessons}
+                        className="w-full"
+                        size="lg"
+                        disabled={Object.values(selectedLessons).every(lessons => lessons.length === 0)}
+                      >
+                        Assign Selected Lessons ({Object.values(selectedLessons).reduce((sum, lessons) => sum + lessons.length, 0)})
+                      </Button>
+                      
                       <div className="space-y-2">
                         <Label htmlFor="dueDate" className="flex items-center gap-2">
                           <Calendar className="h-4 w-4" />
@@ -287,15 +305,6 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                           min={new Date().toISOString().split('T')[0]}
                         />
                       </div>
-                      
-                      <Button 
-                        onClick={handleAssignSelectedLessons}
-                        className="w-full"
-                        size="lg"
-                        disabled={Object.values(selectedLessons).every(lessons => lessons.length === 0)}
-                      >
-                        Assign Selected Lessons ({Object.values(selectedLessons).reduce((sum, lessons) => sum + lessons.length, 0)})
-                      </Button>
                     </div>
                   </>
                 ) : (
@@ -412,11 +421,19 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                                 key={idx}
                                 className="flex items-center gap-3 p-3 rounded border"
                               >
-                                <div className="flex-1">
-                                  <div className="font-medium text-sm">{lesson.title}</div>
-                                  {lesson.locked && (
-                                    <div className="text-xs text-muted-foreground">Unlocks after completing previous lessons</div>
+                                <div className="flex-1 flex items-center gap-2">
+                                  {idx > 0 && (
+                                    <Lock className="h-4 w-4 text-muted-foreground" />
                                   )}
+                                  <div>
+                                    <div className="font-medium text-sm">{lesson.title}</div>
+                                    {idx > 0 && (
+                                      <div className="text-xs text-muted-foreground">Locked - Unlocks after completing previous lessons</div>
+                                    )}
+                                    {idx === 0 && (
+                                      <div className="text-xs text-green-600">Unlocked - Available immediately</div>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             ))}
