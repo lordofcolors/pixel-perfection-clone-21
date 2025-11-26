@@ -48,17 +48,7 @@ export default function LearnerDashboard() {
           </header>
 
           <main className="p-6">
-            {hasAssignments ? (
-              <div className="space-y-6">
-                <div>
-                  <h1 className="text-2xl font-bold">My Assignments</h1>
-                  <p className="text-muted-foreground">Lessons assigned by your parent</p>
-                </div>
-                <LearnerAssignments learnerName={learnerName || "Learner"} />
-              </div>
-            ) : (
-              <EmptyLearnerDashboard learnerName={learnerName || "Learner"} />
-            )}
+            <EmptyLearnerDashboard learnerName={learnerName || "Learner"} />
           </main>
         </SidebarInset>
       </div>
