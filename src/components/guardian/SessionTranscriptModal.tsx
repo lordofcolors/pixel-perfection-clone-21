@@ -119,9 +119,14 @@ export function SessionTranscriptModal({ session, open, onOpenChange }: SessionT
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Close
             </Button>
-            <Button>
-              Jump to Lesson
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline">
+                Reassign Lesson
+              </Button>
+              <Button>
+                Jump to Lesson
+              </Button>
+            </div>
           </div>
         </div>
       </DialogContent>
