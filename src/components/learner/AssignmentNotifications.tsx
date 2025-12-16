@@ -57,9 +57,9 @@ export function AssignmentNotifications({ learnerName }: AssignmentNotifications
     <DropdownMenu onOpenChange={handleOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
-          <Bell className={`h-5 w-5 ${overdueAssignments.length > 0 ? 'text-destructive' : ''}`} />
+          <Bell className="h-5 w-5" />
           {totalNotifications > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-destructive" />
+            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-destructive" />
           )}
         </Button>
       </DropdownMenuTrigger>
