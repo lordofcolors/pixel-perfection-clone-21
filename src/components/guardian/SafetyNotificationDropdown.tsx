@@ -6,62 +6,116 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AlertTriangle, Bell, ExternalLink } from "lucide-react";
+import { AlertTriangle, Bell, ExternalLink, CheckCircle2, BookOpen } from "lucide-react";
 
-export interface SafetyIssue {
+export type NotificationType = "safety" | "completion" | "progress";
+
+export interface ParentNotification {
   id: string;
+  type: NotificationType;
   learnerName: string;
   lessonTitle: string;
-  flaggedContent: string;
-  severity: "high" | "medium" | "low";
+  message: string;
   timestamp: string;
-  sessionId: string;
+  sessionId?: string;
+  severity?: "high" | "medium" | "low";
 }
 
-interface SafetyNotificationDropdownProps {
-  issues: SafetyIssue[];
-  onViewSession: (sessionId: string, learnerName: string) => void;
+interface ParentNotificationDropdownProps {
+  notifications: ParentNotification[];
+  onViewSession?: (sessionId: string, learnerName: string) => void;
 }
 
-// Mock safety alerts for demo
-export const MOCK_SAFETY_ALERTS: SafetyIssue[] = [
+// Mock notifications for demo
+export const MOCK_PARENT_NOTIFICATIONS: ParentNotification[] = [
   {
-    id: "alert-1",
+    id: "notif-1",
+    type: "completion",
     learnerName: "Jake",
     lessonTitle: "Interview Practice Session",
-    flaggedContent: "I've been feeling really down lately and sometimes I don't want to do anything...",
-    severity: "high",
-    timestamp: "2 hours ago",
-    sessionId: "session-1"
+    message: "Jake completed the Interview Practice lesson!",
+    timestamp: "30 min ago",
   },
   {
-    id: "alert-2",
-    learnerName: "Mia",
-    lessonTitle: "Public Speaking Exercise",
-    flaggedContent: "Nobody at school likes me and I feel like I'm all alone...",
-    severity: "medium",
-    timestamp: "Yesterday",
-    sessionId: "session-2"
-  },
-  {
-    id: "alert-3",
+    id: "notif-2",
+    type: "safety",
     learnerName: "Jake",
     lessonTitle: "Confidence Building",
-    flaggedContent: "Sometimes I get so angry I just want to break things...",
-    severity: "medium",
+    message: "I've been feeling really down lately and sometimes I don't want to do anything...",
+    timestamp: "2 hours ago",
+    sessionId: "session-1",
+    severity: "high"
+  },
+  {
+    id: "notif-3",
+    type: "completion",
+    learnerName: "Mia",
+    lessonTitle: "Public Speaking Basics",
+    message: "Mia finished the Public Speaking Basics lesson with 85% completion!",
+    timestamp: "3 hours ago",
+  },
+  {
+    id: "notif-4",
+    type: "safety",
+    learnerName: "Mia",
+    lessonTitle: "Social Skills Practice",
+    message: "Nobody at school likes me and I feel like I'm all alone...",
+    timestamp: "Yesterday",
+    sessionId: "session-2",
+    severity: "medium"
+  },
+  {
+    id: "notif-5",
+    type: "progress",
+    learnerName: "Jake",
+    lessonTitle: "Greeting People",
+    message: "Jake is 50% through the Greeting People lesson",
+    timestamp: "Yesterday",
+  },
+  {
+    id: "notif-6",
+    type: "safety",
+    learnerName: "Jake",
+    lessonTitle: "Emotion Management",
+    message: "Sometimes I get so angry I just want to break things...",
     timestamp: "2 days ago",
-    sessionId: "session-3"
+    sessionId: "session-3",
+    severity: "medium"
   }
 ];
 
 export function SafetyNotificationDropdown({ 
-  issues, 
+  notifications, 
   onViewSession 
-}: SafetyNotificationDropdownProps) {
+}: ParentNotificationDropdownProps) {
   const [open, setOpen] = useState(false);
 
-  const highPriorityCount = issues.filter(issue => issue.severity === "high").length;
-  const hasAlerts = issues.length > 0;
+  const safetyAlerts = notifications.filter(n => n.type === "safety");
+  const highPriorityCount = safetyAlerts.filter(n => n.severity === "high").length;
+  const hasNotifications = notifications.length > 0;
+
+  const getNotificationIcon = (type: NotificationType) => {
+    switch (type) {
+      case "safety":
+        return <AlertTriangle className="h-4 w-4 text-destructive" />;
+      case "completion":
+        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+      case "progress":
+        return <BookOpen className="h-4 w-4 text-blue-500" />;
+    }
+  };
+
+  const getNotificationStyle = (notification: ParentNotification) => {
+    if (notification.type === "safety") {
+      return notification.severity === "high" 
+        ? "border-destructive/50 bg-destructive/5" 
+        : "border-orange-300/50 bg-orange-50/50 dark:bg-orange-950/20";
+    }
+    if (notification.type === "completion") {
+      return "border-green-300/50 bg-green-50/50 dark:bg-green-950/20";
+    }
+    return "border-border bg-muted/30";
+  };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -72,8 +126,10 @@ export function SafetyNotificationDropdown({
           ) : (
             <Bell className="h-5 w-5" />
           )}
-          {hasAlerts && (
-            <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-destructive" />
+          {hasNotifications && (
+            <span className={`absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ${
+              highPriorityCount > 0 ? 'bg-destructive' : 'bg-primary'
+            }`} />
           )}
         </Button>
       </DropdownMenuTrigger>
@@ -84,52 +140,58 @@ export function SafetyNotificationDropdown({
       >
         <div className="p-3">
           <h3 className="font-semibold flex items-center gap-2 mb-3">
-            <AlertTriangle className="h-4 w-4 text-destructive" />
-            Safety Alerts
+            <Bell className="h-4 w-4" />
+            Notifications
           </h3>
           
-          <ScrollArea className="h-[350px]">
-            {issues.length === 0 ? (
+          <ScrollArea className="h-[400px]">
+            {notifications.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                No safety alerts
+                No notifications yet
               </p>
             ) : (
               <div className="space-y-2">
-                {issues.map((issue) => (
+                {notifications.map((notification) => (
                   <div 
-                    key={issue.id} 
-                    className={`p-3 rounded-lg border space-y-2 cursor-pointer hover:bg-muted/50 transition-colors ${
-                      issue.severity === "high" 
-                        ? "border-destructive/50 bg-destructive/5" 
-                        : "border-border bg-muted/30"
+                    key={notification.id} 
+                    className={`p-3 rounded-lg border space-y-2 transition-colors ${getNotificationStyle(notification)} ${
+                      notification.sessionId ? 'cursor-pointer hover:bg-muted/50' : ''
                     }`}
                     onClick={() => {
-                      onViewSession(issue.sessionId, issue.learnerName);
-                      setOpen(false);
+                      if (notification.sessionId && onViewSession) {
+                        onViewSession(notification.sessionId, notification.learnerName);
+                        setOpen(false);
+                      }
                     }}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {issue.severity === "high" && (
-                          <AlertTriangle className="h-3 w-3 text-destructive" />
-                        )}
-                        <span className="text-sm font-medium">{issue.learnerName}</span>
+                        {getNotificationIcon(notification.type)}
+                        <span className="text-sm font-medium">{notification.learnerName}</span>
                       </div>
-                      <span className="text-xs text-muted-foreground">{issue.timestamp}</span>
+                      <span className="text-xs text-muted-foreground">{notification.timestamp}</span>
                     </div>
                     
                     <p className="text-xs text-muted-foreground">
-                      {issue.lessonTitle}
+                      {notification.lessonTitle}
                     </p>
                     
-                    <p className="text-xs text-destructive line-clamp-2">
-                      "{issue.flaggedContent}"
-                    </p>
+                    {notification.type === "safety" ? (
+                      <p className="text-xs text-destructive line-clamp-2">
+                        "{notification.message}"
+                      </p>
+                    ) : (
+                      <p className="text-xs text-foreground">
+                        {notification.message}
+                      </p>
+                    )}
                     
-                    <div className="flex items-center gap-1 text-xs text-primary">
-                      <ExternalLink className="h-3 w-3" />
-                      View transcript
-                    </div>
+                    {notification.sessionId && (
+                      <div className="flex items-center gap-1 text-xs text-primary">
+                        <ExternalLink className="h-3 w-3" />
+                        View transcript
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
