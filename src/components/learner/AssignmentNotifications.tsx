@@ -55,10 +55,6 @@ export function AssignmentNotifications({ learnerName }: AssignmentNotifications
     }
   };
 
-  if (assignments.length === 0) {
-    return null;
-  }
-
   return (
     <DropdownMenu onOpenChange={handleOpen}>
       <DropdownMenuTrigger asChild>
@@ -76,11 +72,11 @@ export function AssignmentNotifications({ learnerName }: AssignmentNotifications
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
         <div className="p-3">
-          <h3 className="font-semibold mb-3">Your Assignments</h3>
+          <h3 className="font-semibold mb-3">Notifications</h3>
           <ScrollArea className="h-[350px]">
-            {pendingAssignments.length === 0 && overdueAssignments.length === 0 ? (
+            {assignments.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                No new assignments
+                No notifications yet
               </p>
             ) : (
               <div className="space-y-3">
@@ -98,6 +94,9 @@ export function AssignmentNotifications({ learnerName }: AssignmentNotifications
                             key={assignment.id}
                             className="p-3 rounded-lg border-2 border-destructive/50 bg-destructive/5 space-y-1"
                           >
+                            <div className="text-xs text-muted-foreground mb-1">
+                              Your parent has assigned you:
+                            </div>
                             <div className="font-medium text-sm">{assignment.skillTitle}</div>
                             <div className="text-xs text-muted-foreground">{assignment.lessonTitle}</div>
                             {assignment.dueDate && (
@@ -121,7 +120,7 @@ export function AssignmentNotifications({ learnerName }: AssignmentNotifications
                   <div>
                     <div className="text-sm font-semibold mb-2 flex items-center gap-2">
                       <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                      New from Your Parent
+                      New Assignments
                     </div>
                     <div className="space-y-2">
                       {pendingAssignments.filter(a => !isOverdue(a)).map(assignment => (
@@ -129,6 +128,9 @@ export function AssignmentNotifications({ learnerName }: AssignmentNotifications
                           key={assignment.id}
                           className="p-3 rounded-lg border-2 border-primary/30 bg-primary/5 space-y-1"
                         >
+                          <div className="text-xs text-muted-foreground mb-1">
+                            Your parent has assigned you:
+                          </div>
                           <div className="font-medium text-sm">{assignment.skillTitle}</div>
                           <div className="text-xs text-muted-foreground">{assignment.lessonTitle}</div>
                           <div className="text-xs text-muted-foreground">
