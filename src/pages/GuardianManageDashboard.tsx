@@ -6,7 +6,7 @@ import { AnalyticsContent } from "@/components/guardian/AnalyticsContent";
 import { SkillSelectionView } from "@/components/guardian/SkillSelectionView";
 import { EmptyLearnerDashboard } from "@/components/learner/EmptyLearnerDashboard";
 import { AssignmentNotifications } from "@/components/learner/AssignmentNotifications";
-import { SafetyNotificationDropdown, MOCK_SAFETY_ALERTS } from "@/components/guardian/SafetyNotificationDropdown";
+import { SafetyNotificationDropdown, MOCK_PARENT_NOTIFICATIONS } from "@/components/guardian/SafetyNotificationDropdown";
 import { SessionTranscriptModal } from "@/components/guardian/SessionTranscriptModal";
 import { getGuardianSetup } from "@/lib/store";
 
@@ -14,7 +14,7 @@ import { getGuardianSetup } from "@/lib/store";
 const MOCK_SESSIONS: { [key: string]: any } = {
   "session-1": {
     id: "session-1",
-    title: "Interview Practice Session",
+    title: "Confidence Building",
     duration: "12 min",
     messagesCount: 24,
     completionRate: 75,
@@ -32,7 +32,7 @@ const MOCK_SESSIONS: { [key: string]: any } = {
   },
   "session-2": {
     id: "session-2",
-    title: "Public Speaking Exercise",
+    title: "Social Skills Practice",
     duration: "8 min",
     messagesCount: 16,
     completionRate: 50,
@@ -49,7 +49,7 @@ const MOCK_SESSIONS: { [key: string]: any } = {
   },
   "session-3": {
     id: "session-3",
-    title: "Confidence Building",
+    title: "Emotion Management",
     duration: "15 min",
     messagesCount: 30,
     completionRate: 90,
@@ -70,7 +70,7 @@ export default function GuardianManageDashboard() {
   const [activeView, setActiveView] = useState<"guardian" | "dashboard" | "skillSelection" | number>("guardian");
   const [previousView, setPreviousView] = useState<"guardian" | "dashboard" | number>("guardian");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [safetyAlerts] = useState(MOCK_SAFETY_ALERTS);
+  const [notifications] = useState(MOCK_PARENT_NOTIFICATIONS);
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [transcriptModalOpen, setTranscriptModalOpen] = useState(false);
   
@@ -160,7 +160,7 @@ export default function GuardianManageDashboard() {
                 <AssignmentNotifications learnerName={currentLearner.name} />
               ) : (
                 <SafetyNotificationDropdown 
-                  issues={safetyAlerts}
+                  notifications={notifications}
                   onViewSession={handleViewSession}
                 />
               )}
