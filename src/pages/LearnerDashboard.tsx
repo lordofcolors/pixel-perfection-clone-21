@@ -40,7 +40,7 @@ export default function LearnerDashboard() {
           <header className="h-16 flex items-center justify-between border-b px-3">
             <div className="flex items-center gap-2">
               <SidebarTrigger className="mr-2" />
-              <h1 className="text-lg font-semibold">Learner Dashboard</h1>
+              <h1 className="text-lg font-semibold">Chat with A</h1>
             </div>
             <div className="flex items-center">
               <AssignmentNotifications learnerName={learnerName || "Learner"} />
