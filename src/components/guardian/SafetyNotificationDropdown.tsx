@@ -179,7 +179,7 @@ export function SafetyNotificationDropdown({
                             }
                           }}
                         >
-                          Review in app
+                          Review transcript
                         </Button>
                       </>
                     ) : (
