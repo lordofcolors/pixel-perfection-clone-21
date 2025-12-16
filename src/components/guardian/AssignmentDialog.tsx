@@ -137,7 +137,14 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
 
   const handleApproveSkill = () => {
     const currentData = getGuardianSetup();
-    if (!currentData) return;
+    if (!currentData) {
+      toast({
+        title: "Error",
+        description: "Could not find guardian setup data. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const newSkill: Skill = {
       title: customSkillText.trim(),
@@ -157,15 +164,21 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
 
     saveGuardianSetup(updatedData);
 
+    // Automatically assign the first lesson (unlocked one) to the learner
+    if (previewLessons.length > 0) {
+      assignLessonToPerson(learnerName, customSkillText.trim(), previewLessons[0].title, dueDate || undefined);
+    }
+
     toast({
       title: "Skill created!",
-      description: `"${customSkillText.trim()}" has been added to ${learnerName}'s skills. You can now assign lessons.`,
+      description: `"${customSkillText.trim()}" has been added to ${learnerName}'s skills. The first lesson has been assigned.`,
     });
 
     setCustomSkillText("");
     setPreviewLessons([]);
     setShowPreview(false);
     setActiveTab("existing");
+    onOpenChange(false);
   };
 
   const handleStartRecording = async () => {
