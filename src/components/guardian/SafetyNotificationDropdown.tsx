@@ -118,13 +118,9 @@ export function SafetyNotificationDropdown({
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
-          {highPriorityCount > 0 ? (
-            <AlertTriangle className="h-5 w-5 text-destructive" />
-          ) : (
-            <Bell className="h-5 w-5" />
-          )}
+          <Bell className="h-5 w-5" />
           {hasNotifications && (
-            <span className={`absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ${
+            <span className={`absolute top-1 right-1 h-2 w-2 rounded-full ${
               highPriorityCount > 0 ? 'bg-destructive' : 'bg-primary'
             }`} />
           )}
