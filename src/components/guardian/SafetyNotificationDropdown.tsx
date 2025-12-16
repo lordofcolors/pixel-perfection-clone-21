@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AlertTriangle, Bell, ExternalLink, CheckCircle2, BookOpen } from "lucide-react";
+import { AlertTriangle, Bell, CheckCircle2, BookOpen } from "lucide-react";
 
 export type NotificationType = "safety" | "completion" | "progress";
 
@@ -15,7 +15,7 @@ export interface ParentNotification {
   type: NotificationType;
   learnerName: string;
   lessonTitle: string;
-  message: string;
+  message?: string;
   timestamp: string;
   sessionId?: string;
   severity?: "high" | "medium" | "low";
@@ -41,7 +41,6 @@ export const MOCK_PARENT_NOTIFICATIONS: ParentNotification[] = [
     type: "safety",
     learnerName: "Jake",
     lessonTitle: "Confidence Building",
-    message: "I've been feeling really down lately and sometimes I don't want to do anything...",
     timestamp: "2 hours ago",
     sessionId: "session-1",
     severity: "high"
@@ -59,7 +58,6 @@ export const MOCK_PARENT_NOTIFICATIONS: ParentNotification[] = [
     type: "safety",
     learnerName: "Mia",
     lessonTitle: "Social Skills Practice",
-    message: "Nobody at school likes me and I feel like I'm all alone...",
     timestamp: "Yesterday",
     sessionId: "session-2",
     severity: "medium"
@@ -77,7 +75,6 @@ export const MOCK_PARENT_NOTIFICATIONS: ParentNotification[] = [
     type: "safety",
     learnerName: "Jake",
     lessonTitle: "Emotion Management",
-    message: "Sometimes I get so angry I just want to break things...",
     timestamp: "2 days ago",
     sessionId: "session-3",
     severity: "medium"
@@ -154,43 +151,50 @@ export function SafetyNotificationDropdown({
                 {notifications.map((notification) => (
                   <div 
                     key={notification.id} 
-                    className={`p-3 rounded-lg border space-y-2 transition-colors ${getNotificationStyle(notification)} ${
-                      notification.sessionId ? 'cursor-pointer hover:bg-muted/50' : ''
-                    }`}
-                    onClick={() => {
-                      if (notification.sessionId && onViewSession) {
-                        onViewSession(notification.sessionId, notification.learnerName);
-                        setOpen(false);
-                      }
-                    }}
+                    className={`p-3 rounded-lg border space-y-2 transition-colors ${getNotificationStyle(notification)}`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {getNotificationIcon(notification.type)}
-                        <span className="text-sm font-medium">{notification.learnerName}</span>
+                        {notification.type === "safety" ? (
+                          <span className="text-sm font-medium">Safety Alert</span>
+                        ) : (
+                          <span className="text-sm font-medium">{notification.learnerName}</span>
+                        )}
                       </div>
                       <span className="text-xs text-muted-foreground">{notification.timestamp}</span>
                     </div>
                     
-                    <p className="text-xs text-muted-foreground">
-                      {notification.lessonTitle}
-                    </p>
-                    
                     {notification.type === "safety" ? (
-                      <p className="text-xs text-destructive line-clamp-2">
-                        "{notification.message}"
-                      </p>
+                      <>
+                        <p className="text-sm">
+                          A conversation for <span className="font-semibold text-primary">{notification.learnerName}</span> was flagged for safety review.
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Content not shown for privacy.
+                        </p>
+                        <Button
+                          size="sm"
+                          className="w-full mt-2"
+                          onClick={() => {
+                            if (notification.sessionId && onViewSession) {
+                              onViewSession(notification.sessionId, notification.learnerName);
+                              setOpen(false);
+                            }
+                          }}
+                        >
+                          Review in app
+                        </Button>
+                      </>
                     ) : (
-                      <p className="text-xs text-foreground">
-                        {notification.message}
-                      </p>
-                    )}
-                    
-                    {notification.sessionId && (
-                      <div className="flex items-center gap-1 text-xs text-primary">
-                        <ExternalLink className="h-3 w-3" />
-                        View transcript
-                      </div>
+                      <>
+                        <p className="text-xs text-muted-foreground">
+                          {notification.lessonTitle}
+                        </p>
+                        <p className="text-xs text-foreground">
+                          {notification.message}
+                        </p>
+                      </>
                     )}
                   </div>
                 ))}
