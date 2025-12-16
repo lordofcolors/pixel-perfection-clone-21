@@ -7,8 +7,8 @@ interface EmptyLearnerDashboardProps {
 
 export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProps) {
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
-      <div className="flex flex-col items-center text-center space-y-16">
+    <div className="flex flex-col items-start justify-start pt-24">
+      <div className="flex flex-col items-center text-center space-y-16 w-full">
         {/* A Circle Logo */}
         <div className="relative">
           <img 
