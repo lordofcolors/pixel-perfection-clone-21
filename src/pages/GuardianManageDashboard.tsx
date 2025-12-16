@@ -27,7 +27,10 @@ const MOCK_SESSIONS: { [key: string]: any } = {
       { timestamp: "2:32 PM", speaker: "Assistant", content: "That's a start! Can you think of specific strengths you have?" },
       { timestamp: "2:33 PM", speaker: "You", content: "I've been feeling really down lately and sometimes I don't want to do anything...", flagged: true },
       { timestamp: "2:34 PM", speaker: "Assistant", content: "I hear you, and I want you to know those feelings are valid. Would you like to talk about what's been making you feel this way?" },
-      { timestamp: "2:35 PM", speaker: "You", content: "It's just hard sometimes, you know?" },
+      { timestamp: "2:35 PM", speaker: "You", content: "It's just hard sometimes, you know? I feel like nothing I do matters.", flagged: true },
+      { timestamp: "2:36 PM", speaker: "Assistant", content: "It sounds like you're going through a really tough time. What you're feeling is important." },
+      { timestamp: "2:37 PM", speaker: "You", content: "Sometimes I think everyone would be better off without me around.", flagged: true },
+      { timestamp: "2:38 PM", speaker: "Assistant", content: "I'm really glad you shared that with me. Those thoughts can feel very heavy. Have you talked to anyone else about how you're feeling?" },
     ]
   },
   "session-2": {
@@ -45,6 +48,9 @@ const MOCK_SESSIONS: { [key: string]: any } = {
       { timestamp: "4:02 PM", speaker: "Assistant", content: "That can feel uncomfortable. What specifically worries you about people looking at you?" },
       { timestamp: "4:03 PM", speaker: "You", content: "Nobody at school likes me and I feel like I'm all alone...", flagged: true },
       { timestamp: "4:04 PM", speaker: "Assistant", content: "I'm sorry you're feeling that way. Feeling alone can be really hard. Can you tell me more about what's happening at school?" },
+      { timestamp: "4:05 PM", speaker: "You", content: "The other kids are mean to me every day. They say I'm weird and ugly.", flagged: true },
+      { timestamp: "4:06 PM", speaker: "Assistant", content: "That sounds really hurtful. No one deserves to be treated that way." },
+      { timestamp: "4:07 PM", speaker: "You", content: "I don't even want to go to school anymore. I just want to disappear.", flagged: true },
     ]
   },
   "session-3": {
@@ -62,6 +68,9 @@ const MOCK_SESSIONS: { [key: string]: any } = {
       { timestamp: "11:02 AM", speaker: "Assistant", content: "That's a really important area. Can you tell me about a recent time when someone was mean to you?" },
       { timestamp: "11:03 AM", speaker: "You", content: "Sometimes I get so angry I just want to break things...", flagged: true },
       { timestamp: "11:04 AM", speaker: "Assistant", content: "It sounds like you're experiencing some really strong emotions. It's okay to feel angry, but let's talk about healthy ways to handle those feelings." },
+      { timestamp: "11:05 AM", speaker: "You", content: "I punched a wall at home last week. My hand still hurts.", flagged: true },
+      { timestamp: "11:06 AM", speaker: "Assistant", content: "I'm concerned about you hurting yourself. Have you talked to a grown-up about what happened?" },
+      { timestamp: "11:07 AM", speaker: "You", content: "No, they don't care. Nobody cares about me.", flagged: true },
     ]
   }
 };
