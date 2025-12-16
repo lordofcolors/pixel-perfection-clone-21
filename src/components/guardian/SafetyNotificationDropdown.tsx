@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AlertTriangle, Bell, Eye, X } from "lucide-react";
+import { AlertTriangle, Bell, ExternalLink } from "lucide-react";
 
-interface SafetyIssue {
+export interface SafetyIssue {
   id: string;
   learnerName: string;
   lessonTitle: string;
@@ -22,137 +21,121 @@ interface SafetyIssue {
 interface SafetyNotificationDropdownProps {
   issues: SafetyIssue[];
   onViewSession: (sessionId: string, learnerName: string) => void;
-  onDismiss: (issueId: string) => void;
 }
+
+// Mock safety alerts for demo
+export const MOCK_SAFETY_ALERTS: SafetyIssue[] = [
+  {
+    id: "alert-1",
+    learnerName: "Jake",
+    lessonTitle: "Interview Practice Session",
+    flaggedContent: "I've been feeling really down lately and sometimes I don't want to do anything...",
+    severity: "high",
+    timestamp: "2 hours ago",
+    sessionId: "session-1"
+  },
+  {
+    id: "alert-2",
+    learnerName: "Mia",
+    lessonTitle: "Public Speaking Exercise",
+    flaggedContent: "Nobody at school likes me and I feel like I'm all alone...",
+    severity: "medium",
+    timestamp: "Yesterday",
+    sessionId: "session-2"
+  },
+  {
+    id: "alert-3",
+    learnerName: "Jake",
+    lessonTitle: "Confidence Building",
+    flaggedContent: "Sometimes I get so angry I just want to break things...",
+    severity: "medium",
+    timestamp: "2 days ago",
+    sessionId: "session-3"
+  }
+];
 
 export function SafetyNotificationDropdown({ 
   issues, 
-  onViewSession, 
-  onDismiss 
+  onViewSession 
 }: SafetyNotificationDropdownProps) {
   const [open, setOpen] = useState(false);
 
-  if (issues.length === 0) return null;
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case "high":
-        return "destructive";
-      case "medium":
-        return "outline";
-      case "low":
-        return "secondary";
-      default:
-        return "outline";
-    }
-  };
-
-  const getSeverityText = (severity: string) => {
-    switch (severity) {
-      case "high":
-        return "HIGH";
-      case "medium":
-        return "MED";
-      case "low":
-        return "LOW";
-      default:
-        return "?";
-    }
-  };
-
   const highPriorityCount = issues.filter(issue => issue.severity === "high").length;
+  const hasAlerts = issues.length > 0;
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant={highPriorityCount > 0 ? "destructive" : "outline"} 
-          size="sm" 
-          className="relative"
-        >
+        <Button variant="ghost" size="icon" className="relative">
           {highPriorityCount > 0 ? (
-            <AlertTriangle className="h-4 w-4 mr-2" />
+            <AlertTriangle className="h-5 w-5 text-destructive" />
           ) : (
-            <Bell className="h-4 w-4 mr-2" />
+            <Bell className="h-5 w-5" />
           )}
-          Safety Alerts
-          {issues.length > 0 && (
-            <Badge 
-              variant="secondary" 
-              className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
-            >
-              {issues.length}
-            </Badge>
+          {hasAlerts && (
+            <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-destructive" />
           )}
         </Button>
       </DropdownMenuTrigger>
       
       <DropdownMenuContent 
         align="end" 
-        className="w-[480px] max-h-[600px] bg-background border shadow-lg z-50"
+        className="w-80"
       >
-        <div className="p-4 border-b">
-          <h3 className="font-semibold flex items-center gap-2">
+        <div className="p-3">
+          <h3 className="font-semibold flex items-center gap-2 mb-3">
             <AlertTriangle className="h-4 w-4 text-destructive" />
-            Safety Alerts ({issues.length})
+            Safety Alerts
           </h3>
-        </div>
-        
-        <ScrollArea className="h-[520px]">
-          <div className="p-4 space-y-3">
-            {issues.map((issue) => (
-              <div 
-                key={issue.id} 
-                className="p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Badge variant={getSeverityColor(issue.severity) as any} className="text-xs">
-                      {getSeverityText(issue.severity)}
-                    </Badge>
-                    <span className="text-sm font-medium">{issue.learnerName}</span>
+          
+          <ScrollArea className="h-[350px]">
+            {issues.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                No safety alerts
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {issues.map((issue) => (
+                  <div 
+                    key={issue.id} 
+                    className={`p-3 rounded-lg border space-y-2 cursor-pointer hover:bg-muted/50 transition-colors ${
+                      issue.severity === "high" 
+                        ? "border-destructive/50 bg-destructive/5" 
+                        : "border-border bg-muted/30"
+                    }`}
+                    onClick={() => {
+                      onViewSession(issue.sessionId, issue.learnerName);
+                      setOpen(false);
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {issue.severity === "high" && (
+                          <AlertTriangle className="h-3 w-3 text-destructive" />
+                        )}
+                        <span className="text-sm font-medium">{issue.learnerName}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">{issue.timestamp}</span>
+                    </div>
+                    
+                    <p className="text-xs text-muted-foreground">
+                      {issue.lessonTitle}
+                    </p>
+                    
+                    <p className="text-xs text-destructive line-clamp-2">
+                      "{issue.flaggedContent}"
+                    </p>
+                    
+                    <div className="flex items-center gap-1 text-xs text-primary">
+                      <ExternalLink className="h-3 w-3" />
+                      View transcript
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">{issue.timestamp}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        onDismiss(issue.id);
-                      }}
-                      className="h-6 w-6 p-0"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <p className="text-sm text-muted-foreground mb-3">
-                  {issue.lessonTitle}
-                </p>
-                
-                <p className="text-sm bg-destructive/10 border border-destructive/20 p-3 rounded text-destructive-foreground mb-3">
-                  "{issue.flaggedContent}"
-                </p>
-                
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onViewSession(issue.sessionId, issue.learnerName);
-                    setOpen(false);
-                  }}
-                  className="w-full"
-                >
-                  <Eye className="h-3 w-3 mr-2" />
-                  View Full Session
-                </Button>
+                ))}
               </div>
-            ))}
-          </div>
-        </ScrollArea>
+            )}
+          </ScrollArea>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
