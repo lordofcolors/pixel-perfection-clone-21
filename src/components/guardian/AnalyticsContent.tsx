@@ -59,6 +59,16 @@ const mockSessionData = {
   }
 };
 
+// Mock conversations data for prototype - prepopulated list
+const MOCK_CONVERSATIONS = [
+  { id: 1, title: "Public Speaking Session Overview", duration: "16.4s", messages: 2, timestamp: "2026-01-06, 12:05:47 p.m.", isFlagged: false },
+  { id: 2, title: "User's Appreciation and Next Steps in Learning", duration: "1m 1.5s", messages: 8, timestamp: "2026-01-06, 12:05:18 p.m.", isFlagged: false },
+  { id: 3, title: "Cảm giác chán nản trong cuộc sống", duration: "14.8s", messages: 1, timestamp: "2026-01-06, 11:57:25 a.m.", isFlagged: true },
+  { id: 4, title: "Confidence Building Practice", duration: "12m 30s", messages: 24, timestamp: "2026-01-05, 3:45:00 p.m.", isFlagged: true },
+  { id: 5, title: "Interview Skills Workshop", duration: "18m 15s", messages: 32, timestamp: "2026-01-05, 2:30:00 p.m.", isFlagged: false },
+  { id: 6, title: "Dealing with Stress at School", duration: "8m 45s", messages: 16, timestamp: "2026-01-04, 4:20:00 p.m.", isFlagged: true },
+];
+
 // Mock safety issues - would come from your content moderation service
 const mockSafetyIssues = [
   {
@@ -239,41 +249,24 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                         </Button>
                       </div>
                       
-                      {!hasLearnerSkill ? (
-                        // Empty State Layout
-                        <div className="flex flex-col flex-1 min-h-[400px]">
-                          <div className="flex-1 flex flex-col justify-center">
-                            <div className="text-center py-4">
-                              <div className="text-4xl mb-2">🎯</div>
-                              <p className="text-sm text-muted-foreground">
-                                Ready to start their learning journey
-                              </p>
-                            </div>
-                          </div>
-                          <Button 
-                            className="w-full mt-auto" 
-                            onClick={() => navigate('/learner', { state: { firstName: learner.name } })}
-                          >
-                            Switch to {learner.name}'s Account
-                          </Button>
-                        </div>
-                      ) : (
+                      {/* Always show the populated layout with mock conversations for prototype */}
+                      {(
                         // Populated State Layout
                         <div className="flex flex-col flex-1 min-h-[400px]">
                           <div className="flex-1 space-y-4">
                             {/* Stats */}
                             <div className="grid grid-cols-3 gap-4 text-sm">
                               <div className="text-center">
-                                <div className="font-semibold text-primary">{learnerSkills.length}</div>
-                                <div className="text-muted-foreground">Skills</div>
+                                <div className="font-semibold text-primary">{MOCK_CONVERSATIONS.length}</div>
+                                <div className="text-muted-foreground">Skills in Progress</div>
                               </div>
                               <div className="text-center">
-                                <div className="font-semibold text-primary">{learnerSkills.length}</div>
-                                <div className="text-muted-foreground">Lessons</div>
+                                <div className="font-semibold text-primary">{MOCK_CONVERSATIONS.length}</div>
+                                <div className="text-muted-foreground">Lessons Completed</div>
                               </div>
                               <div className="text-center">
-                                <div className="font-semibold text-primary">{learnerSkills.length * 15}m</div>
-                                <div className="text-muted-foreground">Time</div>
+                                <div className="font-semibold text-primary">15m 40.2s</div>
+                                <div className="text-muted-foreground">Spent Learning</div>
                               </div>
                             </div>
 
@@ -302,13 +295,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                               {/* Conversation List */}
                               <div className="space-y-2">
                                 {(() => {
-                                  // Create mock conversations with some flagged
-                                  const conversations = learnerSkills.map((skill, idx) => {
-                                    const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
-                                    // Mock: make every 3rd conversation flagged
-                                    const isFlagged = idx % 3 === 2;
-                                    return { skill, skillName, idx, isFlagged };
-                                  });
+                                  // Use prepopulated mock conversations
+                                  const conversations = MOCK_CONVERSATIONS;
                                   
                                   // Filter based on showFlaggedOnly state
                                   const filteredConversations = showFlaggedOnly[learner.name]
@@ -331,47 +319,33 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                                   
                                   return (
                                     <>
-                                      {displayedConversations.map(({ skillName, idx, isFlagged }) => (
+                                      {displayedConversations.map((conv) => (
                                         <div 
-                                          key={idx} 
+                                          key={conv.id} 
                                           className={`border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all duration-200 group ${
-                                            isFlagged ? 'border-destructive/50 bg-destructive/5' : ''
+                                            conv.isFlagged ? 'border-destructive/50 bg-destructive/5' : ''
                                           }`}
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             handleViewSession("session-1", learner.name);
                                           }}
                                         >
-                                          <div className="flex items-center justify-between mb-2">
-                                            <div className="font-medium text-sm">{skillName}</div>
-                                            <div className="flex items-center gap-2">
-                                              {isFlagged && (
-                                                <Badge variant="destructive" className="text-xs">
-                                                  FLAGGED
-                                                </Badge>
-                                              )}
-                                              <div className="text-xs text-primary group-hover:underline">View transcript →</div>
-                                            </div>
-                                          </div>
-                                          
-                                          <div className="grid grid-cols-2 gap-2 text-xs">
-                                            <div className="text-center">
-                                              <div className="font-medium text-primary">15m</div>
-                                              <div className="text-muted-foreground">Duration</div>
-                                            </div>
-                                            <div className="text-center">
-                                              <div className="font-medium text-primary">12</div>
-                                              <div className="text-muted-foreground">Messages</div>
-                                            </div>
-                                          </div>
-                                          
-                                          <div className="mt-2 flex items-center gap-2">
-                                            {idx === 0 ? (
-                                              <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">In Progress</span>
-                                            ) : (
-                                              <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
+                                          <div className="flex items-center justify-between mb-1">
+                                            <div className="font-medium text-sm">{conv.title}</div>
+                                            {conv.isFlagged && (
+                                              <Badge variant="destructive" className="text-xs">
+                                                FLAGGED
+                                              </Badge>
                                             )}
-                                            <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
+                                          </div>
+                                          
+                                          <div className="flex items-center gap-4 text-xs text-muted-foreground mb-2">
+                                            <span>⏱ {conv.duration}</span>
+                                            <span>💬 {conv.messages} messages</span>
+                                          </div>
+                                          
+                                          <div className="text-xs text-muted-foreground">
+                                            {conv.timestamp}
                                           </div>
                                         </div>
                                       ))}
