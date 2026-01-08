@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Flag } from "lucide-react";
 import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { EmptyStateDashboard } from "./EmptyStateDashboard";
 import { AssignmentDialog } from "./AssignmentDialog";
@@ -78,6 +79,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
   const [showAllLessons, setShowAllLessons] = useState<{[key: string]: boolean}>({});
   const [assignmentDialogOpen, setAssignmentDialogOpen] = useState(false);
   const [selectedLearnerForAssignment, setSelectedLearnerForAssignment] = useState<string>("");
+  const [showFlaggedOnly, setShowFlaggedOnly] = useState<{[key: string]: boolean}>({});
   
   // Check if any skills exist across all learners
   const setupData = getGuardianSetup();
@@ -275,61 +277,119 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                               </div>
                             </div>
 
-                            {/* Recent Lessons */}
+                            {/* All Conversations with Filter */}
                             <div className="border-t pt-3 space-y-3">
-                              <div className="flex items-center justify-between">
-                                <div className="text-sm font-medium">Recent Lessons:</div>
-                                {learnerSkills.length > 3 && (
-                                  <button 
-                                    className="text-xs text-primary hover:underline"
-                                    onClick={() => setShowAllLessons(prev => ({
-                                      ...prev,
-                                      [learner.name]: !prev[learner.name]
-                                    }))}
-                                  >
-                                    {showAllLessons[learner.name] ? 'Show Less' : 'View All'}
-                                  </button>
-                                )}
+                              <div className="text-sm font-medium">All Conversations</div>
+                              
+                              {/* Filter Chip Row */}
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => setShowFlaggedOnly(prev => ({
+                                    ...prev,
+                                    [learner.name]: !prev[learner.name]
+                                  }))}
+                                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                                    showFlaggedOnly[learner.name]
+                                      ? 'bg-destructive text-destructive-foreground'
+                                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                  }`}
+                                >
+                                  <Flag className="h-3 w-3" />
+                                  Flagged
+                                </button>
                               </div>
+                              
+                              {/* Conversation List */}
                               <div className="space-y-2">
-                                {learnerSkills.slice(0, showAllLessons[learner.name] ? learnerSkills.length : 3).map((skill, idx) => {
-                                  const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
-                                  return (
-                                    <div 
-                                      key={idx} 
-                                      className="border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all duration-200 group"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleViewSession("session-1", learner.name);
-                                      }}
-                                    >
-                                      <div className="flex items-center justify-between mb-2">
-                                        <div className="font-medium text-sm">{skillName}</div>
-                                        <div className="text-xs text-primary group-hover:underline">View transcript →</div>
-                                      </div>
-                                      
-                                      <div className="grid grid-cols-2 gap-2 text-xs">
-                                        <div className="text-center">
-                                          <div className="font-medium text-primary">15m</div>
-                                          <div className="text-muted-foreground">Duration</div>
-                                        </div>
-                                        <div className="text-center">
-                                          <div className="font-medium text-primary">12</div>
-                                          <div className="text-muted-foreground">Messages</div>
-                                        </div>
-                                      </div>
-                                      
-                                      <div className="mt-2 flex items-center gap-2">
-                                        {idx === 0 ? (
-                                          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">In Progress</span>
-                                        ) : (
-                                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
-                                        )}
-                                        <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
-                                      </div>
-                                    </div>
+                                {(() => {
+                                  // Create mock conversations with some flagged
+                                  const conversations = learnerSkills.map((skill, idx) => {
+                                    const skillName = typeof skill === 'object' && skill?.title ? skill.title : `Skill ${idx + 1}`;
+                                    // Mock: make every 3rd conversation flagged
+                                    const isFlagged = idx % 3 === 2;
+                                    return { skill, skillName, idx, isFlagged };
+                                  });
+                                  
+                                  // Filter based on showFlaggedOnly state
+                                  const filteredConversations = showFlaggedOnly[learner.name]
+                                    ? conversations.filter(c => c.isFlagged)
+                                    : conversations;
+                                  
+                                  // Apply show all/less logic
+                                  const displayedConversations = filteredConversations.slice(
+                                    0, 
+                                    showAllLessons[learner.name] ? filteredConversations.length : 3
                                   );
-                                })}
+                                  
+                                  if (displayedConversations.length === 0 && showFlaggedOnly[learner.name]) {
+                                    return (
+                                      <div className="text-center py-4 text-sm text-muted-foreground">
+                                        No flagged conversations
+                                      </div>
+                                    );
+                                  }
+                                  
+                                  return (
+                                    <>
+                                      {displayedConversations.map(({ skillName, idx, isFlagged }) => (
+                                        <div 
+                                          key={idx} 
+                                          className={`border rounded-lg p-3 hover:border-primary/50 hover:bg-primary/5 cursor-pointer transition-all duration-200 group ${
+                                            isFlagged ? 'border-destructive/50 bg-destructive/5' : ''
+                                          }`}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleViewSession("session-1", learner.name);
+                                          }}
+                                        >
+                                          <div className="flex items-center justify-between mb-2">
+                                            <div className="font-medium text-sm">{skillName}</div>
+                                            <div className="flex items-center gap-2">
+                                              {isFlagged && (
+                                                <Badge variant="destructive" className="text-xs">
+                                                  FLAGGED
+                                                </Badge>
+                                              )}
+                                              <div className="text-xs text-primary group-hover:underline">View transcript →</div>
+                                            </div>
+                                          </div>
+                                          
+                                          <div className="grid grid-cols-2 gap-2 text-xs">
+                                            <div className="text-center">
+                                              <div className="font-medium text-primary">15m</div>
+                                              <div className="text-muted-foreground">Duration</div>
+                                            </div>
+                                            <div className="text-center">
+                                              <div className="font-medium text-primary">12</div>
+                                              <div className="text-muted-foreground">Messages</div>
+                                            </div>
+                                          </div>
+                                          
+                                          <div className="mt-2 flex items-center gap-2">
+                                            {idx === 0 ? (
+                                              <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">In Progress</span>
+                                            ) : (
+                                              <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Completed</span>
+                                            )}
+                                            <span className="text-xs text-muted-foreground">{idx === 0 ? '1h ago' : '2h ago'}</span>
+                                          </div>
+                                        </div>
+                                      ))}
+                                      
+                                      {filteredConversations.length > 3 && (
+                                        <button 
+                                          className="text-xs text-primary hover:underline w-full text-center py-2"
+                                          onClick={() => setShowAllLessons(prev => ({
+                                            ...prev,
+                                            [learner.name]: !prev[learner.name]
+                                          }))}
+                                        >
+                                          {showAllLessons[learner.name] ? 'Show Less' : `View All (${filteredConversations.length})`}
+                                        </button>
+                                      )}
+                                    </>
+                                  );
+                                })()}
                               </div>
                             </div>
                           </div>
