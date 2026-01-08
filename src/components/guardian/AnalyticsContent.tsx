@@ -110,120 +110,73 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
     }
   };
 
-  // Show empty state dashboard if no skills exist
-  if (!hasAnySkills && isParentView) {
-    return (
-      <div className="space-y-6">
-        <EmptyStateDashboard 
-          guardianName={guardianName}
-          learners={learners}
-          onSelectView={onSelectView}
-        />
+  // Always show populated dashboard for prototype (skip empty state check)
 
-        <SessionTranscriptModal 
-          session={selectedSession}
-          open={modalOpen}
-          onOpenChange={setModalOpen}
-        />
-      </div>
-    );
-  }
-
-  // Dashboard with stats when skills exist
-  const totalLessons = learners.reduce((acc, learner) => {
-    const learnerSkills = skills[learner.name] || [];
-    return acc + learnerSkills.length;
-  }, 0);
-  
-  const activeLearners = learners.filter(learner => (skills[learner.name] || []).length > 0).length;
-  const totalLearningTime = `${totalLessons * 15}m 30s`;
-  const skillsInProgress = totalLessons;
+  // Use mock data for prototype stats (matching screenshot)
+  const activeLearners = learners.length; // 3 in screenshot
+  const skillsInProgress = 3;
+  const totalLessons = 4;
+  const totalLearningTime = "15m 40.2s";
   
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold">Family Dashboard</h2>
-        <p className="text-muted-foreground">Track progress and assign lessons to your children</p>
-      </div>
-
-      {/* Welcome Header - Always show */}
-      <Card className="bg-gradient-to-r from-primary/5 to-secondary/5">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl">
-            <div className="text-2xl">🎯</div>
-            Welcome to Your Parent Dashboard, {guardianName}!
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <p className="text-muted-foreground">
-              Your family's learning journey starts here. Track progress, view lesson transcripts, and monitor engagement across all your children's accounts.
-            </p>
-            <div className="bg-white/50 dark:bg-background/50 rounded-lg p-4 border">
-              <h4 className="font-medium mb-2 flex items-center gap-2">
-                📚 What You Can Track:
-              </h4>
-              <div className="grid sm:grid-cols-2 gap-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  Real-time progress tracking
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  Lesson completion analytics
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  Session transcript access
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  Time spent monitoring
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Stats Overview */}
+      {/* Stats Overview - matching screenshot layout */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{activeLearners}</div>
-            <div className="text-sm text-muted-foreground">Active Learners</div>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-muted-foreground">Active Learners</span>
+              <span className="text-muted-foreground">👥</span>
+            </div>
+            <div className="text-2xl font-bold">{activeLearners}</div>
+            <div className="text-xs text-muted-foreground">Children with learning data</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{skillsInProgress}</div>
-            <div className="text-sm text-muted-foreground">Skills in Progress</div>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-muted-foreground">Skills in Progress</span>
+              <span className="text-muted-foreground">🎯</span>
+            </div>
+            <div className="text-2xl font-bold">{skillsInProgress}</div>
+            <div className="text-xs text-muted-foreground">Active skills across {activeLearners} children</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{totalLessons}</div>
-            <div className="text-sm text-muted-foreground">Total Lessons Completed</div>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-muted-foreground">Completed Lessons</span>
+              <span className="text-muted-foreground">📚</span>
+            </div>
+            <div className="text-2xl font-bold">{totalLessons}</div>
+            <div className="text-xs text-muted-foreground">Lessons completed across {activeLearners} children</div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{totalLearningTime}</div>
-            <div className="text-sm text-muted-foreground">Learning Time</div>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-muted-foreground">Learning Time</span>
+              <span className="text-muted-foreground">⏱</span>
+            </div>
+            <div className="text-2xl font-bold">{totalLearningTime}</div>
+            <div className="text-xs text-muted-foreground">Spent learning across {activeLearners} children</div>
           </CardContent>
         </Card>
       </div>
       
-      {/* Learners Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            👥 Your Learners - Learning Progress
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2 items-stretch">{/* Added items-stretch for equal heights */}
+      {/* Your Children Section - matching screenshot */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">👥</span>
+            <div>
+              <h2 className="text-xl font-bold">Your Children</h2>
+              <p className="text-sm text-muted-foreground">Track your child's progress and recent activities</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
             {learners.map((learner) => {
               const learnerSkills = skills[learner.name] || [];
               const hasLearnerSkill = learnerSkills.length > 0;
@@ -381,9 +334,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                 </Card>
               );
             })}
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       <SessionTranscriptModal 
         session={selectedSession}
