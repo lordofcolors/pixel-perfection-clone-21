@@ -234,10 +234,10 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                                     ...prev,
                                     [learner.name]: !prev[learner.name]
                                   }))}
-                                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
                                     showFlaggedOnly[learner.name]
-                                      ? 'bg-destructive text-destructive-foreground'
-                                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                      ? 'border-foreground text-foreground bg-transparent'
+                                      : 'border-muted bg-muted text-muted-foreground hover:bg-muted/80'
                                   }`}
                                 >
                                   <Flag className="h-3 w-3" />
