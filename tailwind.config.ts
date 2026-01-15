@@ -61,6 +61,45 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				"xolv-magenta": {
+					50: "#FCF8FC",
+					100: "#F8EEF9",
+					200: "#EED4F0",
+					300: "#E9C7EB",
+					400: "#DAA3DD",
+					500: "#CA7FCD",
+					600: "#B962BB",
+					700: "#A14EA2",
+					800: "#854485",
+					900: "#6B386A",
+					950: "#4C1F4C"
+				},
+				"xolv-blue": {
+					50: "#EEF2FF",
+					100: "#E0E7FF",
+					200: "#C6D3FF",
+					300: "#97AAFD",
+					400: "#7F8DFA",
+					500: "#6166F3",
+					600: "#4B44E7",
+					700: "#342EA5",
+					800: "#2F2D82",
+					900: "#21495B",
+					950: "#1C1A4C"
+				},
+				"xolv-teal": {
+					50: "#EFFCFC",
+					100: "#D6F4F7",
+					200: "#B1E9F0",
+					300: "#B1E9F0",
+					400: "#3FBDD1",
+					500: "#24A1B6",
+					600: "#20829A",
+					700: "#21697D",
+					800: "#235767",
+					900: "#214958",
+					950: "#112F3B"
 				}
 			},
 			fontFamily: {

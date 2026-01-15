@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import acircleLogo from "@/assets/acircle-logo.png";
 
@@ -42,10 +41,19 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
       <Dialog open={isWelcomeOpen} onOpenChange={setIsWelcomeOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-2xl italic font-normal">
+            <DialogTitle className="text-2xl font-literata font-normal">
               Welcome, {learnerName}!
             </DialogTitle>
           </DialogHeader>
+          
+          {/* A Logo */}
+          <div className="flex justify-center py-4">
+            <img 
+              src={acircleLogo} 
+              alt="A Assistant" 
+              className="w-20 h-20 object-contain"
+            />
+          </div>
           
           <div className="space-y-4 text-muted-foreground">
             <p>Hi {learnerName}. I'm A.</p>
@@ -63,8 +71,7 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
           </div>
 
           <Button 
-            className="w-full mt-4 text-foreground font-medium"
-            style={{ backgroundColor: '#94DFE9' }}
+            className="w-full mt-4 bg-gradient-to-r dark:from-xolv-magenta-300 dark:via-xolv-blue-300 dark:to-xolv-teal-300 from-xolv-magenta-700 via-xolv-blue-600 to-xolv-teal-500 text-black font-medium"
             onClick={() => setIsWelcomeOpen(false)}
           >
             Let's meet A
