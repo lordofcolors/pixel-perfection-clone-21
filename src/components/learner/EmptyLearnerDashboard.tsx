@@ -51,11 +51,11 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
             <img 
               src={acircleLogo} 
               alt="A Assistant" 
-              className="w-20 h-20 object-contain"
+              className="w-[7.5rem] h-[7.5rem] object-contain"
             />
           </div>
           
-          <div className="space-y-4 text-muted-foreground">
+          <div className="space-y-4 text-muted-foreground font-literata">
             <p>Hi {learnerName}. I'm A.</p>
             
             <p>
@@ -71,7 +71,7 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
           </div>
 
           <Button 
-            className="w-full mt-4 bg-gradient-to-r dark:from-xolv-magenta-300 dark:via-xolv-blue-300 dark:to-xolv-teal-300 from-xolv-magenta-700 via-xolv-blue-600 to-xolv-teal-500 text-black font-medium"
+            className="w-full mt-4 bg-gradient-to-r dark:from-xolv-magenta-300 dark:via-xolv-blue-300 dark:to-xolv-teal-300 from-xolv-magenta-700 via-xolv-blue-600 to-xolv-teal-500 text-black font-medium font-literata"
             onClick={() => setIsWelcomeOpen(false)}
           >
             Let's meet A
