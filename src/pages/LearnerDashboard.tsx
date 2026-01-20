@@ -1,13 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/learner/AppSidebar";
 import { EmptyLearnerDashboard } from "@/components/learner/EmptyLearnerDashboard";
 import { LearnerAssignments } from "@/components/learner/LearnerAssignments";
 import { AssignmentNotifications } from "@/components/learner/AssignmentNotifications";
+import { LearnerWelcomeModal } from "@/components/learner/LearnerWelcomeModal";
 import { useLocation } from "react-router-dom";
 import { getOnboardingName, getAssignmentsForLearner } from "@/lib/store";
 
 export default function LearnerDashboard() {
+  const location = useLocation();
+  const learnerName = ((location.state as any)?.firstName as string | undefined) || getOnboardingName();
+  const hasAssignments = getAssignmentsForLearner(learnerName || "").length > 0;
+  
+  // Show welcome modal on every visit to learner dashboard
+  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+
   useEffect(() => {
     document.title = "Learner Dashboard - Curriculum";
     const desc = "Browse your curriculum and lessons.";
@@ -27,12 +35,9 @@ export default function LearnerDashboard() {
     }
     canonical.setAttribute('href', window.location.href);
   }, []);
-  const location = useLocation();
-  const learnerName = ((location.state as any)?.firstName as string | undefined) || getOnboardingName();
-  const hasAssignments = getAssignmentsForLearner(learnerName || "").length > 0;
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full">
         <AppSidebar learnerName={learnerName} />
 
@@ -52,6 +57,12 @@ export default function LearnerDashboard() {
           </main>
         </SidebarInset>
       </div>
+
+      <LearnerWelcomeModal 
+        open={showWelcomeModal} 
+        onClose={() => setShowWelcomeModal(false)}
+        learnerName={learnerName || "Learner"}
+      />
     </SidebarProvider>
   );
 }
