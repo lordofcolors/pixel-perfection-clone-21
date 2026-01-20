@@ -6,7 +6,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarInput,
   SidebarMenu,
@@ -20,7 +19,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Lock, Plus, ChevronUp, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { getAssignmentsForLearner, type Assignment } from "@/lib/store";
+import { getAssignmentsForLearner, getGuardianSetup, type Assignment, type Skill } from "@/lib/store";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 // Helper: initials from 'First Last'
@@ -33,14 +32,16 @@ const getInitials = (name?: string) => {
   return initials.toUpperCase();
 };
 
-type SkillWithAssignments = {
+type LessonWithDueStatus = {
+  title: string;
+  locked: boolean;
+  isDue: boolean;
+  dueDate?: string;
+};
+
+type SkillWithLessons = {
   skillTitle: string;
-  lessons: {
-    title: string;
-    locked: boolean;
-    isDue: boolean;
-    dueDate?: string;
-  }[];
+  lessons: LessonWithDueStatus[];
   dueCount: number;
 };
 
@@ -50,48 +51,63 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
   const { setOpen } = useSidebar();
   const isActive = (path: string) => location.pathname === path;
 
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [skillsWithAssignments, setSkillsWithAssignments] = useState<SkillWithAssignments[]>([]);
+  const [skillsWithLessons, setSkillsWithLessons] = useState<SkillWithLessons[]>([]);
   const [openSkills, setOpenSkills] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // Open sidebar when learner dashboard loads
     setOpen(true);
     
-    // Poll for assignments
-    const updateAssignments = () => {
+    const updateSkillsAndAssignments = () => {
+      const setup = getGuardianSetup();
+      const learnerSkills: Skill[] = setup?.skills?.[learnerName || ""] || [];
       const learnerAssignments = getAssignmentsForLearner(learnerName || "");
-      setAssignments(learnerAssignments);
       
-      // Group assignments by skill
-      const skillMap = new Map<string, SkillWithAssignments>();
-      
+      // Create a map of assigned lessons for quick lookup
+      // Key: "skillTitle|lessonTitle" to avoid duplicates
+      const assignedLessonsMap = new Map<string, Assignment>();
       learnerAssignments.forEach(assignment => {
-        if (!skillMap.has(assignment.skillTitle)) {
-          skillMap.set(assignment.skillTitle, {
-            skillTitle: assignment.skillTitle,
-            lessons: [],
-            dueCount: 0,
-          });
-        }
-        
-        const skill = skillMap.get(assignment.skillTitle)!;
-        const isDue = assignment.status === 'pending' || assignment.status === 'in-progress';
-        
-        skill.lessons.push({
-          title: assignment.lessonTitle,
-          locked: false,
-          isDue,
-          dueDate: assignment.dueDate,
-        });
-        
-        if (isDue) {
-          skill.dueCount++;
+        const key = `${assignment.skillTitle}|${assignment.lessonTitle}`;
+        // Only keep the first assignment for each unique skill+lesson combo
+        if (!assignedLessonsMap.has(key)) {
+          assignedLessonsMap.set(key, assignment);
         }
       });
       
-      const skillsList = Array.from(skillMap.values());
-      setSkillsWithAssignments(skillsList);
+      // Build skills list with full lesson tree, marking which ones are due
+      const skillsList: SkillWithLessons[] = learnerSkills.map(skill => {
+        let dueCount = 0;
+        let foundFirstDue = false;
+        
+        const lessons: LessonWithDueStatus[] = skill.lessons.map((lesson, idx) => {
+          const key = `${skill.title}|${lesson.title}`;
+          const assignment = assignedLessonsMap.get(key);
+          const isDue = assignment && (assignment.status === 'pending' || assignment.status === 'in-progress');
+          
+          // Determine if lesson should be locked (all lessons after the first due one are locked)
+          const isLocked = idx > 0 && !isDue && foundFirstDue;
+          
+          if (isDue) {
+            dueCount++;
+            foundFirstDue = true;
+          }
+          
+          return {
+            title: lesson.title,
+            locked: isLocked || lesson.locked,
+            isDue: isDue || false,
+            dueDate: assignment?.dueDate,
+          };
+        });
+        
+        return {
+          skillTitle: skill.title,
+          lessons,
+          dueCount,
+        };
+      });
+      
+      setSkillsWithLessons(skillsList);
       
       // Auto-open skills that have due items
       const skillsToOpen = new Set<string>();
@@ -100,11 +116,16 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
           skillsToOpen.add(skill.skillTitle);
         }
       });
-      setOpenSkills(skillsToOpen);
+      setOpenSkills(prev => {
+        // Merge with existing open skills to preserve user's manual toggles
+        const merged = new Set(prev);
+        skillsToOpen.forEach(s => merged.add(s));
+        return merged;
+      });
     };
 
-    updateAssignments();
-    const interval = setInterval(updateAssignments, 2000);
+    updateSkillsAndAssignments();
+    const interval = setInterval(updateSkillsAndAssignments, 2000);
     return () => clearInterval(interval);
   }, [learnerName, setOpen]);
 
@@ -155,8 +176,8 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
-              {/* Skills with assignments */}
-              {skillsWithAssignments.map((skill) => (
+              {/* Skills with full lesson tree */}
+              {skillsWithLessons.map((skill) => (
                 <SidebarMenuItem key={skill.skillTitle}>
                   <Collapsible 
                     open={openSkills.has(skill.skillTitle)}
@@ -185,7 +206,7 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
                     <CollapsibleContent>
                       <SidebarMenuSub>
                         {skill.lessons.map((lesson, idx) => (
-                          <li key={idx} className="flex items-center justify-between py-1">
+                          <li key={`${skill.skillTitle}-${lesson.title}-${idx}`} className="flex items-center justify-between py-1">
                             <SidebarMenuSubButton
                               asChild
                               isActive={false}

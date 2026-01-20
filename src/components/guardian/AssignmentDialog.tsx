@@ -176,20 +176,18 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
 
     saveGuardianSetup(updatedData);
 
-    // Automatically assign the first lesson (unlocked one) to the learner
-    if (previewLessons.length > 0) {
-      assignLessonToPerson(learnerName, customSkillText.trim(), previewLessons[0].title, dueDate || undefined);
-    }
+    // Show a toast that skill was created, then switch to existing tab for lesson selection
+    toast({
+      title: "Skill created!",
+      description: `"${customSkillText.trim()}" has been added. Now select the lessons you want to assign.`,
+    });
 
-    // Show success modal instead of toast
-    setSuccessMessage({ title: customSkillText.trim(), lessonCount: 1 });
-    setShowSuccessModal(true);
-
+    // Reset preview and switch to existing tab for lesson assignment
     setCustomSkillText("");
     setPreviewLessons([]);
     setShowPreview(false);
     setActiveTab("existing");
-    onOpenChange(false);
+    // Don't close dialog - let parent select lessons to assign
   };
 
   const handleStartRecording = async () => {
