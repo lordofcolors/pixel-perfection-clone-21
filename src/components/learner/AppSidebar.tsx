@@ -17,10 +17,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Lock, Plus, ChevronUp, ChevronDown } from "lucide-react";
+import { Lock, Plus, ChevronUp, ChevronDown, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getAssignmentsForLearner, getGuardianSetup, type Assignment, type Skill } from "@/lib/store";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { SwitchToParentDialog } from "./SwitchToParentDialog";
 
 // Helper: initials from 'First Last'
 const getInitials = (name?: string) => {
@@ -53,6 +54,7 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
 
   const [skillsWithLessons, setSkillsWithLessons] = useState<SkillWithLessons[]>([]);
   const [openSkills, setOpenSkills] = useState<Set<string>>(new Set());
+  const [showParentSwitch, setShowParentSwitch] = useState(false);
 
   useEffect(() => {
     // Open sidebar when learner dashboard loads
@@ -238,6 +240,17 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
       </SidebarContent>
 
       <SidebarFooter>
+        <div className="px-2 pb-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full justify-start gap-2"
+            onClick={() => setShowParentSwitch(true)}
+          >
+            <Users className="h-4 w-4" />
+            Switch to Family Dashboard
+          </Button>
+        </div>
         <div className="flex items-center gap-2 px-2 py-1 rounded-md">
           <Avatar>
             <AvatarFallback>{getInitials(learnerName)}</AvatarFallback>
@@ -262,6 +275,11 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
           </SidebarMenu>
         </div>
       </SidebarFooter>
+      
+      <SwitchToParentDialog 
+        open={showParentSwitch} 
+        onOpenChange={setShowParentSwitch}
+      />
     </Sidebar>
   );
 }
