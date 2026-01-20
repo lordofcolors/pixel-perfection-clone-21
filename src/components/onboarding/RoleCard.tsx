@@ -5,7 +5,7 @@ interface RoleCardProps {
   role: 'learner' | 'guardian';
   title: string;
   description: string;
-  extendedDescription: string;
+  bulletPoints: string[];
   imageUrl: string;
   imageAlt: string;
   isSelected: boolean;
@@ -18,7 +18,7 @@ export const RoleCard: React.FC<RoleCardProps> = ({
   role,
   title,
   description,
-  extendedDescription,
+  bulletPoints,
   imageUrl,
   imageAlt,
   isSelected,
@@ -56,9 +56,14 @@ export const RoleCard: React.FC<RoleCardProps> = ({
             {title}
           </div>
           <div className="text-sm text-muted-foreground leading-5 text-left">{description}</div>
-          <div className="text-xs text-muted-foreground/80 leading-4 text-left mt-2 border-t border-border/50 pt-2">
-            {extendedDescription}
-          </div>
+          <ul className="text-xs text-muted-foreground/80 leading-4 text-left mt-2 border-t border-border/50 pt-2 space-y-1.5 list-none">
+            {bulletPoints.map((point, index) => (
+              <li key={index} className="flex items-start gap-1.5">
+                <span className="text-primary mt-0.5">•</span>
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </CardContent>
     </Card>
