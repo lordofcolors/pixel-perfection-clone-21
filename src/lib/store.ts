@@ -30,6 +30,7 @@ export type GuardianSetupData = {
   accountMode?: 'inhouse' | 'separate';
   skills?: PersonSkills;
   assignments?: Assignment[];
+  parentPin?: string;
 };
 
 const KEYS = {
