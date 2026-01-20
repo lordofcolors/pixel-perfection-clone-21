@@ -83,6 +83,7 @@ export const OnboardingLayout: React.FC = () => {
       imageUrl: 'https://api.builder.io/api/v1/image/assets/TEMP/9107901cbfe710c4b3a731604ada2cac0d28a37a?width=240',
       imageAlt: 'learner',
       backgroundColor: '#3FBDD1',
+      titleColorClass: 'text-xolv-teal-300',
       imageClassName: 'w-[120px] h-[87px] left-[63px] top-[35px]'
     },
     {
@@ -97,6 +98,7 @@ export const OnboardingLayout: React.FC = () => {
       imageUrl: 'https://api.builder.io/api/v1/image/assets/TEMP/8d59003dfe2826aab8d09c5daa647bf58f9895e6?width=270',
       imageAlt: 'guardian',
       backgroundColor: '#CA7FCD',
+      titleColorClass: 'text-xolv-magenta-300',
       imageClassName: 'w-[135px] h-[125px] left-[22px] -top-1.5'
     }
   ];
@@ -149,19 +151,20 @@ export const OnboardingLayout: React.FC = () => {
           <fieldset className="flex gap-4 mt-8 max-md:flex-col max-md:items-center max-md:gap-5">
             <legend className="sr-only">Choose your role</legend>
             {roleCards.map((card) => (
-              <RoleCard
-                key={card.role}
-                role={card.role}
-                title={card.title}
-                description={card.description}
-                bulletPoints={card.bulletPoints}
-                imageUrl={card.imageUrl}
-                imageAlt={card.imageAlt}
-                isSelected={selectedRole === card.role}
-                onSelect={() => setSelectedRole(card.role)}
-                backgroundColor={card.backgroundColor}
-                imageClassName={card.imageClassName}
-              />
+            <RoleCard
+              key={card.role}
+              role={card.role}
+              title={card.title}
+              description={card.description}
+              bulletPoints={card.bulletPoints}
+              imageUrl={card.imageUrl}
+              imageAlt={card.imageAlt}
+              isSelected={selectedRole === card.role}
+              onSelect={() => setSelectedRole(card.role)}
+              backgroundColor={card.backgroundColor}
+              titleColorClass={card.titleColorClass}
+              imageClassName={card.imageClassName}
+            />
             ))}
           </fieldset>
 
