@@ -114,7 +114,7 @@ export const OnboardingLayout: React.FC = () => {
   };
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <main className="w-screen min-h-screen relative overflow-auto font-literata bg-background max-md:p-5 max-sm:p-4">
         <ProgressBar progress={25} />
         
@@ -181,9 +181,9 @@ export const OnboardingLayout: React.FC = () => {
             type="submit"
             disabled={!canSubmit}
             className={`inline-flex h-11 justify-center items-center gap-2 shrink-0 absolute -translate-x-2/4 w-[100px] px-8 py-2 rounded-lg left-2/4 top-[879px] max-md:top-[780px] max-sm:w-[120px] max-sm:top-[680px] transition-all duration-200 font-literata`}
-            aria-label="Complete onboarding process"
+            aria-label="Proceed to next step"
           >
-            Done
+            Next
           </Button>
         </form>
 
