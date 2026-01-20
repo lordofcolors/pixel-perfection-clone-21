@@ -97,27 +97,25 @@ export function ParentPinFlow({ open, onOpenChange, learnerName, mode, onSuccess
 
   const handleVerifyPin = () => {
     const currentSetup = getGuardianSetup();
-    console.log("Verifying PIN...", { enteredPin: pin, storedPin: currentSetup?.parentPin, mode });
     
     if (pin === currentSetup?.parentPin) {
-      console.log("PIN verified! Navigating...");
-      onOpenChange(false);
       setPin("");
       setError("");
+      onOpenChange(false);
       
-      if (mode === 'setup-before-switch') {
-        console.log("Navigating to /learner for:", learnerName);
-        navigate('/learner', { state: { firstName: learnerName } });
-      } else if (mode === 'verify-to-parent') {
-        console.log("Navigating to /guardian/manage");
-        navigate('/guardian/manage');
-      }
-      
-      if (onSuccess) {
-        onSuccess();
-      }
+      // Use setTimeout to ensure dialog closes before navigation
+      setTimeout(() => {
+        if (mode === 'setup-before-switch') {
+          navigate('/learner', { state: { firstName: learnerName } });
+        } else if (mode === 'verify-to-parent') {
+          navigate('/guardian/manage', { replace: true });
+        }
+        
+        if (onSuccess) {
+          onSuccess();
+        }
+      }, 100);
     } else {
-      console.log("PIN mismatch!");
       setError("Incorrect PIN. Please try again.");
       setPin("");
     }
