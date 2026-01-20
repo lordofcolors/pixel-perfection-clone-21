@@ -14,6 +14,7 @@ import { Plus, Mic, MicOff, Loader2, Calendar, RefreshCw, Sparkles, Lock, CheckC
 import { toast } from "@/hooks/use-toast";
 import { AudioRecorder } from "@/utils/audioRecorder";
 import { supabase } from "@/integrations/supabase/client";
+import { ParentPinFlow } from "./ParentPinFlow";
 
 type AssignmentDialogProps = {
   open: boolean;
@@ -37,6 +38,7 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
   const [adjustmentPrompt, setAdjustmentPrompt] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState<{ title: string; lessonCount: number }>({ title: "", lessonCount: 0 });
+  const [showPinFlow, setShowPinFlow] = useState(false);
   
   const setup = getGuardianSetup();
   const learnerSkills = setup?.skills?.[learnerName] || [];
@@ -94,7 +96,8 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
 
   const handleSwitchToLearner = () => {
     setShowSuccessModal(false);
-    navigate('/learner', { state: { firstName: learnerName } });
+    // Open PIN flow instead of navigating directly
+    setShowPinFlow(true);
   };
 
   const handleCloseSuccessModal = () => {
@@ -596,6 +599,14 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* PIN Flow Modal */}
+      <ParentPinFlow
+        open={showPinFlow}
+        onOpenChange={setShowPinFlow}
+        learnerName={learnerName}
+        mode="setup-before-switch"
+      />
     </>
   );
 }
