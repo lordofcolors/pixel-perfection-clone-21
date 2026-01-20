@@ -46,12 +46,12 @@ export const RoleCard: React.FC<RoleCardProps> = ({
           <div className="flex h-0 rotate-[-25.377deg] flex-col items-center shrink-0 self-stretch relative" />
         </div>
         <img src={imageUrl} alt={imageAlt} loading="lazy" className={`absolute ${imageClassName}`} />
-        <CardContent className="pt-6">
-          <div className="flex flex-col items-start gap-1.5">
+        <CardContent className="pt-6 px-0">
+          <div className="flex flex-col items-start gap-1.5 text-left">
             <div className={`text-sm font-bold leading-[21px] ${isSelected ? 'text-foreground' : ''}`}>
               {title}
             </div>
-            <div className="text-sm text-muted-foreground leading-5">{description}</div>
+            <div className="text-sm text-muted-foreground leading-5 text-left">{description}</div>
           </div>
         </CardContent>
       </Card>
