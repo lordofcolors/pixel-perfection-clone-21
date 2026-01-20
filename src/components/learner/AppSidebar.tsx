@@ -17,11 +17,19 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Lock, Plus, ChevronUp, ChevronDown, Users } from "lucide-react";
+import { Lock, Plus, ChevronUp, ChevronDown, Users, ChevronsUpDown, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getAssignmentsForLearner, getGuardianSetup, type Assignment, type Skill } from "@/lib/store";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { SwitchToParentDialog } from "./SwitchToParentDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Helper: initials from 'First Last'
 const getInitials = (name?: string) => {
@@ -240,26 +248,61 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
       </SidebarContent>
 
       <SidebarFooter>
-        <div className="px-2 pb-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="w-full justify-start gap-2"
-            onClick={() => setShowParentSwitch(true)}
-          >
-            <Users className="h-4 w-4" />
-            Switch to Family Dashboard
-          </Button>
-        </div>
-        <div className="flex items-center gap-2 px-2 py-1 rounded-md">
-          <Avatar>
-            <AvatarFallback>{getInitials(learnerName)}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium truncate">{learnerName || "Learner"}</span>
-            <span className="text-xs text-muted-foreground">Learner</span>
-          </div>
-        </div>
+        {/* Account Switcher Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-between px-2 py-6 h-auto"
+            >
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="text-sm">{getInitials(learnerName)}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col items-start">
+                  <span className="text-sm font-medium truncate">{learnerName || "Learner"}</span>
+                  <span className="text-xs text-muted-foreground">Learner</span>
+                </div>
+              </div>
+              <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuLabel>Accounts</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            
+            {/* Current Learner - shown as selected */}
+            <DropdownMenuItem className="gap-2">
+              <Avatar className="h-6 w-6">
+                <AvatarFallback className="text-xs">{getInitials(learnerName)}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col flex-1">
+                <span className="text-sm">{learnerName || "Learner"}</span>
+                <span className="text-xs text-muted-foreground">Learner</span>
+              </div>
+              <Check className="h-4 w-4" />
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator />
+            
+            {/* Switch to Parent */}
+            <DropdownMenuItem 
+              className="gap-2 cursor-pointer"
+              onClick={() => setShowParentSwitch(true)}
+            >
+              <div className="h-6 w-6 rounded-full bg-xolv-magenta-300/20 flex items-center justify-center">
+                <Users className="h-3 w-3 text-xolv-magenta-300" />
+              </div>
+              <div className="flex flex-col flex-1">
+                <span className="text-sm">Family Dashboard</span>
+                <span className="text-xs text-muted-foreground">Parent View</span>
+              </div>
+              <Lock className="h-3 w-3 text-muted-foreground" />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Account and Billing links */}
         <div className="px-2 pt-2">
           <SidebarMenu>
             <SidebarMenuItem>
