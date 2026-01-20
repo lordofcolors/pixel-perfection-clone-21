@@ -11,6 +11,7 @@ interface RoleCardProps {
   isSelected: boolean;
   onSelect: () => void;
   backgroundColor: string;
+  titleColorClass: string;
   imageClassName?: string;
 }
 
@@ -24,6 +25,7 @@ export const RoleCard: React.FC<RoleCardProps> = ({
   isSelected,
   onSelect,
   backgroundColor,
+  titleColorClass,
   imageClassName = ''
 }) => {
   return (
@@ -52,14 +54,14 @@ export const RoleCard: React.FC<RoleCardProps> = ({
       <img src={imageUrl} alt={imageAlt} loading="lazy" className={`absolute ${imageClassName}`} />
       <CardContent className="pt-6 px-0">
         <div className="flex flex-col items-start gap-1.5 text-left">
-          <div className={`text-sm font-bold leading-[21px] ${isSelected ? 'text-foreground' : ''}`}>
+          <div className={`text-sm font-bold leading-[21px] ${titleColorClass}`}>
             {title}
           </div>
-          <div className="text-sm text-muted-foreground leading-5 text-left">{description}</div>
-          <ul className="text-xs text-muted-foreground/80 leading-4 text-left mt-2 border-t border-border/50 pt-2 space-y-1.5 list-none">
+          <div className="text-sm text-white leading-5 text-left">{description}</div>
+          <ul className="text-xs text-white/90 leading-4 text-left mt-2 border-t border-border/50 pt-2 space-y-1.5 list-none">
             {bulletPoints.map((point, index) => (
               <li key={index} className="flex items-start gap-1.5">
-                <span className="text-primary mt-0.5">•</span>
+                <span className={`mt-0.5 ${titleColorClass}`}>•</span>
                 <span>{point}</span>
               </li>
             ))}
