@@ -75,7 +75,11 @@ export const OnboardingLayout: React.FC = () => {
       role: 'learner' as const,
       title: 'Learner',
       description: 'For students and job seekers building career skills',
-      extendedDescription: 'You\'ll manage your own account and payments independently, without a parent or guardian overseeing your activity.',
+      bulletPoints: [
+        'You manage your own monthly subscription',
+        'Learn independently at your own pace',
+        'Full control over your learning journey'
+      ],
       imageUrl: 'https://api.builder.io/api/v1/image/assets/TEMP/9107901cbfe710c4b3a731604ada2cac0d28a37a?width=240',
       imageAlt: 'learner',
       backgroundColor: '#3FBDD1',
@@ -85,7 +89,11 @@ export const OnboardingLayout: React.FC = () => {
       role: 'guardian' as const,
       title: 'Parent/Guardian',
       description: 'For parents and caregivers supporting a learner',
-      extendedDescription: 'You can add learners, track their activity and progress, and manage payments on their behalf. Recommended for families.',
+      bulletPoints: [
+        'You manage subscription on learner\'s behalf',
+        'Track activity and learning progress',
+        'Assign skills and lessons with due dates'
+      ],
       imageUrl: 'https://api.builder.io/api/v1/image/assets/TEMP/8d59003dfe2826aab8d09c5daa647bf58f9895e6?width=270',
       imageAlt: 'guardian',
       backgroundColor: '#CA7FCD',
@@ -109,61 +117,64 @@ export const OnboardingLayout: React.FC = () => {
   };
 
   return (
-    <main className="w-screen min-h-screen relative overflow-auto font-literata bg-background max-md:p-5 max-sm:p-4">
+    <main className="w-screen min-h-screen font-literata bg-background overflow-auto">
       <ProgressBar progress={25} />
       
-      <div className="absolute -translate-x-2/4 w-[213px] h-[212px] left-2/4 top-[102px] max-md:w-[180px] max-md:h-[180px] max-md:top-20 max-sm:w-[150px] max-sm:h-[150px] max-sm:top-[60px]">
-        <img
-          src="https://api.builder.io/api/v1/image/assets/TEMP/93a27a18bc8d04a44cda6817cf59746f14d5582d?width=426"
-          alt="Welcome illustration"
-          loading="eager"
-          className="w-[213px] h-[212px] shrink-0 max-md:w-[180px] max-md:h-[180px] max-sm:w-[150px] max-sm:h-[150px]"
-        />
+      <div className="flex flex-col items-center px-4 pt-24 pb-16 max-md:pt-20 max-sm:pt-16">
+        {/* Welcome illustration */}
+        <div className="w-[213px] h-[212px] max-md:w-[180px] max-md:h-[180px] max-sm:w-[150px] max-sm:h-[150px]">
+          <img
+            src="https://api.builder.io/api/v1/image/assets/TEMP/93a27a18bc8d04a44cda6817cf59746f14d5582d?width=426"
+            alt="Welcome illustration"
+            loading="eager"
+            className="w-full h-full"
+          />
+        </div>
+
+        <form onSubmit={handleDoneClick} noValidate className="flex flex-col items-center w-full">
+          <h1 className="text-[#EED4F0] text-center text-2xl font-normal leading-[30px] mt-8 max-md:text-xl max-sm:text-lg">
+            Hello there, what's your name?
+          </h1>
+
+          <NameInput
+            register={register}
+            errors={errors}
+            className="mt-4"
+          />
+
+          <h2 className="text-[#EED4F0] text-center text-2xl font-normal leading-[30px] mt-12 max-md:text-xl max-sm:text-lg">
+            Pick the role that fits you best:
+          </h2>
+
+          <fieldset className="flex gap-4 mt-8 max-md:flex-col max-md:items-center max-md:gap-5">
+            <legend className="sr-only">Choose your role</legend>
+            {roleCards.map((card) => (
+              <RoleCard
+                key={card.role}
+                role={card.role}
+                title={card.title}
+                description={card.description}
+                bulletPoints={card.bulletPoints}
+                imageUrl={card.imageUrl}
+                imageAlt={card.imageAlt}
+                isSelected={selectedRole === card.role}
+                onSelect={() => setSelectedRole(card.role)}
+                backgroundColor={card.backgroundColor}
+                imageClassName={card.imageClassName}
+              />
+            ))}
+          </fieldset>
+
+          <Button
+            type="submit"
+            disabled={!canSubmit}
+            className="h-11 w-[100px] px-8 py-2 rounded-lg mt-10 transition-all duration-200 font-literata max-sm:w-[120px]"
+            aria-label="Proceed to next step"
+          >
+            Next
+          </Button>
+        </form>
       </div>
-
-      <form onSubmit={handleDoneClick} noValidate>
-        <h1 className="w-[421px] h-[99px] shrink-0 text-[#EED4F0] text-center text-2xl font-normal leading-[30px] absolute -translate-x-2/4 left-2/4 top-[340px] max-md:text-xl max-md:w-[350px] max-md:top-[280px] max-sm:text-lg max-sm:w-[300px] max-sm:left-2/4 max-sm:top-[230px]">
-          Hello there, what's your name?
-        </h1>
-
-        <NameInput
-          register={register}
-          errors={errors}
-          className="absolute -translate-x-2/4 left-2/4 top-[399px] max-md:top-[330px] max-sm:top-[280px]"
-        />
-
-        <h2 className="w-[421px] h-[99px] shrink-0 text-[#EED4F0] text-center text-2xl font-normal leading-[30px] absolute -translate-x-2/4 left-2/4 top-[512px] max-md:text-xl max-md:w-[350px] max-md:top-[420px] max-sm:text-lg max-sm:w-[300px] max-sm:top-[350px]">
-          Pick the role that fits you best:
-        </h2>
-
-        <fieldset className="flex gap-4 absolute -translate-x-2/4 left-2/4 top-[585px] max-md:flex-col max-md:items-center max-md:gap-5 max-md:top-[480px] max-sm:top-[400px]">
-          <legend className="sr-only">Choose your role</legend>
-          {roleCards.map((card) => (
-            <RoleCard
-              key={card.role}
-              role={card.role}
-              title={card.title}
-              description={card.description}
-              extendedDescription={card.extendedDescription}
-              imageUrl={card.imageUrl}
-              imageAlt={card.imageAlt}
-              isSelected={selectedRole === card.role}
-              onSelect={() => setSelectedRole(card.role)}
-              backgroundColor={card.backgroundColor}
-              imageClassName={card.imageClassName}
-            />
-          ))}
-        </fieldset>
-
-        <Button
-          type="submit"
-          disabled={!canSubmit}
-          className={`inline-flex h-11 justify-center items-center gap-2 shrink-0 absolute -translate-x-2/4 w-[100px] px-8 py-2 rounded-lg left-2/4 top-[920px] max-md:top-[850px] max-sm:w-[120px] max-sm:top-[750px] transition-all duration-200 font-literata`}
-          aria-label="Proceed to next step"
-        >
-          Next
-        </Button>
-      </form>
 
 
       {/* Confirmation Modal */}
