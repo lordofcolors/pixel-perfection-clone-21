@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Dialog,
@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { getGuardianSetup, saveGuardianSetup } from "@/lib/store";
-import { Lock, ArrowRight, Mail, ArrowLeft } from "lucide-react";
+import { Lock, ArrowRight, ArrowLeft } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 type ParentPinFlowProps = {
@@ -27,29 +27,29 @@ export function ParentPinFlow({ open, onOpenChange, learnerName, mode, onSuccess
   const [confirmPin, setConfirmPin] = useState("");
   const [step, setStep] = useState<'setup' | 'confirm' | 'verify' | 'forgot'>('setup');
   const [error, setError] = useState("");
-  
-  const setup = getGuardianSetup();
-  const hasPin = !!setup?.parentPin;
-  const parentEmail = setup?.guardianEmail || "";
 
-  // Determine initial step based on mode and whether PIN exists
-  const getInitialStep = () => {
-    if (mode === 'setup-before-switch') {
-      return hasPin ? 'verify' : 'setup';
-    }
-    return hasPin ? 'verify' : 'setup';
-  };
-
-  // Reset state when dialog opens
-  const handleOpenChange = (isOpen: boolean) => {
-    if (isOpen) {
-      setStep(getInitialStep());
+  // Get fresh data from store when dialog opens
+  useEffect(() => {
+    if (open) {
+      const currentSetup = getGuardianSetup();
+      const pinExists = !!currentSetup?.parentPin;
+      
+      // Set the correct initial step based on whether PIN exists
+      if (pinExists) {
+        setStep('verify');
+      } else {
+        setStep('setup');
+      }
+      
       setPin("");
       setConfirmPin("");
       setError("");
     }
-    onOpenChange(isOpen);
-  };
+  }, [open]);
+
+  // Get fresh setup data for each render when open
+  const setup = getGuardianSetup();
+  const parentName = setup?.guardianName || "Parent";
 
   const handleSetPin = () => {
     if (pin.length !== 4) {
@@ -71,9 +71,10 @@ export function ParentPinFlow({ open, onOpenChange, learnerName, mode, onSuccess
       return;
     }
     
-    // Save PIN
-    if (setup) {
-      saveGuardianSetup({ ...setup, parentPin: pin });
+    // Save PIN - get fresh setup data
+    const currentSetup = getGuardianSetup();
+    if (currentSetup) {
+      saveGuardianSetup({ ...currentSetup, parentPin: pin });
     }
     
     toast({
@@ -95,7 +96,8 @@ export function ParentPinFlow({ open, onOpenChange, learnerName, mode, onSuccess
   };
 
   const handleVerifyPin = () => {
-    if (pin === setup?.parentPin) {
+    const currentSetup = getGuardianSetup();
+    if (pin === currentSetup?.parentPin) {
       onOpenChange(false);
       setPin("");
       setError("");
@@ -115,39 +117,23 @@ export function ParentPinFlow({ open, onOpenChange, learnerName, mode, onSuccess
     }
   };
 
-  const handleForgotPin = async () => {
-    if (!parentEmail) {
-      toast({
-        title: "No email on file",
-        description: "Please contact support to reset your PIN.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // In a real app, this would call an edge function to send email
-    // For now, we'll show the PIN in a toast (for demo purposes)
+  const handleForgotPin = () => {
+    // For now, just show a message about using Google auth
     toast({
       title: "PIN Recovery",
-      description: `A PIN reminder has been sent to ${parentEmail}. Check your email.`,
+      description: "Please use Google Sign-In to verify your identity and reset your PIN.",
     });
-    
-    // For demo: show the actual PIN
-    console.log("Demo: Parent PIN is:", setup?.parentPin);
-    
-    setStep('verify');
   };
 
   const handleClose = () => {
     onOpenChange(false);
     setPin("");
     setConfirmPin("");
-    setStep(getInitialStep());
     setError("");
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         {/* SETUP STEP */}
         {step === 'setup' && (
@@ -158,7 +144,10 @@ export function ParentPinFlow({ open, onOpenChange, learnerName, mode, onSuccess
                 Create Your Parent PIN
               </DialogTitle>
               <DialogDescription>
-                Before switching to {learnerName}'s account, create a 4-digit PIN so you can easily switch back to the Family Dashboard.
+                {mode === 'setup-before-switch' 
+                  ? `Before switching to ${learnerName}'s account, create a 4-digit PIN so you can easily switch back.`
+                  : "Create a 4-digit PIN to protect your Family Dashboard."
+                }
               </DialogDescription>
             </DialogHeader>
 
@@ -182,7 +171,7 @@ export function ParentPinFlow({ open, onOpenChange, learnerName, mode, onSuccess
               {error && <p className="text-sm text-destructive">{error}</p>}
               
               <p className="text-xs text-muted-foreground text-center">
-                This PIN will be required to access the Family Dashboard from {learnerName}'s account.
+                This PIN will be required to access the Family Dashboard.
               </p>
             </div>
 
@@ -260,10 +249,7 @@ export function ParentPinFlow({ open, onOpenChange, learnerName, mode, onSuccess
                 Enter Parent PIN
               </DialogTitle>
               <DialogDescription>
-                {mode === 'setup-before-switch' 
-                  ? `Enter your PIN to switch to ${learnerName}'s account.`
-                  : "Enter your 4-digit PIN to access the Family Dashboard."
-                }
+                Enter your 4-digit PIN to access the Family Dashboard.
               </DialogDescription>
             </DialogHeader>
 
@@ -303,55 +289,10 @@ export function ParentPinFlow({ open, onOpenChange, learnerName, mode, onSuccess
               
               <Button
                 variant="link"
-                onClick={() => setStep('forgot')}
+                onClick={handleForgotPin}
                 className="w-full text-muted-foreground"
               >
-                Forgot your PIN?
-              </Button>
-            </div>
-          </>
-        )}
-
-        {/* FORGOT STEP */}
-        {step === 'forgot' && (
-          <>
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Mail className="h-5 w-5" />
-                Reset Your PIN
-              </DialogTitle>
-              <DialogDescription>
-                We'll send a PIN reminder to your email address on file.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="py-6 space-y-4">
-              <div className="bg-muted/50 rounded-lg p-4 text-center">
-                {parentEmail ? (
-                  <p className="text-sm">
-                    A PIN reminder will be sent to:<br />
-                    <span className="font-medium">{parentEmail}</span>
-                  </p>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    No email address on file. Please contact support.
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setStep('verify')} className="flex-1">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-              <Button 
-                onClick={handleForgotPin}
-                className="flex-1"
-                disabled={!parentEmail}
-              >
-                <Mail className="h-4 w-4 mr-2" />
-                Send Reminder
+                Forgot your PIN? Use Google Sign-In
               </Button>
             </div>
           </>

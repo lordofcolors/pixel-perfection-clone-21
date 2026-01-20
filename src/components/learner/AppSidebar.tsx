@@ -63,6 +63,9 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
   const [skillsWithLessons, setSkillsWithLessons] = useState<SkillWithLessons[]>([]);
   const [openSkills, setOpenSkills] = useState<Set<string>>(new Set());
   const [showParentSwitch, setShowParentSwitch] = useState(false);
+  
+  const setup = getGuardianSetup();
+  const parentName = setup?.guardianName || "Parent";
 
   useEffect(() => {
     // Open sidebar when learner dashboard loads
@@ -290,12 +293,14 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
               className="gap-2 cursor-pointer"
               onClick={() => setShowParentSwitch(true)}
             >
-              <div className="h-6 w-6 rounded-full bg-xolv-magenta-300/20 flex items-center justify-center">
-                <Users className="h-3 w-3 text-xolv-magenta-300" />
-              </div>
+              <Avatar className="h-6 w-6">
+                <AvatarFallback className="text-xs bg-xolv-magenta-300/20 text-xolv-magenta-300">
+                  {getInitials(parentName)}
+                </AvatarFallback>
+              </Avatar>
               <div className="flex flex-col flex-1">
-                <span className="text-sm">Family Dashboard</span>
-                <span className="text-xs text-muted-foreground">Parent View</span>
+                <span className="text-sm">{parentName}</span>
+                <span className="text-xs text-muted-foreground">Parent</span>
               </div>
               <Lock className="h-3 w-3 text-muted-foreground" />
             </DropdownMenuItem>
