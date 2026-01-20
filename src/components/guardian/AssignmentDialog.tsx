@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { getGuardianSetup, type Skill, type Lesson, saveGuardianSetup, assignLessonToPerson } from "@/lib/store";
-import { Plus, Mic, MicOff, Loader2, Calendar, RefreshCw, Sparkles, Lock } from "lucide-react";
+import { Plus, Mic, MicOff, Loader2, Calendar, RefreshCw, Sparkles, Lock, CheckCircle2, ArrowRight } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { AudioRecorder } from "@/utils/audioRecorder";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +22,7 @@ type AssignmentDialogProps = {
 };
 
 export function AssignmentDialog({ open, onOpenChange, learnerName }: AssignmentDialogProps) {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"existing" | "new">("existing");
   const [customSkillText, setCustomSkillText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -33,6 +35,8 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
   const [previewLessons, setPreviewLessons] = useState<Lesson[]>([]);
   const [showAdjustDialog, setShowAdjustDialog] = useState(false);
   const [adjustmentPrompt, setAdjustmentPrompt] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<{ title: string; lessonCount: number }>({ title: "", lessonCount: 0 });
   
   const setup = getGuardianSetup();
   const learnerSkills = setup?.skills?.[learnerName] || [];
@@ -79,14 +83,22 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
       return;
     }
 
-    toast({
-      title: "Lessons assigned!",
-      description: `${assignedCount} lesson${assignedCount > 1 ? 's' : ''} assigned to ${learnerName}${dueDate ? ` (Due: ${new Date(dueDate).toLocaleDateString()})` : ''}.`,
-    });
+    // Show success modal instead of toast
+    setSuccessMessage({ title: "Lessons", lessonCount: assignedCount });
+    setShowSuccessModal(true);
 
     setSelectedLessons({});
     setDueDate("");
     onOpenChange(false);
+  };
+
+  const handleSwitchToLearner = () => {
+    setShowSuccessModal(false);
+    navigate('/learner', { state: { firstName: learnerName } });
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
   };
 
   const generateLessons = async (adjusting = false) => {
@@ -169,10 +181,9 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
       assignLessonToPerson(learnerName, customSkillText.trim(), previewLessons[0].title, dueDate || undefined);
     }
 
-    toast({
-      title: "Skill created!",
-      description: `"${customSkillText.trim()}" has been added to ${learnerName}'s skills. The first lesson has been assigned.`,
-    });
+    // Show success modal instead of toast
+    setSuccessMessage({ title: customSkillText.trim(), lessonCount: 1 });
+    setShowSuccessModal(true);
 
     setCustomSkillText("");
     setPreviewLessons([]);
@@ -527,6 +538,61 @@ export function AssignmentDialog({ open, onOpenChange, learnerName }: Assignment
                     Regenerate Lessons
                   </>
                 )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Modal */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="max-w-md text-center">
+          <div className="py-6 space-y-6">
+            {/* Success Icon */}
+            <div className="mx-auto w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-green-500" />
+            </div>
+            
+            {/* Title */}
+            <div className="space-y-2">
+              <h2 className="text-xl font-bold">
+                Skill assigned to {learnerName}! 🎉
+              </h2>
+              <p className="text-muted-foreground">
+                {successMessage.lessonCount} lesson{successMessage.lessonCount > 1 ? 's' : ''} {successMessage.lessonCount > 1 ? 'have' : 'has'} been assigned and {successMessage.lessonCount > 1 ? 'are' : 'is'} ready to start.
+              </p>
+            </div>
+
+            {/* Next Steps */}
+            <div className="bg-muted/50 rounded-lg p-4 text-left space-y-2">
+              <h3 className="font-semibold text-sm">What's next?</h3>
+              <p className="text-sm text-muted-foreground">
+                Switch to {learnerName}'s account to see the assignment and begin their learning journey. {learnerName} will see the new skill in their dashboard.
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="space-y-3">
+              {/* Primary CTA with rainbow gradient */}
+              <div className="relative group">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-xolv-magenta-300 via-xolv-blue-300 to-xolv-teal-300 rounded-md opacity-75 group-hover:opacity-100 transition-opacity" />
+                <Button
+                  onClick={handleSwitchToLearner}
+                  size="lg"
+                  className="relative w-full bg-background hover:bg-background text-foreground border-0 gap-2"
+                >
+                  Switch to {learnerName}'s Account
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              {/* Secondary option */}
+              <Button
+                variant="ghost"
+                onClick={handleCloseSuccessModal}
+                className="w-full text-muted-foreground"
+              >
+                Return to Dashboard
               </Button>
             </div>
           </div>
