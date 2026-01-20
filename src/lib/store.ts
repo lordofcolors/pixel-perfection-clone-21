@@ -26,6 +26,7 @@ export type Assignment = {
 
 export type GuardianSetupData = {
   guardianName: string;
+  guardianEmail?: string;
   learners: { name: string }[];
   accountMode?: 'inhouse' | 'separate';
   skills?: PersonSkills;
