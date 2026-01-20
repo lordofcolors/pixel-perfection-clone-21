@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Flag } from "lucide-react";
+import { Plus, Flag, MessageSquare } from "lucide-react";
 import { SessionTranscriptModal } from "./SessionTranscriptModal";
 import { EmptyStateDashboard } from "./EmptyStateDashboard";
 import { AssignmentDialog } from "./AssignmentDialog";
@@ -227,8 +227,11 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                             </div>
 
                             {/* All Conversations with Filter */}
-                            <div className="border-t pt-3 space-y-3">
-                              <div className="text-sm font-medium">All Conversations</div>
+                            <div className="border-t pt-4 space-y-3">
+                              <div className="flex items-center gap-2 text-base font-semibold">
+                                <MessageSquare className="h-4 w-4 text-primary" />
+                                All Conversations
+                              </div>
                               
                               {/* Filter Chip Row */}
                               <div className="flex gap-2">
@@ -346,9 +349,12 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                           </div>
 
                           {/* All Conversations - Empty */}
-                          <div className="border-t pt-3 flex-1">
-                            <div className="text-sm font-medium mb-3">All Conversations</div>
-                            <div className="border rounded-lg p-8 flex flex-col items-center justify-center text-center min-h-[180px]">
+                          <div className="border-t pt-4 flex-1">
+                            <div className="flex items-center gap-2 text-base font-semibold mb-3">
+                              <MessageSquare className="h-4 w-4 text-primary" />
+                              All Conversations
+                            </div>
+                            <div className="border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center text-center min-h-[180px] bg-muted/30">
                               <div className="text-muted-foreground mb-2">💬</div>
                               <p className="text-muted-foreground text-sm font-medium">No conversations yet.</p>
                               <p className="text-muted-foreground text-sm">Switch to {learner.name}'s account to start their learning journey!</p>
