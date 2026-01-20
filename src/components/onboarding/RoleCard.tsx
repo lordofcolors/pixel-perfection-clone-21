@@ -5,6 +5,7 @@ interface RoleCardProps {
   role: 'learner' | 'guardian';
   title: string;
   description: string;
+  extendedDescription: string;
   imageUrl: string;
   imageAlt: string;
   isSelected: boolean;
@@ -17,6 +18,7 @@ export const RoleCard: React.FC<RoleCardProps> = ({
   role,
   title,
   description,
+  extendedDescription,
   imageUrl,
   imageAlt,
   isSelected,
@@ -25,36 +27,40 @@ export const RoleCard: React.FC<RoleCardProps> = ({
   imageClassName = ''
 }) => {
   return (
-    <button
-      type="button"
+    <Card
       onClick={onSelect}
-      className={`relative focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background ${
-        isSelected ? 'ring-2 ring-primary' : ''
+      className={`relative w-[280px] cursor-pointer p-6 transition-transform duration-200 hover:scale-105 ${
+        isSelected ? 'ring-2 ring-primary border-primary' : ''
       }`}
+      role="button"
+      tabIndex={0}
       aria-pressed={isSelected}
       aria-label={`Select ${title} role: ${description}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
     >
-      <Card
-        className={`w-[248px] h-[244px] max-sm:w-[220px] max-sm:h-[220px] p-6 transition-transform duration-200 hover:scale-105 ${
-          isSelected ? 'border-primary' : ''
-        }`}
+      <div
+        className="flex h-[103px] flex-col items-start shrink-0 self-stretch relative rounded-lg"
+        style={{ backgroundColor }}
       >
-        <div
-          className="flex h-[103px] flex-col items-start shrink-0 self-stretch relative rounded-lg"
-          style={{ backgroundColor }}
-        >
-          <div className="flex h-0 rotate-[-25.377deg] flex-col items-center shrink-0 self-stretch relative" />
-        </div>
-        <img src={imageUrl} alt={imageAlt} loading="lazy" className={`absolute ${imageClassName}`} />
-        <CardContent className="pt-6 px-0">
-          <div className="flex flex-col items-start gap-1.5 text-left">
-            <div className={`text-sm font-bold leading-[21px] ${isSelected ? 'text-foreground' : ''}`}>
-              {title}
-            </div>
-            <div className="text-sm text-muted-foreground leading-5 text-left">{description}</div>
+        <div className="flex h-0 rotate-[-25.377deg] flex-col items-center shrink-0 self-stretch relative" />
+      </div>
+      <img src={imageUrl} alt={imageAlt} loading="lazy" className={`absolute ${imageClassName}`} />
+      <CardContent className="pt-6 px-0">
+        <div className="flex flex-col items-start gap-1.5 text-left">
+          <div className={`text-sm font-bold leading-[21px] ${isSelected ? 'text-foreground' : ''}`}>
+            {title}
           </div>
-        </CardContent>
-      </Card>
-    </button>
+          <div className="text-sm text-muted-foreground leading-5 text-left">{description}</div>
+          <div className="text-xs text-muted-foreground/80 leading-4 text-left mt-2 border-t border-border/50 pt-2">
+            {extendedDescription}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
