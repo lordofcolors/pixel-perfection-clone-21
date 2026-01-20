@@ -112,11 +112,11 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
 
   // Always show populated dashboard for prototype (skip empty state check)
 
-  // Use mock data for prototype stats (matching screenshot)
-  const activeLearners = learners.length; // 3 in screenshot
-  const skillsInProgress = 3;
-  const totalLessons = 4;
-  const totalLearningTime = "15m 40.2s";
+  // Empty state - show zeros for all stats
+  const activeLearners = learners.length;
+  const skillsInProgress = 0;
+  const totalLessons = 0;
+  const totalLearningTime = "0m";
   
   return (
     <div className="space-y-6">
@@ -179,7 +179,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
         <div className="grid gap-6 lg:grid-cols-2">
             {learners.map((learner) => {
               const learnerSkills = skills[learner.name] || [];
-              const hasLearnerSkill = learnerSkills.length > 0;
+              const hasConversations = false; // Set to false to show empty state
               
               return (
                 <Card key={learner.name} className="border-2 h-full">
@@ -188,22 +188,25 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                       {/* Header with Assign CTA */}
                       <div className="flex items-start justify-between mb-4">
                         <h3 className="text-lg font-semibold">{learner.name}</h3>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            setSelectedLearnerForAssignment(learner.name);
-                            setAssignmentDialogOpen(true);
-                          }}
-                          className="gap-2"
-                        >
-                          <Plus className="h-4 w-4" />
-                          Assign
-                        </Button>
+                        {/* Rainbow gradient outline button for first skill assignment */}
+                        <div className="relative group">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-xolv-magenta-300 via-xolv-blue-300 to-xolv-teal-300 rounded-md opacity-75 group-hover:opacity-100 transition-opacity" />
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedLearnerForAssignment(learner.name);
+                              setAssignmentDialogOpen(true);
+                            }}
+                            className="relative gap-2 bg-background hover:bg-background border-0"
+                          >
+                            <Plus className="h-4 w-4" />
+                            Assign {learner.name}'s first skill
+                          </Button>
+                        </div>
                       </div>
                       
-                      {/* Always show the populated layout with mock conversations for prototype */}
-                      {(
+                      {hasConversations ? (
                         // Populated State Layout
                         <div className="flex flex-col flex-1 min-h-[400px]">
                           <div className="flex-1 space-y-4">
@@ -248,15 +251,10 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                               {/* Conversation List */}
                               <div className="space-y-2">
                                 {(() => {
-                                  // Use prepopulated mock conversations
                                   const conversations = MOCK_CONVERSATIONS;
-                                  
-                                  // Filter based on showFlaggedOnly state
                                   const filteredConversations = showFlaggedOnly[learner.name]
                                     ? conversations.filter(c => c.isFlagged)
                                     : conversations;
-                                  
-                                  // Apply show all/less logic
                                   const displayedConversations = filteredConversations.slice(
                                     0, 
                                     showAllLessons[learner.name] ? filteredConversations.length : 3
@@ -326,6 +324,42 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                             onClick={() => navigate('/learner', { state: { firstName: learner.name } })}
                           >
                             Switch to {learner.name}'s Account
+                          </Button>
+                        </div>
+                      ) : (
+                        // Empty State Layout
+                        <div className="flex flex-col flex-1 min-h-[300px]">
+                          {/* Stats - All zeros */}
+                          <div className="grid grid-cols-3 gap-4 text-sm mb-4">
+                            <div className="text-center">
+                              <div className="font-semibold">0</div>
+                              <div className="text-muted-foreground">Skills in Progress</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-semibold">0</div>
+                              <div className="text-muted-foreground">Lessons Completed</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="font-semibold">0m</div>
+                              <div className="text-muted-foreground">Spent Learning</div>
+                            </div>
+                          </div>
+
+                          {/* All Conversations - Empty */}
+                          <div className="border-t pt-3 flex-1">
+                            <div className="text-sm font-medium mb-3">All Conversations</div>
+                            <div className="border rounded-lg p-8 flex flex-col items-center justify-center text-center min-h-[180px]">
+                              <div className="text-muted-foreground mb-2">💬</div>
+                              <p className="text-muted-foreground text-sm font-medium">No conversations yet.</p>
+                              <p className="text-muted-foreground text-sm">Switch to {learner.name}'s account to start their learning journey!</p>
+                            </div>
+                          </div>
+
+                          <Button 
+                            className="w-full mt-4 bg-xolv-magenta-300/20 text-xolv-magenta-300 border border-xolv-magenta-300/50 hover:bg-xolv-magenta-300/30" 
+                            onClick={() => navigate('/learner', { state: { firstName: learner.name } })}
+                          >
+                            Switch to {learner.name}'s Account to begin
                           </Button>
                         </div>
                       )}
