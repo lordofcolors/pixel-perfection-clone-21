@@ -179,6 +179,8 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
         <div className="grid gap-6 lg:grid-cols-2">
             {learners.map((learner) => {
               const learnerSkills = skills[learner.name] || [];
+              const learnerAssignments = getAssignmentsForLearner(learner.name);
+              const hasAssignedLessons = learnerAssignments.length > 0;
               const hasConversations = false; // Set to false to show empty state
               
               return (
@@ -188,7 +190,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                       {/* Header with Assign CTA */}
                       <div className="flex items-start justify-between mb-4">
                         <h3 className="text-lg font-semibold">{learner.name}</h3>
-                        {/* Rainbow gradient outline button for first skill assignment */}
+                        {/* Rainbow gradient outline button for first lesson assignment */}
                         <div className="relative group">
                           <div className="absolute -inset-0.5 bg-gradient-to-r from-xolv-magenta-300 via-xolv-blue-300 to-xolv-teal-300 rounded-md opacity-75 group-hover:opacity-100 transition-opacity" />
                           <Button
@@ -201,7 +203,7 @@ export function AnalyticsContent({ guardianName, learners, activeView, onSelectV
                             className="relative gap-2 bg-background hover:bg-background border-0"
                           >
                             <Plus className="h-4 w-4" />
-                            Assign {learner.name}'s first skill
+                            {hasAssignedLessons ? "Assign skill" : `Assign ${learner.name}'s first lesson`}
                           </Button>
                         </div>
                       </div>
