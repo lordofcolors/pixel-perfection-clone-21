@@ -1,53 +1,10 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
-// Input validation
-const MAX_SKILL_DESCRIPTION_LENGTH = 500;
-const MAX_ADJUSTMENT_PROMPT_LENGTH = 1000;
-const MIN_SKILL_DESCRIPTION_LENGTH = 10;
-
-function validateInput(skillDescription: unknown, adjustmentPrompt: unknown): { 
-  valid: boolean; 
-  error?: string; 
-  skillDescription?: string;
-  adjustmentPrompt?: string;
-} {
-  if (!skillDescription || typeof skillDescription !== 'string') {
-    return { valid: false, error: 'Skill description is required and must be a string' };
-  }
-  
-  const trimmedDescription = skillDescription.trim();
-  if (trimmedDescription.length < MIN_SKILL_DESCRIPTION_LENGTH) {
-    return { valid: false, error: `Skill description must be at least ${MIN_SKILL_DESCRIPTION_LENGTH} characters` };
-  }
-  
-  if (trimmedDescription.length > MAX_SKILL_DESCRIPTION_LENGTH) {
-    return { valid: false, error: `Skill description must be less than ${MAX_SKILL_DESCRIPTION_LENGTH} characters` };
-  }
-  
-  let trimmedAdjustment: string | undefined;
-  if (adjustmentPrompt !== undefined && adjustmentPrompt !== null) {
-    if (typeof adjustmentPrompt !== 'string') {
-      return { valid: false, error: 'Adjustment prompt must be a string' };
-    }
-    trimmedAdjustment = adjustmentPrompt.trim();
-    if (trimmedAdjustment.length > MAX_ADJUSTMENT_PROMPT_LENGTH) {
-      return { valid: false, error: `Adjustment prompt must be less than ${MAX_ADJUSTMENT_PROMPT_LENGTH} characters` };
-    }
-  }
-  
-  return { 
-    valid: true, 
-    skillDescription: trimmedDescription,
-    adjustmentPrompt: trimmedAdjustment
-  };
-}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -55,46 +12,12 @@ serve(async (req) => {
   }
 
   try {
-    // Authentication check
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized - Missing or invalid authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_ANON_KEY')!,
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    const token = authHeader.replace('Bearer ', '');
-    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
+    const { skillDescription, adjustmentPrompt } = await req.json();
     
-    if (claimsError || !claimsData?.claims) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized - Invalid token' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    if (!skillDescription) {
+      throw new Error('Skill description is required');
     }
 
-    const userId = claimsData.claims.sub;
-    console.log('Authenticated user:', userId);
-
-    // Parse and validate input
-    const body = await req.json();
-    const validation = validateInput(body.skillDescription, body.adjustmentPrompt);
-    
-    if (!validation.valid) {
-      return new Response(
-        JSON.stringify({ error: validation.error }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const { skillDescription, adjustmentPrompt } = validation;
     console.log('Generating lessons for skill:', skillDescription);
 
     const systemPrompt = adjustmentPrompt 

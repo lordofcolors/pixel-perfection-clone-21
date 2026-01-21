@@ -99,35 +99,6 @@ export type Database = {
           },
         ]
       }
-      guardian_pins: {
-        Row: {
-          created_at: string
-          id: string
-          pin_hash: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id: string
-          pin_hash: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          pin_hash?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "guardian_pins_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "guardians"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       guardians: {
         Row: {
           created_at: string
@@ -274,6 +245,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          pin_hash: string | null
           role: Database["public"]["Enums"]["app_role"]
           updated_at: string
         }
@@ -281,6 +253,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          pin_hash?: string | null
           role: Database["public"]["Enums"]["app_role"]
           updated_at?: string
         }
@@ -288,6 +261,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          pin_hash?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
         }
