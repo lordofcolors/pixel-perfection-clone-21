@@ -31,21 +31,21 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
 
   return (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] w-full max-w-3xl mx-auto">
-      {/* Video/Avatar Area */}
-      <div className="relative w-full flex-1 flex items-center justify-center bg-card/50 rounded-xl mb-4">
-        {/* A Circle Logo with Audio Indicator */}
-        <div className="relative">
-          <img 
-            src={acircleLogo} 
-            alt="A Assistant" 
-            className="w-24 h-24 object-contain"
-          />
-          {/* Audio indicator */}
-          <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-xolv-teal-300 flex items-center justify-center">
-            <Volume2 className="w-3.5 h-3.5 text-background" />
-          </div>
+      {/* A Circle Logo with Audio Indicator - Outside the window */}
+      <div className="relative mb-4">
+        <img 
+          src={acircleLogo} 
+          alt="A Assistant" 
+          className="w-20 h-20 object-contain"
+        />
+        {/* Audio indicator */}
+        <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-xolv-teal-300 flex items-center justify-center">
+          <Volume2 className="w-3.5 h-3.5 text-background" />
         </div>
+      </div>
 
+      {/* Video/Avatar Area */}
+      <div className="relative w-full flex-1 bg-card/50 rounded-xl mb-4">
         {/* Menu dots in top right */}
         <button className="absolute top-4 right-4 w-10 h-10 rounded-full bg-muted/80 flex items-center justify-center hover:bg-muted transition-colors">
           <span className="text-muted-foreground">•••</span>
@@ -55,7 +55,7 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
       {/* AI Message Bubble */}
       <div className="w-full bg-card/80 backdrop-blur rounded-xl p-4 mb-4 text-center">
         <p className="text-foreground">
-          Hi {learnerName}! I'm A. Ready to learn something new today?
+          Hi {learnerName}! I'm A. How are you today?
         </p>
       </div>
 
