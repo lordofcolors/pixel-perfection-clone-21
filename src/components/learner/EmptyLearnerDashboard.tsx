@@ -16,18 +16,7 @@ interface EmptyLearnerDashboardProps {
 
 export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProps) {
   const [message, setMessage] = useState("");
-  const [showEmojiHint, setShowEmojiHint] = useState(false);
-
-  // Show emoji hint periodically for new users
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowEmojiHint(true);
-      // Hide after 5 seconds
-      setTimeout(() => setShowEmojiHint(false), 5000);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const [showEmojiHint, setShowEmojiHint] = useState(true);
 
   return (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] w-full max-w-3xl mx-auto">
