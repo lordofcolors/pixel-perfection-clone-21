@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import GuardianSetup from "./pages/GuardianSetup";
 import LearnerDashboard from "./pages/LearnerDashboard";
 import LearnerSkillSelection from "./pages/LearnerSkillSelection";
@@ -14,6 +16,7 @@ import GuardianManageDashboard from "./pages/GuardianManageDashboard";
 import GuardianAnalyticsDashboard from "./pages/GuardianAnalyticsDashboard";
 import GuardianAccount from "./pages/GuardianAccount";
 import GuardianBilling from "./pages/GuardianBilling";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -24,17 +27,43 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Index />} />
-          <Route path="/guardian-setup" element={<GuardianSetup />} />
-          <Route path="/learner" element={<LearnerDashboard />} />
-          <Route path="/learner/add-skill" element={<LearnerSkillSelection />} />
-          <Route path="/learner/account" element={<LearnerAccount />} />
-          <Route path="/learner/billing" element={<LearnerBilling />} />
-          <Route path="/guardian/manage" element={<GuardianManageDashboard />} />
-          <Route path="/guardian/separate" element={<GuardianAnalyticsDashboard />} />
-          <Route path="/guardian/account" element={<GuardianAccount />} />
-          <Route path="/guardian/billing" element={<GuardianBilling />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          
+          {/* Protected routes - Guardian */}
+          <Route path="/guardian-setup" element={
+            <ProtectedRoute><GuardianSetup /></ProtectedRoute>
+          } />
+          <Route path="/guardian/manage" element={
+            <ProtectedRoute><GuardianManageDashboard /></ProtectedRoute>
+          } />
+          <Route path="/guardian/separate" element={
+            <ProtectedRoute><GuardianAnalyticsDashboard /></ProtectedRoute>
+          } />
+          <Route path="/guardian/account" element={
+            <ProtectedRoute><GuardianAccount /></ProtectedRoute>
+          } />
+          <Route path="/guardian/billing" element={
+            <ProtectedRoute><GuardianBilling /></ProtectedRoute>
+          } />
+          
+          {/* Protected routes - Learner */}
+          <Route path="/learner" element={
+            <ProtectedRoute><LearnerDashboard /></ProtectedRoute>
+          } />
+          <Route path="/learner/add-skill" element={
+            <ProtectedRoute><LearnerSkillSelection /></ProtectedRoute>
+          } />
+          <Route path="/learner/account" element={
+            <ProtectedRoute><LearnerAccount /></ProtectedRoute>
+          } />
+          <Route path="/learner/billing" element={
+            <ProtectedRoute><LearnerBilling /></ProtectedRoute>
+          } />
+          
+          {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
