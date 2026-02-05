@@ -1,11 +1,5 @@
- import { useState } from "react";
- import { FileText, ChevronDown, Sparkles } from "lucide-react";
+import { FileText, Sparkles } from "lucide-react";
  import { Button } from "@/components/ui/button";
- import {
-   Collapsible,
-   CollapsibleContent,
-   CollapsibleTrigger,
- } from "@/components/ui/collapsible";
  
  interface LessonEndedViewProps {
    learnerName: string;
@@ -13,35 +7,14 @@
  }
  
  export function LessonEndedView({ learnerName, onStartNewSession }: LessonEndedViewProps) {
-   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
- 
    return (
      <div className="flex flex-col items-center w-full max-w-4xl mx-auto px-6 py-8 overflow-y-auto">
-        {/* Disconnection Banner */}
-        <Collapsible 
-          open={showTechnicalDetails} 
-          onOpenChange={setShowTechnicalDetails}
-          className="w-full mb-8"
-        >
-          <div className="w-full border border-border/50 bg-card/30 rounded-lg p-4">
-            <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-              It looks like the connection dropped, so this lesson ended. When you're ready, select <span className="text-foreground">Continue Lesson</span> to start again.
-            </p>
-            <CollapsibleTrigger asChild>
-              <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                <ChevronDown className={`h-3 w-3 transition-transform ${showTechnicalDetails ? 'rotate-180' : ''}`} />
-                View technical details
-              </button>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="mt-3 p-3 rounded-md bg-muted/20 border border-border/30">
-                <code className="text-xs text-muted-foreground font-mono">
-                  Connection closed (1006):
-                </code>
-              </div>
-            </CollapsibleContent>
-          </div>
-        </Collapsible>
+        {/* Disconnection Banner - Thin inline style */}
+        <div className="w-full border border-border/50 bg-card/30 rounded-lg px-4 py-3 mb-8">
+          <p className="text-sm text-muted-foreground">
+            Connection lost <span className="text-muted-foreground/70">(1006)</span> — select <span className="text-foreground">Continue Lesson</span> to restart.
+          </p>
+        </div>
 
        {/* Icon */}
        <div className="w-24 h-24 rounded-full bg-xolv-blue-300/20 flex items-center justify-center mb-6">
