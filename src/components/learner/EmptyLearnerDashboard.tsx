@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+ import { useState } from "react";
 import acircleLogo from "@/assets/acircle-logo.png";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+ import { LessonEndedView } from "./LessonEndedView";
 
 interface EmptyLearnerDashboardProps {
   learnerName: string;
@@ -17,6 +18,16 @@ interface EmptyLearnerDashboardProps {
 export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProps) {
   const [message, setMessage] = useState("");
   const [showEmojiHint, setShowEmojiHint] = useState(true);
+   const [isDisconnected, setIsDisconnected] = useState(false);
+ 
+   if (isDisconnected) {
+     return (
+       <LessonEndedView 
+         learnerName={learnerName} 
+         onStartNewSession={() => setIsDisconnected(false)} 
+       />
+     );
+   }
 
   return (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] w-full max-w-3xl mx-auto">
@@ -95,7 +106,10 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
           <span className="text-xs text-muted-foreground uppercase tracking-wide">Share Screen</span>
         </button>
 
-        <button className="flex flex-col items-center gap-2 group">
+         <button 
+           className="flex flex-col items-center gap-2 group"
+           onClick={() => setIsDisconnected(true)}
+         >
           <div className="w-14 h-14 rounded-full bg-destructive/20 flex items-center justify-center group-hover:bg-destructive/30 transition-colors">
             <X className="w-6 h-6 text-destructive" />
           </div>
