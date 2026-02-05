@@ -23,7 +23,7 @@ export function LessonEndedView({ learnerName, onStartNewSession, errorCode = 10
         {/* Disconnection Banner - Thin inline style */}
         <div className="w-full border border-border/50 bg-card/30 rounded-lg px-4 py-3 mb-8">
           <p className="text-sm text-muted-foreground">
-            {getErrorMessage()} <span className="text-muted-foreground/70">({errorCode})</span> — select <span className="text-foreground">Continue Lesson</span> to restart.
+            {getErrorMessage()} <span className="text-muted-foreground/70">({errorCode})</span> — select <span className="text-foreground">Continue Lesson</span> if you'd like to restart.
           </p>
         </div>
 
