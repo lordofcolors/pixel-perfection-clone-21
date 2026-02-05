@@ -87,7 +87,7 @@
         >
           <div className="w-full border border-border/50 bg-card/30 rounded-lg p-4">
             <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-              It looks like the connection dropped, so we had to end this lesson. Please select <span className="text-xolv-blue-300">Continue Lesson</span> to begin a new one.
+              It looks like the connection dropped, so we had to end this lesson. Please select <span className="text-foreground">Continue Lesson</span> to begin a new one.
             </p>
             <CollapsibleTrigger asChild>
               <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
