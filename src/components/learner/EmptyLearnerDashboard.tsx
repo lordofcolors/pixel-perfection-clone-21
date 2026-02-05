@@ -24,6 +24,7 @@ export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProp
      return (
        <LessonEndedView 
          learnerName={learnerName} 
+        errorCode={1011}
          onStartNewSession={() => setIsDisconnected(false)} 
        />
      );
