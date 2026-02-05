@@ -24,9 +24,8 @@
          className="w-full mb-8"
        >
          <div className="w-full border border-border/50 bg-card/30 rounded-lg p-4">
-           <h4 className="text-base font-medium text-foreground mb-1">You were disconnected</h4>
-           <p className="text-sm text-muted-foreground mb-3">
-             It looks like the connection dropped, so we had to end this session. You can start a new one anytime.
+            <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
+              It looks like the connection dropped, so we had to end this session. Select <span className="font-semibold text-foreground">Continue Lesson</span> to begin a new session.
            </p>
            <CollapsibleTrigger asChild>
              <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
