@@ -26,36 +26,10 @@
        <h1 className="text-4xl font-semibold text-foreground mb-3">Lesson Ended</h1>
        
        {/* Subtitle */}
-        <p className="text-lg text-muted-foreground mb-6">
+        <p className="text-lg text-muted-foreground mb-8">
          Chat with A - Lesson Duration: 1 second
        </p>
  
-        {/* Disconnection Banner */}
-        <Collapsible 
-          open={showTechnicalDetails} 
-          onOpenChange={setShowTechnicalDetails}
-          className="w-full mb-8"
-        >
-          <div className="w-full border border-border/50 bg-card/30 rounded-lg p-4">
-            <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-              It looks like the connection dropped, so we had to end this session. Select <span className="font-semibold text-foreground">Continue Lesson</span> to begin a new session.
-            </p>
-            <CollapsibleTrigger asChild>
-              <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                <ChevronDown className={`h-3 w-3 transition-transform ${showTechnicalDetails ? 'rotate-180' : ''}`} />
-                View technical details
-              </button>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="mt-3 p-3 rounded-md bg-muted/20 border border-border/30">
-                <code className="text-xs text-muted-foreground font-mono">
-                  Connection closed (1006):
-                </code>
-              </div>
-            </CollapsibleContent>
-          </div>
-        </Collapsible>
-
        {/* Transcript & Insights Grid */}
        <div className="w-full grid gap-4 lg:grid-cols-2 mb-6">
          {/* Lesson Transcript */}
@@ -105,6 +79,32 @@
          </div>
        </div>
  
+        {/* Disconnection Banner */}
+        <Collapsible 
+          open={showTechnicalDetails} 
+          onOpenChange={setShowTechnicalDetails}
+          className="w-full mb-6"
+        >
+          <div className="w-full border border-border/50 bg-card/30 rounded-lg p-4">
+            <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
+              It looks like the connection dropped, so we had to end this session. Select <span className="font-semibold text-foreground">Continue Lesson</span> to begin a new session.
+            </p>
+            <CollapsibleTrigger asChild>
+              <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+                <ChevronDown className={`h-3 w-3 transition-transform ${showTechnicalDetails ? 'rotate-180' : ''}`} />
+                View technical details
+              </button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className="mt-3 p-3 rounded-md bg-muted/20 border border-border/30">
+                <code className="text-xs text-muted-foreground font-mono">
+                  Connection closed (1006):
+                </code>
+              </div>
+            </CollapsibleContent>
+          </div>
+        </Collapsible>
+
        {/* Action Buttons */}
        <div className="w-full flex items-center justify-between">
          <Button 
