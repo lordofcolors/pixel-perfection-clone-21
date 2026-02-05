@@ -4,15 +4,26 @@ import { FileText, Sparkles } from "lucide-react";
  interface LessonEndedViewProps {
    learnerName: string;
    onStartNewSession: () => void;
+  errorCode?: number;
  }
  
- export function LessonEndedView({ learnerName, onStartNewSession }: LessonEndedViewProps) {
+export function LessonEndedView({ learnerName, onStartNewSession, errorCode = 1006 }: LessonEndedViewProps) {
+  const getErrorMessage = () => {
+    switch (errorCode) {
+      case 1006:
+        return "Connection lost";
+      case 1011:
+      default:
+        return "Something went wrong";
+    }
+  };
+
    return (
      <div className="flex flex-col items-center w-full max-w-4xl mx-auto px-6 py-8 overflow-y-auto">
         {/* Disconnection Banner - Thin inline style */}
         <div className="w-full border border-border/50 bg-card/30 rounded-lg px-4 py-3 mb-8">
           <p className="text-sm text-muted-foreground">
-            Connection lost <span className="text-muted-foreground/70">(1006)</span> — select <span className="text-foreground">Continue Lesson</span> to restart.
+            {getErrorMessage()} <span className="text-muted-foreground/70">({errorCode})</span> — select <span className="text-foreground">Continue Lesson</span> to restart.
           </p>
         </div>
 
