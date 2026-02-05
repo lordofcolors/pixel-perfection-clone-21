@@ -87,7 +87,7 @@
         >
           <div className="w-full border border-border/50 bg-card/30 rounded-lg p-4">
             <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-              To restart, please select <span className="text-foreground">Continue Lesson</span>.
+              It looks like the connection dropped, so this lesson ended. When you're ready, select <span className="text-foreground">Continue Lesson</span> to start again.
             </p>
             <CollapsibleTrigger asChild>
               <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
