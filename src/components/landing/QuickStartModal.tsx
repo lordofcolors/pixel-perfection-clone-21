@@ -15,15 +15,15 @@ const roles = [
     role: "learner" as const,
     title: "Learner",
     description: "For students and job seekers building career, social, and daily skills",
-    titleColorClass: "text-xolv-teal-300",
-    borderClass: "ring-xolv-teal-400",
+    titleColorClass: "text-xolv-magenta-300",
+    borderClass: "ring-xolv-magenta-400",
   },
   {
     role: "guardian" as const,
     title: "Parent/Guardian",
     description: "For parents and caregivers supporting a learner",
-    titleColorClass: "text-xolv-magenta-300",
-    borderClass: "ring-xolv-magenta-400",
+    titleColorClass: "text-xolv-blue-300",
+    borderClass: "ring-xolv-blue-400",
   },
 ];
 
@@ -160,9 +160,11 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
             </Button>
           )}
 
-          <p className="text-[11px] text-muted-foreground/50 text-center leading-relaxed">
+          <p className="text-[11px] text-foreground text-center leading-relaxed">
             A is a voice-first experience. Allow microphone access to speak with A directly.
           </p>
+
+          <div className="h-1" />
 
           {/* Start Chatting */}
           <Button
