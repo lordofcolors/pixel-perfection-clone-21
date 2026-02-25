@@ -18,7 +18,7 @@ const ChatPage = () => {
   const greetingText = `Hi${firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!`;
 
   useEffect(() => {
-    const delayTimer = setTimeout(() => setShowContent(true), 1000);
+    const delayTimer = setTimeout(() => setShowContent(true), 2000);
     return () => clearTimeout(delayTimer);
   }, []);
 
