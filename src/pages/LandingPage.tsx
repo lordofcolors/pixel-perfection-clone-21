@@ -31,7 +31,7 @@ const LandingPage = () => {
     if (role === "guardian") {
       navigate("/guardian-setup", { state: { firstName: name } });
     } else {
-      navigate("/learner", { state: { firstName: name } });
+      navigate("/chat", { state: { firstName: name, role } });
     }
   };
 
