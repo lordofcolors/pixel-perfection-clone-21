@@ -80,7 +80,7 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
             Welcome!
           </h2>
           <p className="text-xolv-magenta-300 text-sm md:text-base leading-relaxed max-w-md mx-auto">
-            Before you meet A for the first time, let's get your profile set up.
+            Before you meet A for the first time, let's set up a quick trial profile so you can experience what it's like to chat with A.
           </p>
         </div>
 
@@ -160,6 +160,10 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
             </Button>
           )}
 
+          <p className="text-[11px] text-muted-foreground/50 text-center leading-relaxed">
+            A is a voice-first experience. Allow microphone access to speak with A directly.
+          </p>
+
           {/* Start Chatting */}
           <Button
             disabled={!canStart}
@@ -172,10 +176,6 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
           >
             Start Chatting
           </Button>
-
-          <p className="text-[11px] text-muted-foreground/50 text-center leading-relaxed mt-1">
-            A is a voice-first experience. Allow microphone access to speak with A directly.
-          </p>
         </div>
       </div>
     </div>
