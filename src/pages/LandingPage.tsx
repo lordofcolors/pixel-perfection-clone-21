@@ -27,10 +27,10 @@ const LandingPage = () => {
   return (
     <main className="w-screen min-h-screen bg-background flex flex-col font-literata">
       {/* Login button */}
-      <div className="flex justify-end p-6">
+      <div className="flex justify-end p-6 relative z-10">
         <Button
           variant="outline"
-          className="rounded-lg px-6 border-primary/40 text-primary hover:bg-primary/10"
+          className="rounded-lg px-6 border-xolv-magenta-300 text-xolv-magenta-300 hover:bg-xolv-magenta-300/10"
           onClick={() => navigate("/onboarding")}
         >
           Login
