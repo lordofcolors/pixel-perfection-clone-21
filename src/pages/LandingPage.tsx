@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import acircleLogo from "@/assets/acircle-logo.png";
+import { QuickStartModal } from "@/components/landing/QuickStartModal";
 
 const skillSuggestions = [
   "I want to improve my interviewing skills",
@@ -13,15 +14,25 @@ const skillSuggestions = [
 const LandingPage = () => {
   const navigate = useNavigate();
   const [skillInput, setSkillInput] = useState("");
+  const [showQuickStart, setShowQuickStart] = useState(false);
 
   const handleSubmit = () => {
     if (skillInput.trim()) {
-      navigate("/onboarding", { state: { skill: skillInput } });
+      setShowQuickStart(true);
     }
   };
 
-  const handleSuggestionClick = (skill: string) => {
-    navigate("/onboarding", { state: { skill } });
+  const handleSuggestionClick = (_skill: string) => {
+    setShowQuickStart(true);
+  };
+
+  const handleQuickStartComplete = (name: string, role: "learner" | "guardian") => {
+    setShowQuickStart(false);
+    if (role === "guardian") {
+      navigate("/guardian-setup", { state: { firstName: name } });
+    } else {
+      navigate("/learner", { state: { firstName: name } });
+    }
   };
 
   return (
@@ -106,6 +117,13 @@ const LandingPage = () => {
           XOLV
         </span>
       </footer>
+
+      {/* Quick Start Modal */}
+      <QuickStartModal
+        open={showQuickStart}
+        onClose={() => setShowQuickStart(false)}
+        onStart={handleQuickStartComplete}
+      />
     </main>
   );
 };
