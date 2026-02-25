@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import acircleLogo from "@/assets/acircle-logo.png";
@@ -29,11 +29,10 @@ const LandingPage = () => {
       {/* Login button */}
       <div className="flex justify-end p-6 relative z-10">
         <Button
-          variant="outline"
-          className="rounded-lg px-6 border-xolv-magenta-300 text-xolv-magenta-300 hover:bg-xolv-magenta-300/10"
-          onClick={() => navigate("/onboarding")}
+          asChild
+          className="rounded-lg px-6 bg-xolv-magenta-300 text-black hover:bg-xolv-magenta-300/90 border-none"
         >
-          Login
+          <Link to="/onboarding">Login</Link>
         </Button>
       </div>
 
