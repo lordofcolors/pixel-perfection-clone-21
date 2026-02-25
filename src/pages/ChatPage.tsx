@@ -5,11 +5,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef } from "react";
 
+const LOADING_STATES = [
+  "Warming up neural pathways…",
+  "Calibrating learning style…",
+  "Mapping knowledge graph…",
+  "Preparing personalized content…",
+  "Connecting to your AI tutor…",
+];
+
+const LOADING_INTERVAL = 1800;
+
 const ChatPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { firstName } = (location.state as { firstName?: string }) || {};
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingIndex, setLoadingIndex] = useState(0);
   const [showContent, setShowContent] = useState(false);
   const [showGreeting, setShowGreeting] = useState(false);
   const [typedText, setTypedText] = useState("");
@@ -17,9 +29,22 @@ const ChatPage = () => {
 
   const greetingText = `Hi${firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!`;
 
+  // Cycle through loading states then reveal content
   useEffect(() => {
-    const delayTimer = setTimeout(() => setShowContent(true), 2000);
-    return () => clearTimeout(delayTimer);
+    const interval = setInterval(() => {
+      setLoadingIndex((prev) => {
+        if (prev >= LOADING_STATES.length - 1) {
+          clearInterval(interval);
+          setTimeout(() => {
+            setIsLoading(false);
+            setTimeout(() => setShowContent(true), 100);
+          }, LOADING_INTERVAL);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, LOADING_INTERVAL);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -56,6 +81,19 @@ const ChatPage = () => {
     }),
   });
 
+  if (isLoading) {
+    return (
+      <main className="w-screen h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
+        {/* Spinner */}
+        <div className="w-10 h-10 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin mb-6" />
+        {/* Loading state text */}
+        <p className="text-muted-foreground italic text-sm transition-opacity duration-500">
+          {LOADING_STATES[loadingIndex]}
+        </p>
+      </main>
+    );
+  }
+
   return (
     <main className="w-screen h-screen bg-background flex flex-col items-center relative overflow-hidden">
       <div
@@ -72,9 +110,9 @@ const ChatPage = () => {
         </Button>
       </div>
 
-      {/* Rive animation - pushed to top */}
+      {/* Rive animation - shorter */}
       <div
-        className="w-[400px] h-[400px] md:w-[550px] md:h-[550px] mt-4 flex-shrink-0 will-change-transform"
+        className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] mt-4 flex-shrink-0 will-change-transform"
         style={{
           opacity: showContent ? 1 : 0,
           transform: showContent ? "translateY(0)" : "translateY(-50px)",
