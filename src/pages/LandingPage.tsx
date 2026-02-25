@@ -14,7 +14,7 @@ const skillSuggestions = [
 const LandingPage = () => {
   const navigate = useNavigate();
   const [skillInput, setSkillInput] = useState("");
-  const [showQuickStart, setShowQuickStart] = useState(false);
+  const [showQuickStart, setShowQuickStart] = useState(true);
 
   const handleSubmit = () => {
     if (skillInput.trim()) {
