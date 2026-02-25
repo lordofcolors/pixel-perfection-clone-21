@@ -18,7 +18,7 @@ const ChatPage = () => {
   const greetingText = `Hi${firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!`;
 
   useEffect(() => {
-    const delayTimer = setTimeout(() => setShowContent(true), 3000);
+    const delayTimer = setTimeout(() => setShowContent(true), 1000);
     return () => clearTimeout(delayTimer);
   }, []);
 
@@ -59,7 +59,7 @@ const ChatPage = () => {
   return (
     <main className="w-screen h-screen bg-background flex flex-col items-center relative overflow-hidden">
       <div
-        className={`absolute top-6 left-6 z-10 transition-opacity duration-1000 ${showContent ? "opacity-100" : "opacity-0"}`}
+        className={`absolute top-6 left-6 z-10 transition-opacity duration-[2000ms] ${showContent ? "opacity-100" : "opacity-0"}`}
       >
         <Button
           variant="ghost"
@@ -74,7 +74,7 @@ const ChatPage = () => {
 
       {/* Rive animation - pushed to top */}
       <div
-        className={`w-[300px] h-[300px] md:w-[400px] md:h-[400px] mt-8 flex-shrink-0 transition-opacity duration-1000 ${showContent ? "opacity-100" : "opacity-0"}`}
+        className={`w-[300px] h-[300px] md:w-[400px] md:h-[400px] mt-8 flex-shrink-0 transition-opacity duration-[2000ms] ${showContent ? "opacity-100" : "opacity-0"}`}
       >
         <RiveComponent />
       </div>
@@ -83,7 +83,7 @@ const ChatPage = () => {
       <div className="flex flex-col items-center w-full max-w-2xl px-6 flex-1 justify-end pb-8 gap-4">
         {/* AI message bubble */}
         <div
-          className={`w-full rounded-2xl border border-muted p-4 mb-2 transition-opacity duration-700 ${showGreeting ? "opacity-100" : "opacity-0"}`}
+          className={`w-full rounded-2xl border border-muted p-4 mb-2 transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
         >
           <p className="text-center text-foreground text-base min-h-[1.5rem]">
             {typedText}
@@ -95,7 +95,7 @@ const ChatPage = () => {
 
         {/* Text input row */}
         <div
-          className={`w-full flex items-center gap-2 rounded-2xl border border-muted p-2 transition-opacity duration-1000 delay-300 ${showContent ? "opacity-100" : "opacity-0"}`}
+          className={`w-full flex items-center gap-2 rounded-2xl border border-muted p-2 transition-opacity duration-[2000ms] delay-300 ${showContent ? "opacity-100" : "opacity-0"}`}
         >
           <Button variant="ghost" size="icon" className="flex-shrink-0 text-amber-400">
             <Smile className="w-6 h-6" />
@@ -113,7 +113,7 @@ const ChatPage = () => {
 
         {/* Action buttons */}
         <div
-          className={`flex items-center gap-8 transition-opacity duration-1000 delay-500 ${showContent ? "opacity-100" : "opacity-0"}`}
+          className={`flex items-center gap-8 transition-opacity duration-[2000ms] delay-500 ${showContent ? "opacity-100" : "opacity-0"}`}
         >
           <div className="flex flex-col items-center gap-1">
             <Button variant="outline" size="icon" className="rounded-full w-14 h-14 border-muted-foreground/30">
@@ -131,7 +131,7 @@ const ChatPage = () => {
 
         {/* Privacy disclaimer */}
         <p
-          className={`text-sm text-muted-foreground transition-opacity duration-1000 delay-700 ${showContent ? "opacity-100" : "opacity-0"}`}
+          className={`text-sm text-muted-foreground transition-opacity duration-[2000ms] delay-700 ${showContent ? "opacity-100" : "opacity-0"}`}
         >
           Your video and audio data will <strong className="text-foreground">NOT</strong> be saved
         </p>
