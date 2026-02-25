@@ -77,7 +77,7 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
         {/* Header */}
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl text-foreground font-semibold mb-3">
-            Welcome!
+            Welcome! Quick Start to A
           </h2>
           <p className="text-xolv-magenta-300 text-sm md:text-base leading-relaxed max-w-md mx-auto">
             Before you meet A for the first time, let's set up a quick trial profile so you can experience what it's like to chat with A.
