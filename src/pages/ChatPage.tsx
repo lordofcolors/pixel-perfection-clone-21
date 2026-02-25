@@ -3,13 +3,47 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Send, Smile, Monitor, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const ChatPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { firstName } = (location.state as { firstName?: string }) || {};
   const [message, setMessage] = useState("");
+  const [showContent, setShowContent] = useState(false);
+  const [showGreeting, setShowGreeting] = useState(false);
+  const [typedText, setTypedText] = useState("");
+  const typingRef = useRef<NodeJS.Timeout | null>(null);
+
+  const greetingText = `Hi${firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!`;
+
+  useEffect(() => {
+    const delayTimer = setTimeout(() => setShowContent(true), 3000);
+    return () => clearTimeout(delayTimer);
+  }, []);
+
+  useEffect(() => {
+    if (showContent) {
+      const greetTimer = setTimeout(() => setShowGreeting(true), 800);
+      return () => clearTimeout(greetTimer);
+    }
+  }, [showContent]);
+
+  useEffect(() => {
+    if (showGreeting) {
+      let i = 0;
+      typingRef.current = setInterval(() => {
+        i++;
+        setTypedText(greetingText.slice(0, i));
+        if (i >= greetingText.length && typingRef.current) {
+          clearInterval(typingRef.current);
+        }
+      }, 45);
+      return () => {
+        if (typingRef.current) clearInterval(typingRef.current);
+      };
+    }
+  }, [showGreeting, greetingText]);
 
   const { RiveComponent } = useRive({
     src: "/animations/robocat.riv",
@@ -22,32 +56,45 @@ const ChatPage = () => {
 
   return (
     <main className="w-screen h-screen bg-background flex flex-col items-center relative overflow-hidden">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => navigate("/")}
-        className="absolute top-6 left-6 text-muted-foreground hover:text-foreground z-10"
-        aria-label="Back"
+      <div
+        className={`absolute top-6 left-6 z-10 transition-opacity duration-1000 ${showContent ? "opacity-100" : "opacity-0"}`}
       >
-        <ArrowLeft className="w-5 h-5" />
-      </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate("/")}
+          className="text-muted-foreground hover:text-foreground"
+          aria-label="Back"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </Button>
+      </div>
 
       {/* Rive animation - pushed to top */}
-      <div className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] mt-8 flex-shrink-0">
+      <div
+        className={`w-[300px] h-[300px] md:w-[400px] md:h-[400px] mt-8 flex-shrink-0 transition-opacity duration-1000 ${showContent ? "opacity-100" : "opacity-0"}`}
+      >
         <RiveComponent />
       </div>
 
       {/* Chat area below animation */}
       <div className="flex flex-col items-center w-full max-w-2xl px-6 flex-1 justify-end pb-8 gap-4">
         {/* AI message bubble */}
-        <div className="w-full rounded-2xl border border-muted p-4 mb-2">
-          <p className="text-center text-foreground text-base">
-            Hi{firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!
+        <div
+          className={`w-full rounded-2xl border border-muted p-4 mb-2 transition-opacity duration-700 ${showGreeting ? "opacity-100" : "opacity-0"}`}
+        >
+          <p className="text-center text-foreground text-base min-h-[1.5rem]">
+            {typedText}
+            {showGreeting && typedText.length < greetingText.length && (
+              <span className="inline-block w-[2px] h-[1em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
+            )}
           </p>
         </div>
 
         {/* Text input row */}
-        <div className="w-full flex items-center gap-2 rounded-2xl border border-muted p-2">
+        <div
+          className={`w-full flex items-center gap-2 rounded-2xl border border-muted p-2 transition-opacity duration-1000 delay-300 ${showContent ? "opacity-100" : "opacity-0"}`}
+        >
           <Button variant="ghost" size="icon" className="flex-shrink-0 text-amber-400">
             <Smile className="w-6 h-6" />
           </Button>
@@ -63,7 +110,9 @@ const ChatPage = () => {
         </div>
 
         {/* Action buttons */}
-        <div className="flex items-center gap-8">
+        <div
+          className={`flex items-center gap-8 transition-opacity duration-1000 delay-500 ${showContent ? "opacity-100" : "opacity-0"}`}
+        >
           <div className="flex flex-col items-center gap-1">
             <Button variant="outline" size="icon" className="rounded-full w-14 h-14 border-muted-foreground/30">
               <Monitor className="w-6 h-6 text-muted-foreground" />
@@ -79,7 +128,9 @@ const ChatPage = () => {
         </div>
 
         {/* Privacy disclaimer */}
-        <p className="text-sm text-muted-foreground">
+        <p
+          className={`text-sm text-muted-foreground transition-opacity duration-1000 delay-700 ${showContent ? "opacity-100" : "opacity-0"}`}
+        >
           Your video and audio data will <strong className="text-foreground">NOT</strong> be saved
         </p>
       </div>
