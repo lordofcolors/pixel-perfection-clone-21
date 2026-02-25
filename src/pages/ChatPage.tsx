@@ -13,7 +13,6 @@ const ChatPage = () => {
 
   const { RiveComponent } = useRive({
     src: "/animations/robocat.riv",
-    stateMachines: "State Machine 1",
     autoplay: true,
     layout: new Layout({
       fit: Fit.Contain,
