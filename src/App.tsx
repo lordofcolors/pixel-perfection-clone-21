@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import ChatPage from "./pages/ChatPage";
 import GuardianSetup from "./pages/GuardianSetup";
 import LearnerDashboard from "./pages/LearnerDashboard";
 import LearnerSkillSelection from "./pages/LearnerSkillSelection";
@@ -26,6 +27,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/chat" element={<ChatPage />} />
           <Route path="/onboarding" element={<Index />} />
           <Route path="/guardian-setup" element={<GuardianSetup />} />
           <Route path="/learner" element={<LearnerDashboard />} />
