@@ -74,7 +74,7 @@ const ChatPage = () => {
 
       {/* Rive animation - pushed to top */}
       <div
-        className={`w-[300px] h-[300px] md:w-[400px] md:h-[400px] mt-8 flex-shrink-0 transition-opacity duration-[2000ms] ${showContent ? "opacity-100" : "opacity-0"}`}
+        className={`w-[300px] h-[300px] md:w-[400px] md:h-[400px] mt-8 flex-shrink-0 transition-opacity duration-[2000ms] mix-blend-lighten ${showContent ? "opacity-100" : "opacity-0"}`}
       >
         <RiveComponent />
       </div>
