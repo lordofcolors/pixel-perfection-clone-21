@@ -22,8 +22,8 @@ const roles = [
     role: "guardian" as const,
     title: "Parent/Guardian",
     description: "For parents and caregivers supporting a learner",
-    titleColorClass: "text-xolv-blue-300",
-    borderClass: "ring-xolv-blue-400",
+    titleColorClass: "text-xolv-teal-400",
+    borderClass: "ring-xolv-teal-400",
   },
 ];
 
