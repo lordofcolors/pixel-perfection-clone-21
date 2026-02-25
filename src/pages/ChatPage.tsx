@@ -112,7 +112,7 @@ const ChatPage = () => {
 
       {/* Rive animation - shorter */}
       <div
-        className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] mt-4 flex-shrink-0 will-change-transform"
+        className="w-[400px] h-[400px] md:w-[550px] md:h-[550px] mt-4 flex-shrink-0 will-change-transform"
         style={{
           opacity: showContent ? 1 : 0,
           transform: showContent ? "translateY(0)" : "translateY(-50px)",
