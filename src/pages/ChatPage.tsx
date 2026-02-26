@@ -4,6 +4,8 @@ import { ArrowLeft, Send, Smile, Monitor, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef } from "react";
+import { SessionEndedView } from "@/components/chat/SessionEndedView";
+import { ContinueLearningModal } from "@/components/chat/ContinueLearningModal";
 
 const LOADING_STATES = [
   "Waking up A…",
@@ -26,6 +28,8 @@ const ChatPage = () => {
   const [showGreeting, setShowGreeting] = useState(false);
   const [typedText, setTypedText] = useState("");
   const typingRef = useRef<NodeJS.Timeout | null>(null);
+  const [sessionEnded, setSessionEnded] = useState(false);
+  const [showContinueModal, setShowContinueModal] = useState(false);
 
   const greetingText = `Hi${firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!`;
 
@@ -100,6 +104,30 @@ const ChatPage = () => {
       rive.play();
     }
   }, [showContent, rive]);
+
+  const handleDisconnect = () => {
+    setSessionEnded(true);
+    setShowContinueModal(true);
+  };
+
+  if (sessionEnded) {
+    return (
+      <>
+        <SessionEndedView
+          learnerName={firstName || ""}
+          onBackToHome={() => navigate("/")}
+          onStartNewSession={() => {
+            setSessionEnded(false);
+            setShowContinueModal(false);
+          }}
+        />
+        <ContinueLearningModal
+          open={showContinueModal}
+          onClose={() => setShowContinueModal(false)}
+        />
+      </>
+    );
+  }
 
   return (
     <main className="w-screen h-screen bg-background flex flex-col items-center relative overflow-hidden">
@@ -183,7 +211,12 @@ const ChatPage = () => {
             <span className="text-xs text-muted-foreground uppercase tracking-wider">Share Screen</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <Button variant="outline" size="icon" className="rounded-full w-14 h-14 border-destructive/30 bg-destructive/10 hover:bg-destructive/20">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full w-14 h-14 border-destructive/30 bg-destructive/10 hover:bg-destructive/20"
+              onClick={handleDisconnect}
+            >
               <X className="w-6 h-6 text-destructive" />
             </Button>
             <span className="text-xs text-muted-foreground uppercase tracking-wider">Disconnect</span>
