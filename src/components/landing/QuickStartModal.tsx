@@ -29,7 +29,7 @@ const roles = [
     borderClass: "ring-xolv-magenta-400",
     imageUrl: "https://api.builder.io/api/v1/image/assets/TEMP/8d59003dfe2826aab8d09c5daa647bf58f9895e6?width=270",
     bgColor: "#CA7FCD",
-    imageClassName: "h-[75px] -ml-2",
+    imageClassName: "h-[90px] -ml-4 -mt-2",
   },
 ];
 
