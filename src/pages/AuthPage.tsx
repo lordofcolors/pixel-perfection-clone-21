@@ -14,7 +14,7 @@ const AuthPage = () => {
   const [showPhoneInput, setShowPhoneInput] = useState(false);
 
   if (!showModal) {
-    return <LandingPage />;
+    return <LandingPage hideQuickStart />;
   }
 
   return (
