@@ -83,12 +83,11 @@ const ChatPage = () => {
     }),
   });
 
-  // Reset and play Rive only after content is visible, with delay for navigation scenarios
+  // Play Rive only after content is visible, with delay for navigation scenarios
   useEffect(() => {
     if (showContent && rive) {
-      rive.reset();
       const timer = setTimeout(() => {
-        rive.play();
+        rive.play("State Machine");
       }, 600);
       return () => clearTimeout(timer);
     }
