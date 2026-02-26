@@ -127,7 +127,7 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
                 <div className={`text-sm font-bold mb-1 ${r.titleColorClass}`}>
                   {r.title}
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-xs text-foreground leading-relaxed">
                   {r.description}
                 </p>
               </Card>
