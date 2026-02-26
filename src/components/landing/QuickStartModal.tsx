@@ -14,7 +14,7 @@ const roles = [
   {
     role: "learner" as const,
     title: "Learner",
-    description: "For students and job seekers building career, social, and daily skills",
+    description: "For students seeking to build social, daily life, and career skills",
     titleColorClass: "text-xolv-teal-300",
     borderClass: "ring-xolv-teal-300",
     imageUrl: "https://api.builder.io/api/v1/image/assets/TEMP/9107901cbfe710c4b3a731604ada2cac0d28a37a?width=240",
