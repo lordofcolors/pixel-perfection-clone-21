@@ -37,9 +37,6 @@ const ChatPage = () => {
           clearInterval(interval);
           setTimeout(() => {
             setIsLoading(false);
-            setTimeout(() => {
-              setShowContent(true);
-            }, 600);
           }, LOADING_INTERVAL);
           return prev;
         }
@@ -48,6 +45,20 @@ const ChatPage = () => {
     }, LOADING_INTERVAL);
     return () => clearInterval(interval);
   }, []);
+
+  // Ensure browser paints opacity-0 before triggering the fade transition
+  useEffect(() => {
+    if (!isLoading) {
+      // Double rAF ensures the browser has painted the initial state
+      const raf1 = requestAnimationFrame(() => {
+        const raf2 = requestAnimationFrame(() => {
+          setShowContent(true);
+        });
+        return () => cancelAnimationFrame(raf2);
+      });
+      return () => cancelAnimationFrame(raf1);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (showContent) {
