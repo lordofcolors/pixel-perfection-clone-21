@@ -17,6 +17,9 @@ const roles = [
     description: "For students and job seekers building career, social, and daily skills",
     titleColorClass: "text-xolv-magenta-300",
     borderClass: "ring-xolv-magenta-400",
+    imageUrl: "https://api.builder.io/api/v1/image/assets/TEMP/9107901cbfe710c4b3a731604ada2cac0d28a37a?width=240",
+    bgColor: "#3FBDD1",
+    imageClassName: "w-[80px] h-[58px] left-[40px] top-[22px]",
   },
   {
     role: "guardian" as const,
@@ -24,6 +27,9 @@ const roles = [
     description: "For parents and caregivers supporting a learner",
     titleColorClass: "text-xolv-teal-300",
     borderClass: "ring-xolv-teal-300",
+    imageUrl: "https://api.builder.io/api/v1/image/assets/TEMP/8d59003dfe2826aab8d09c5daa647bf58f9895e6?width=270",
+    bgColor: "#CA7FCD",
+    imageClassName: "w-[90px] h-[83px] left-[15px] -top-1",
   },
 ];
 
@@ -119,6 +125,18 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
                   }
                 }}
               >
+                {/* Image tile */}
+                <div
+                  className="relative w-full h-[70px] rounded-lg overflow-hidden mb-3"
+                  style={{ backgroundColor: r.bgColor }}
+                >
+                  <img
+                    src={r.imageUrl}
+                    alt={r.title}
+                    loading="lazy"
+                    className={`absolute ${r.imageClassName}`}
+                  />
+                </div>
                 <div className={`text-sm font-bold mb-1 ${r.titleColorClass}`}>
                   {r.title}
                 </div>
