@@ -50,7 +50,7 @@ const AuthPage = () => {
             Welcome back!
           </h1>
           <p className="text-base text-muted-foreground mb-8">
-            Sign back to chat with A
+            Sign back in to chat with A
           </p>
 
           {/* Google sign-in */}
