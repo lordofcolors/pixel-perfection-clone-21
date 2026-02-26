@@ -83,7 +83,7 @@ export function ContinueLearningModal({ open, onClose }: ContinueLearningModalPr
             onClick={() => navigate("/")}
             className="w-full h-12 font-medium text-base border-border/50"
           >
-            Restart as a Different Persona
+            Try as Someone Else
           </Button>
         </div>
       </div>
