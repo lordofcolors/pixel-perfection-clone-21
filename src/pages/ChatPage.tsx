@@ -83,14 +83,10 @@ const ChatPage = () => {
     }),
   });
 
-  // Reset and play Rive only after content is visible, with delay for navigation scenarios
+  // Start Rive animation after loading completes and content is visible
   useEffect(() => {
     if (showContent && rive) {
-      rive.reset();
-      const timer = setTimeout(() => {
-        rive.play();
-      }, 600);
-      return () => clearTimeout(timer);
+      rive.play();
     }
   }, [showContent, rive]);
 
