@@ -104,7 +104,7 @@ const AuthPage = () => {
 
           {/* Try as Guest — prominent white CTA */}
           <Button
-            className="w-full h-12 text-sm font-medium bg-foreground text-background hover:bg-foreground/90"
+            className="w-full h-12 text-sm font-medium bg-xolv-teal-300 text-black hover:bg-xolv-teal-300/90"
             onClick={() => navigate("/try")}
           >
             Try as Guest
