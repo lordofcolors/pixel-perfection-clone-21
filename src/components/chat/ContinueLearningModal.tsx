@@ -49,7 +49,7 @@ export function ContinueLearningModal({ open, onClose }: ContinueLearningModalPr
         <h2 className="text-2xl font-bold text-foreground mb-3">
           Continue Your Learning Journey
         </h2>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-8">
+        <p className="text-sm text-foreground leading-relaxed mb-8">
           You've just taken your first lesson. Great work! Create a free account
           to save your transcript, track your progress, and unlock your next set
           of lessons.
