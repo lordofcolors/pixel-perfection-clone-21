@@ -26,7 +26,7 @@ const AuthPage = () => {
 
       {/* Modal overlay */}
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-        <div className="relative w-full max-w-sm mx-4 rounded-2xl border border-border bg-card p-8 shadow-xl flex flex-col items-center">
+        <div className="relative w-full max-w-sm mx-4 rounded-2xl border border-border bg-background p-8 shadow-xl flex flex-col items-center">
           {/* Close button */}
           <button
             onClick={() => setShowModal(false)}
