@@ -47,10 +47,10 @@ const AuthPage = () => {
 
           {/* Heading */}
           <h1 className="text-2xl font-semibold text-foreground mb-1">
-            Welcome Back!
+            Welcome back!
           </h1>
           <p className="text-base text-muted-foreground mb-8">
-            Sign back in
+            Sign back to chat with A
           </p>
 
           {/* Google sign-in */}
@@ -105,7 +105,7 @@ const AuthPage = () => {
           {/* Try as Guest — prominent white CTA */}
           <Button
             className="w-full h-12 text-sm font-medium bg-foreground text-background hover:bg-foreground/90"
-            onClick={() => setShowModal(false)}
+            onClick={() => navigate("/try")}
           >
             Try as Guest
           </Button>
