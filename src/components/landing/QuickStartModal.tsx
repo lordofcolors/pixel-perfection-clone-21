@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { X, Mic, MicOff } from "lucide-react";
+import { Mic, MicOff } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -66,13 +67,14 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
       {/* Close button */}
-      <button
-        onClick={onClose}
-        className="absolute top-6 right-6 text-muted-foreground hover:text-foreground transition-colors z-10"
-        aria-label="Close"
-      >
-        <X className="w-6 h-6" />
-      </button>
+      <div className="absolute top-6 right-6 z-10">
+        <Button
+          asChild
+          className="rounded-lg px-6 bg-xolv-magenta-300 text-black hover:bg-xolv-magenta-300/90 border-none"
+        >
+          <Link to="/onboarding">Login</Link>
+        </Button>
+      </div>
 
       <div className="w-full max-w-lg mx-4 flex flex-col items-center">
         {/* Header */}
@@ -125,18 +127,11 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
                   }
                 }}
               >
-                {/* Image tile */}
+                {/* Color tile */}
                 <div
-                  className="w-full h-[80px] rounded-lg overflow-hidden mb-3 flex items-center justify-center"
+                  className="w-full h-[80px] rounded-lg mb-3"
                   style={{ backgroundColor: r.bgColor }}
-                >
-                  <img
-                    src={r.imageUrl}
-                    alt={r.title}
-                    loading="lazy"
-                    className={`object-contain ${r.imageClassName}`}
-                  />
-                </div>
+                />
                 <div className={`text-sm font-bold mb-1 ${r.titleColorClass}`}>
                   {r.title}
                 </div>
