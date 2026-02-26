@@ -26,7 +26,7 @@ const AuthPage = () => {
 
       {/* Modal overlay */}
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-        <div className="relative w-full max-w-sm mx-4 rounded-2xl border border-border bg-background p-8 shadow-xl flex flex-col items-center">
+        <div className="relative w-full max-w-xs mx-4 rounded-2xl border border-border bg-background p-8 shadow-xl flex flex-col items-center">
           {/* Close button */}
           <button
             onClick={() => setShowModal(false)}
@@ -35,15 +35,6 @@ const AuthPage = () => {
           >
             <X className="h-4 w-4" />
           </button>
-
-          {/* Logo */}
-          <div className="w-16 h-16 mb-6">
-            <img
-              src={acircleLogo}
-              alt="Acircle logo"
-              className="w-full h-full rounded-full"
-            />
-          </div>
 
           {/* Heading */}
           <h1 className="text-2xl font-semibold text-foreground mb-1">
