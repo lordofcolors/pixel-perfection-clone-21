@@ -6,11 +6,11 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef } from "react";
 
 const LOADING_STATES = [
-  "Warming up neural pathways…",
-  "Calibrating learning style…",
-  "Mapping knowledge graph…",
-  "Preparing personalized content…",
-  "Connecting to your AI tutor…",
+  "Starting up A…",
+  "Personalizing your experience…",
+  "Tuning A to your learning style…",
+  "Loading your skill toolkit…",
+  "A is ready to meet you…",
 ];
 
 const LOADING_INTERVAL = 1800;
