@@ -34,7 +34,7 @@ export function ContinueLearningModal({ open, onClose }: ContinueLearningModalPr
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="relative w-full max-w-md mx-4 bg-card border border-border/50 rounded-2xl p-8">
         {/* Close */}
         <button
@@ -81,9 +81,9 @@ export function ContinueLearningModal({ open, onClose }: ContinueLearningModalPr
           <Button
             variant="outline"
             onClick={() => navigate("/")}
-            className="w-full h-12 font-medium text-sm border-border/50"
+            className="w-full h-12 font-medium text-base border-border/50"
           >
-            Restart as a different persona
+            Restart as a Different Persona
           </Button>
         </div>
       </div>
