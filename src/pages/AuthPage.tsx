@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import acircleLogo from "@/assets/acircle-logo.png";
 import googleLogo from "@/assets/google-g-logo.png";
+import { LandingBackground } from "@/components/landing/LandingBackground";
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -11,9 +12,12 @@ const AuthPage = () => {
   const [showPhoneInput, setShowPhoneInput] = useState(false);
 
   return (
-    <main className="w-screen min-h-screen bg-background/95 flex items-center justify-center font-literata">
+    <main className="w-screen min-h-screen bg-background flex items-center justify-center font-literata relative">
+      {/* Background — same as /try landing page */}
+      <LandingBackground />
+
       {/* Modal card */}
-      <div className="w-full max-w-md mx-4 rounded-2xl border border-border bg-card p-8 shadow-xl flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-sm mx-4 rounded-2xl border border-border bg-card p-8 shadow-xl flex flex-col items-center">
         {/* Logo */}
         <div className="w-16 h-16 mb-6">
           <img
