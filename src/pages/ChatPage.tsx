@@ -83,10 +83,14 @@ const ChatPage = () => {
     }),
   });
 
-  // Play Rive when content starts fading in — the CSS transition handles the visual fade
+  // Reset and play Rive only after content is visible, with delay for navigation scenarios
   useEffect(() => {
     if (showContent && rive) {
-      rive.play("State Machine");
+      rive.reset();
+      const timer = setTimeout(() => {
+        rive.play();
+      }, 600);
+      return () => clearTimeout(timer);
     }
   }, [showContent, rive]);
 
