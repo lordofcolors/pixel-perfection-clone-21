@@ -35,13 +35,8 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
   const [micStatus, setMicStatus] = useState<MicStatus>("unknown");
 
   const checkMicPermission = useCallback(async () => {
-    try {
-      const result = await navigator.permissions.query({ name: "microphone" as PermissionName });
-      setMicStatus(result.state as MicStatus);
-      result.onchange = () => setMicStatus(result.state as MicStatus);
-    } catch {
-      setMicStatus("unknown");
-    }
+    // Always require re-enabling mic each time the modal opens
+    setMicStatus("prompt");
   }, []);
 
   useEffect(() => {
