@@ -101,21 +101,23 @@ const ChatPage = () => {
     }
   }, [showContent, rive]);
 
-  if (isLoading) {
-    return (
-      <main className="w-screen h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
-        {/* Spinner */}
+  return (
+    <main className="w-screen h-screen bg-background flex flex-col items-center relative overflow-hidden">
+      {/* Loading overlay */}
+      <div
+        className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-background transition-opacity duration-1000"
+        style={{
+          opacity: isLoading ? 1 : 0,
+          pointerEvents: isLoading ? "auto" : "none",
+        }}
+      >
         <div className="w-10 h-10 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin mb-6" />
-        {/* Loading state text */}
         <p className="text-muted-foreground italic text-sm transition-opacity duration-500">
           {LOADING_STATES[loadingIndex]}
         </p>
-      </main>
-    );
-  }
+      </div>
 
-  return (
-    <main className="w-screen h-screen bg-background flex flex-col items-center relative overflow-hidden">
+      {/* Main content — always mounted, fades in after loading */}
       <div
         className={`absolute top-6 left-6 z-10 transition-opacity duration-[2000ms] ${showContent ? "opacity-100" : "opacity-0"}`}
       >
@@ -130,13 +132,11 @@ const ChatPage = () => {
         </Button>
       </div>
 
-      {/* Rive animation - shorter */}
       <div
-        className="w-[400px] h-[400px] md:w-[550px] md:h-[550px] mt-4 flex-shrink-0 will-change-transform"
+        className="w-[400px] h-[400px] md:w-[550px] md:h-[550px] mt-4 flex-shrink-0 will-change-transform transition-all duration-[2000ms] ease-out"
         style={{
           opacity: showContent ? 1 : 0,
           transform: showContent ? "translateY(0)" : "translateY(-50px)",
-          transition: "opacity 2000ms ease, transform 2000ms ease",
         }}
       >
         <div className="w-full h-full">
@@ -144,9 +144,7 @@ const ChatPage = () => {
         </div>
       </div>
 
-      {/* Chat area below animation */}
       <div className="flex flex-col items-center w-full max-w-2xl px-6 flex-1 justify-end pb-8 gap-4">
-        {/* AI message bubble */}
         <div
           className={`w-full rounded-2xl border border-muted p-4 mb-2 transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
         >
@@ -158,7 +156,6 @@ const ChatPage = () => {
           </p>
         </div>
 
-        {/* Text input row */}
         <div
           className={`w-full flex items-center gap-2 rounded-2xl border border-muted p-2 transition-opacity duration-[2000ms] delay-300 ${showContent ? "opacity-100" : "opacity-0"}`}
         >
@@ -176,7 +173,6 @@ const ChatPage = () => {
           </Button>
         </div>
 
-        {/* Action buttons */}
         <div
           className={`flex items-center gap-8 transition-opacity duration-[2000ms] delay-500 ${showContent ? "opacity-100" : "opacity-0"}`}
         >
@@ -194,7 +190,6 @@ const ChatPage = () => {
           </div>
         </div>
 
-        {/* Privacy disclaimer */}
         <p
           className={`text-sm text-muted-foreground transition-opacity duration-[2000ms] delay-700 ${showContent ? "opacity-100" : "opacity-0"}`}
         >
