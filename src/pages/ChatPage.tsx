@@ -37,10 +37,10 @@ const ChatPage = () => {
           clearInterval(interval);
           setTimeout(() => {
             setIsLoading(false);
+            setTimeout(() => {
+              setShowContent(true);
+            }, 600);
           }, LOADING_INTERVAL);
-          setTimeout(() => {
-            setShowContent(true);
-          }, LOADING_INTERVAL + 400);
           return prev;
         }
         return prev + 1;
