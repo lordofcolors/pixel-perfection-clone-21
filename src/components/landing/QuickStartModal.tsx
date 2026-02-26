@@ -127,11 +127,6 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
                   }
                 }}
               >
-                {/* Color tile */}
-                <div
-                  className="w-full h-[80px] rounded-lg mb-3"
-                  style={{ backgroundColor: r.bgColor }}
-                />
                 <div className={`text-sm font-bold mb-1 ${r.titleColorClass}`}>
                   {r.title}
                 </div>
