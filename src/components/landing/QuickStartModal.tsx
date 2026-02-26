@@ -19,7 +19,7 @@ const roles = [
     borderClass: "ring-xolv-teal-300",
     imageUrl: "https://api.builder.io/api/v1/image/assets/TEMP/9107901cbfe710c4b3a731604ada2cac0d28a37a?width=240",
     bgColor: "#3FBDD1",
-    imageClassName: "w-[100px] h-[72px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+    imageClassName: "h-[62px]",
   },
   {
     role: "guardian" as const,
@@ -29,7 +29,7 @@ const roles = [
     borderClass: "ring-xolv-magenta-400",
     imageUrl: "https://api.builder.io/api/v1/image/assets/TEMP/8d59003dfe2826aab8d09c5daa647bf58f9895e6?width=270",
     bgColor: "#CA7FCD",
-    imageClassName: "w-[110px] h-[102px] left-[45%] top-1/2 -translate-x-1/2 -translate-y-1/2",
+    imageClassName: "h-[75px] -ml-2",
   },
 ];
 
@@ -127,14 +127,14 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
               >
                 {/* Image tile */}
                 <div
-                  className="relative w-full h-[70px] rounded-lg overflow-hidden mb-3"
+                  className="w-full h-[80px] rounded-lg overflow-hidden mb-3 flex items-center justify-center"
                   style={{ backgroundColor: r.bgColor }}
                 >
                   <img
                     src={r.imageUrl}
                     alt={r.title}
                     loading="lazy"
-                    className={`absolute ${r.imageClassName}`}
+                    className={`object-contain ${r.imageClassName}`}
                   />
                 </div>
                 <div className={`text-sm font-bold mb-1 ${r.titleColorClass}`}>
