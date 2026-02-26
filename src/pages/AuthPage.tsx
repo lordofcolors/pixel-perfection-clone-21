@@ -47,10 +47,10 @@ const AuthPage = () => {
 
           {/* Heading */}
           <h1 className="text-2xl font-semibold text-foreground mb-1">
-            Welcome to A.
+            Welcome Back!
           </h1>
           <p className="text-base text-muted-foreground mb-8">
-            Your new learning companion
+            Sign back in
           </p>
 
           {/* Google sign-in */}
