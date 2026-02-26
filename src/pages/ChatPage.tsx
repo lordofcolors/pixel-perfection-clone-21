@@ -72,16 +72,23 @@ const ChatPage = () => {
     }
   }, [showGreeting, greetingText]);
 
-  const { RiveComponent } = useRive({
+  const { rive, RiveComponent } = useRive({
     src: "/animations/robocat.riv",
     stateMachines: "State Machine",
     artboard: "Catbot",
-    autoplay: true,
+    autoplay: false,
     layout: new Layout({
       fit: Fit.Contain,
       alignment: Alignment.Center,
     }),
   });
+
+  // Start Rive animation after loading completes and content is visible
+  useEffect(() => {
+    if (showContent && rive) {
+      rive.play();
+    }
+  }, [showContent, rive]);
 
   if (isLoading) {
     return (
