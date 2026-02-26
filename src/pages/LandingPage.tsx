@@ -11,10 +11,10 @@ const skillSuggestions = [
   "I want to improve my public speaking skills",
 ];
 
-const LandingPage = () => {
+const LandingPage = ({ hideQuickStart = false }: { hideQuickStart?: boolean }) => {
   const navigate = useNavigate();
   const [skillInput, setSkillInput] = useState("");
-  const [showQuickStart, setShowQuickStart] = useState(true);
+  const [showQuickStart, setShowQuickStart] = useState(!hideQuickStart);
 
   const handleSubmit = () => {
     if (skillInput.trim()) {

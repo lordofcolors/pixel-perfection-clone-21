@@ -21,7 +21,7 @@ const AuthPage = () => {
     <div className="relative font-literata">
       {/* Full landing page behind */}
       <div className="pointer-events-none select-none" aria-hidden>
-        <LandingPage />
+        <LandingPage hideQuickStart />
       </div>
 
       {/* Modal overlay */}
