@@ -128,8 +128,8 @@ const ChatPage = () => {
           transition: "opacity 2000ms ease, transform 2000ms ease",
         }}
       >
-        <div className="w-full h-full mix-blend-lighten">
-          <RiveComponent />
+        <div className="w-full h-full">
+          <RiveComponent className="w-full h-full" />
         </div>
       </div>
 
