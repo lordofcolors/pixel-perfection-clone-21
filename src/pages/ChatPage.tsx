@@ -107,7 +107,7 @@ const ChatPage = () => {
 
   const handleDisconnect = () => {
     setSessionEnded(true);
-    setShowContinueModal(true);
+    setTimeout(() => setShowContinueModal(true), 1000);
   };
 
   if (sessionEnded) {
