@@ -28,11 +28,7 @@ const LandingPage = () => {
 
   const handleQuickStartComplete = (name: string, role: "learner" | "guardian") => {
     setShowQuickStart(false);
-    if (role === "guardian") {
-      navigate("/guardian-setup", { state: { firstName: name } });
-    } else {
-      navigate("/chat", { state: { firstName: name, role } });
-    }
+    navigate("/chat", { state: { firstName: name, role } });
   };
 
   return (
