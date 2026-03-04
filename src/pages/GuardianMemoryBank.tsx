@@ -64,15 +64,15 @@ function formatDate(date: Date): string {
 const importanceOrder: Record<Importance, number> = { high: 0, medium: 1, low: 2 };
 
 const importanceColors: Record<Importance, string> = {
-  high: "text-destructive",
-  medium: "text-chart-4",
-  low: "text-muted-foreground",
+  high: "text-xolv-magenta-600",
+  medium: "text-xolv-teal-600",
+  low: "text-xolv-blue-500",
 };
 
 const importanceBgColors: Record<Importance, string> = {
-  high: "bg-destructive/10",
-  medium: "bg-chart-4/10",
-  low: "bg-muted",
+  high: "bg-xolv-magenta-100",
+  medium: "bg-xolv-teal-100",
+  low: "bg-xolv-blue-100",
 };
 
 export default function GuardianMemoryBank() {
@@ -158,11 +158,6 @@ export default function GuardianMemoryBank() {
           </header>
 
           <main className="p-6 max-w-4xl mx-auto">
-            <div className="mb-1">
-              <p className="text-muted-foreground text-sm">
-                {memories.length} memories saved
-              </p>
-            </div>
 
             {/* Controls */}
             <div className="flex items-center gap-3 mb-4">
@@ -210,34 +205,38 @@ export default function GuardianMemoryBank() {
                   key={memory.id}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors group"
                 >
+                  {/* Delete icon - left side */}
+                  <button
+                    onClick={() => setDeleteConfirm(memory.id)}
+                    className="p-1 rounded-md hover:bg-destructive/10 transition-colors flex-shrink-0"
+                    aria-label="Delete memory"
+                  >
+                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                  </button>
+
+                  {/* Memory text */}
                   <p className="flex-1 text-sm truncate min-w-0 cursor-pointer" onClick={() => handleEdit(memory)}>
                     {memory.text}
                   </p>
 
+                  {/* Importance badge */}
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap capitalize ${importanceColors[memory.importance]} ${importanceBgColors[memory.importance]}`}>
                     {memory.importance}
                   </span>
 
+                  {/* Date */}
                   <span className="text-xs text-muted-foreground whitespace-nowrap w-16 text-right">
                     {formatDate(memory.createdAt)}
                   </span>
 
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={() => handleEdit(memory)}
-                      className="p-1.5 rounded-md hover:bg-accent transition-colors"
-                      aria-label="Edit memory"
-                    >
-                      <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
-                    </button>
-                    <button
-                      onClick={() => setDeleteConfirm(memory.id)}
-                      className="p-1.5 rounded-md hover:bg-destructive/10 transition-colors"
-                      aria-label="Delete memory"
-                    >
-                      <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                    </button>
-                  </div>
+                  {/* Edit icon - right side */}
+                  <button
+                    onClick={() => handleEdit(memory)}
+                    className="p-1 rounded-md hover:bg-accent transition-colors flex-shrink-0"
+                    aria-label="Edit memory"
+                  >
+                    <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
+                  </button>
                 </div>
               ))}
             </div>
