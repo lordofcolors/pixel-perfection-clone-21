@@ -87,7 +87,6 @@ const GuardianSetup = () => {
   }, [fields.length]);
 
   const onSubmit = (data: GuardianForm) => {
-    console.log('Guardian setup form:', data);
     saveGuardianSetup({
       guardianName: data.fullName || 'Guardian',
       learners: (data.learners || []).map((l) => ({ name: l.fullName || 'Learner' })),

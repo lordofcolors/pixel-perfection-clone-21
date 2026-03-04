@@ -60,7 +60,6 @@ export default function GuardianAccount() {
   }, []);
 
   const onSubmit = (data: GuardianForm) => {
-    console.log("Guardian account save:", data);
     // persist changes
     const learnersOut = (data.learners || []).map((l) => ({ name: l.fullName || 'Learner' }));
     const { saveGuardianSetup } = require("@/lib/store");
