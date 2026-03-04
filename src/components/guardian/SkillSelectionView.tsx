@@ -33,9 +33,7 @@ export function SkillSelectionView({ guardianName, learners, onBack, onSkillCrea
       return;
     }
     
-    console.log('Adding skill to person:', targetPerson, skill);
     addSkillToPerson(targetPerson, skill);
-    console.log('Skill added, calling onSkillCreated');
     onSkillCreated();
     onBack();
   };
