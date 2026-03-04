@@ -186,7 +186,7 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
                   </SelectTrigger>
                   <SelectContent>
                     {personOptions.map(opt => (
-                      <SelectItem key={opt.value} value={opt.value} className="pl-2">
+                      <SelectItem key={opt.value} value={opt.value}>
                         {opt.label}
                       </SelectItem>
                     ))}
@@ -212,8 +212,8 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="importance" className="pl-2">By importance</SelectItem>
-                  <SelectItem value="recent" className="pl-2">Most recent</SelectItem>
+                  <SelectItem value="importance">By importance</SelectItem>
+                  <SelectItem value="recent">Most recent</SelectItem>
                 </SelectContent>
               </Select>
             </div>
