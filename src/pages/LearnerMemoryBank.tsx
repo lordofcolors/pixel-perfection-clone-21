@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Pencil, Trash2, Search, Brain } from "lucide-react";
+import { Pencil, Trash2, Search, Brain, Plus } from "lucide-react";
 
 type Importance = "high" | "medium" | "low";
 
@@ -76,6 +76,7 @@ export default function LearnerMemoryBank() {
   const [editText, setEditText] = useState("");
   const [editImportance, setEditImportance] = useState<Importance>("medium");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const filtered = useMemo(() => {
     let result = memories;
@@ -101,6 +102,19 @@ export default function LearnerMemoryBank() {
   };
 
   const handleSaveEdit = () => {
+    if (isCreating) {
+      if (!editText.trim()) return;
+      const newMemory: Memory = {
+        id: `new-${Date.now()}`,
+        text: editText.trim(),
+        importance: editImportance,
+        createdAt: new Date(),
+      };
+      setMemories(prev => [newMemory, ...prev]);
+      setIsCreating(false);
+      setEditingMemory(null);
+      return;
+    }
     if (!editingMemory) return;
     setMemories(prev => prev.map(m =>
       m.id === editingMemory.id ? { ...m, text: editText, importance: editImportance } : m
@@ -146,10 +160,24 @@ export default function LearnerMemoryBank() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="importance" className="pl-2">By importance</SelectItem>
-                  <SelectItem value="recent" className="pl-2">Most recent</SelectItem>
+                  <SelectItem value="importance">By importance</SelectItem>
+                  <SelectItem value="recent">Most recent</SelectItem>
                 </SelectContent>
               </Select>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-10 w-10 flex-shrink-0"
+                onClick={() => {
+                  setIsCreating(true);
+                  setEditingMemory({ id: "", text: "", importance: "medium", createdAt: new Date() });
+                  setEditText("");
+                  setEditImportance("medium");
+                }}
+                aria-label="Create memory"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
             </div>
 
             {/* Memory table */}
@@ -206,11 +234,11 @@ export default function LearnerMemoryBank() {
         </SidebarInset>
       </div>
 
-      {/* Edit Modal */}
-      <Dialog open={!!editingMemory} onOpenChange={(open) => !open && setEditingMemory(null)}>
+      {/* Edit/Create Modal */}
+      <Dialog open={!!editingMemory} onOpenChange={(open) => { if (!open) { setEditingMemory(null); setIsCreating(false); } }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Memory</DialogTitle>
+            <DialogTitle>{isCreating ? "Create Memory" : "Edit Memory"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div>
@@ -220,6 +248,7 @@ export default function LearnerMemoryBank() {
                 onChange={e => setEditText(e.target.value)}
                 rows={3}
                 className="resize-none"
+                placeholder={isCreating ? "Enter a new memory..." : ""}
               />
             </div>
             <div>
@@ -235,28 +264,30 @@ export default function LearnerMemoryBank() {
                 </SelectContent>
               </Select>
             </div>
-            {editingMemory && (
+            {!isCreating && editingMemory && (
               <p className="text-xs text-muted-foreground">
                 Created: {formatDate(editingMemory.createdAt)}
               </p>
             )}
           </div>
           <DialogFooter className="flex !justify-between">
-            <button
-              onClick={() => {
-                if (editingMemory) {
-                  setEditingMemory(null);
-                  setDeleteConfirm(editingMemory.id);
-                }
-              }}
-              className="p-2 rounded-md hover:bg-destructive/10 transition-colors"
-              aria-label="Delete memory"
-            >
-              <Trash2 className="h-4 w-4 text-muted-foreground" />
-            </button>
+            {!isCreating ? (
+              <button
+                onClick={() => {
+                  if (editingMemory) {
+                    setEditingMemory(null);
+                    setDeleteConfirm(editingMemory.id);
+                  }
+                }}
+                className="p-2 rounded-md hover:bg-destructive/10 transition-colors"
+                aria-label="Delete memory"
+              >
+                <Trash2 className="h-4 w-4 text-muted-foreground" />
+              </button>
+            ) : <span />}
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setEditingMemory(null)}>Cancel</Button>
-              <Button onClick={handleSaveEdit}>Save</Button>
+              <Button variant="outline" onClick={() => { setEditingMemory(null); setIsCreating(false); }}>Cancel</Button>
+              <Button onClick={handleSaveEdit}>{isCreating ? "Create" : "Save"}</Button>
             </div>
           </DialogFooter>
         </DialogContent>
