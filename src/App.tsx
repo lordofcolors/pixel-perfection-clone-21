@@ -36,7 +36,7 @@ const App = () => (
 
           {/* Protected routes */}
           <Route path="/chat" element={<ChatPage />} />
-          <Route path="/onboarding" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+          <Route path="/onboarding" element={<Index />} />
           <Route path="/guardian-setup" element={<ProtectedRoute><GuardianSetup /></ProtectedRoute>} />
           <Route path="/learner" element={<ProtectedRoute><LearnerDashboard /></ProtectedRoute>} />
           <Route path="/learner/add-skill" element={<ProtectedRoute><LearnerSkillSelection /></ProtectedRoute>} />
