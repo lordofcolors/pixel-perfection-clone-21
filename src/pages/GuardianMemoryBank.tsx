@@ -64,15 +64,15 @@ function formatDate(date: Date): string {
 const importanceOrder: Record<Importance, number> = { high: 0, medium: 1, low: 2 };
 
 const importanceColors: Record<Importance, string> = {
-  high: "text-xolv-magenta-600",
-  medium: "text-xolv-teal-600",
-  low: "text-xolv-blue-500",
+  high: "text-xolv-magenta-200",
+  medium: "text-xolv-teal-200",
+  low: "text-xolv-blue-200",
 };
 
 const importanceBgColors: Record<Importance, string> = {
-  high: "bg-xolv-magenta-100",
-  medium: "bg-xolv-teal-100",
-  low: "bg-xolv-blue-100",
+  high: "bg-xolv-magenta-800",
+  medium: "bg-xolv-teal-800",
+  low: "bg-xolv-blue-800",
 };
 
 export default function GuardianMemoryBank() {
@@ -229,10 +229,10 @@ export default function GuardianMemoryBank() {
                     {formatDate(memory.createdAt)}
                   </span>
 
-                  {/* Edit icon - right side */}
+                  {/* Edit icon - right side, visible on hover */}
                   <button
                     onClick={() => handleEdit(memory)}
-                    className="p-1 rounded-md hover:bg-accent transition-colors flex-shrink-0"
+                    className="p-1 rounded-md hover:bg-accent transition-colors flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                     aria-label="Edit memory"
                   >
                     <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
