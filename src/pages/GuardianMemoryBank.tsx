@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { ManageSidebar } from "@/components/guardian/ManageSidebar";
 import { getGuardianSetup } from "@/lib/store";
@@ -16,7 +17,7 @@ interface Memory {
   text: string;
   importance: Importance;
   createdAt: Date;
-  owner: string; // person name this memory belongs to
+  owner: string;
 }
 
 function buildMockMemories(guardianName: string, learners: { name: string }[]): Record<string, Memory[]> {
@@ -63,15 +64,19 @@ function formatDate(date: Date): string {
 
 const importanceOrder: Record<Importance, number> = { high: 0, medium: 1, low: 2 };
 
-// Border-only tag colors using xolv palette
-
 const importanceBorderColors: Record<Importance, string> = {
   high: "border-[#EED4F0] text-[#EED4F0]",
   medium: "border-[#94DFE9] text-[#94DFE9]",
   low: "border-[#B9C6FE] text-[#B9C6FE]",
 };
 
-export default function GuardianMemoryBank() {
+interface GuardianMemoryBankProps {
+  isLearnerView?: boolean;
+  learnerName?: string;
+}
+
+export default function GuardianMemoryBank({ isLearnerView = false, learnerName }: GuardianMemoryBankProps) {
+  const navigate = useNavigate();
   const data = getGuardianSetup();
   const guardianName = data?.guardianName || "Tree Guardian";
   const learners = data?.learners || [{ name: "Jake" }, { name: "Mia" }];
@@ -79,20 +84,28 @@ export default function GuardianMemoryBank() {
   const [allMemories, setAllMemories] = useState<Record<string, Memory[]>>(() =>
     buildMockMemories(guardianName, learners)
   );
-  const [selectedPerson, setSelectedPerson] = useState(guardianName);
+  
+  // If learner view, lock to that learner's memories only
+  const [selectedPerson, setSelectedPerson] = useState(
+    isLearnerView && learnerName ? learnerName : guardianName
+  );
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<"importance" | "recent">("importance");
   const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
   const [editText, setEditText] = useState("");
   const [editImportance, setEditImportance] = useState<Importance>("medium");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [activeView, setActiveView] = useState<"guardian" | "dashboard" | "skillSelection" | number>("guardian");
 
   const memories = allMemories[selectedPerson] || [];
 
-  const personOptions = [
-    { value: guardianName, label: `${guardianName} (myself)` },
-    ...learners.map(l => ({ value: l.name, label: l.name })),
-  ];
+  // For guardian: show all people. For learner: only themselves
+  const personOptions = isLearnerView
+    ? [{ value: learnerName || "", label: learnerName || "" }]
+    : [
+        { value: guardianName, label: `${guardianName} (myself)` },
+        ...learners.map(l => ({ value: l.name, label: l.name })),
+      ];
 
   const filtered = useMemo(() => {
     let result = memories;
@@ -136,14 +149,23 @@ export default function GuardianMemoryBank() {
     setDeleteConfirm(null);
   };
 
+  const handleSidebarViewChange = (view: "guardian" | "dashboard" | "skillSelection" | number) => {
+    if (typeof view === "number") {
+      // Switching to a learner — navigate to learner dashboard
+      navigate("/learner");
+      return;
+    }
+    setActiveView(view);
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <ManageSidebar
           learners={learners}
           guardianName={guardianName}
-          activeView="guardian"
-          onSelectView={() => {}}
+          activeView={activeView}
+          onSelectView={handleSidebarViewChange}
           onCreateSkill={() => {}}
         />
         <SidebarInset>
@@ -153,23 +175,30 @@ export default function GuardianMemoryBank() {
             <h1 className="text-lg font-semibold">Memory Bank</h1>
           </header>
 
-          <main className="p-6 max-w-4xl mx-auto">
-
-            {/* Controls */}
+          <main className="p-6">
+            {/* Controls row */}
             <div className="flex items-center gap-3 mb-4">
-              {/* Person selector */}
-              <Select value={selectedPerson} onValueChange={(v) => { setSelectedPerson(v); setSearch(""); }}>
-                <SelectTrigger className="w-48">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="min-w-48">
-                  {personOptions.map(opt => (
-                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Person selector — no indent, using DropdownMenu-style or fixing SelectItem padding */}
+              {!isLearnerView && personOptions.length > 1 ? (
+                <Select value={selectedPerson} onValueChange={(v) => { setSelectedPerson(v); setSearch(""); }}>
+                  <SelectTrigger className="w-48 [&>span]:truncate">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {personOptions.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value} className="pl-2">
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="h-10 px-3 flex items-center rounded-md border border-input bg-background text-sm font-medium w-48 truncate">
+                  {selectedPerson}
+                </div>
+              )}
 
-              <div className="relative flex-1 max-w-sm">
+              <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search memories..."
@@ -183,68 +212,71 @@ export default function GuardianMemoryBank() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="importance">By importance</SelectItem>
-                  <SelectItem value="recent">Most recent</SelectItem>
+                  <SelectItem value="importance" className="pl-2">By importance</SelectItem>
+                  <SelectItem value="recent" className="pl-2">Most recent</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Memory List */}
-            <div className="border rounded-lg">
-              {/* Header row */}
-              <div className="flex items-center gap-3 px-4 py-2 border-b bg-muted/30 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                <span className="w-7" /> {/* delete spacer */}
-                <span className="flex-1 min-w-0">Memory</span>
-                <span className="w-20 text-center">Importance</span>
-                <span className="w-20 text-right">Created</span>
-                <span className="w-7" /> {/* edit spacer */}
+            {/* Memory table */}
+            <div className="border rounded-lg overflow-hidden">
+              {/* Header */}
+              <div className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-2 border-b bg-muted/30 text-xs font-medium text-muted-foreground uppercase tracking-wide items-center">
+                <span /> {/* delete */}
+                <span>Memory</span>
+                <span className="text-center">Importance</span>
+                <span className="text-right">Created</span>
+                <span /> {/* edit */}
               </div>
-              <div className="divide-y divide-border">
-                {filtered.length === 0 && (
-                  <div className="p-8 text-center text-muted-foreground text-sm">
-                    {search ? "No memories match your search." : "No memories yet."}
-                  </div>
-                )}
-                {filtered.map((memory) => (
-                  <div
-                    key={memory.id}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors group"
+
+              {/* Rows */}
+              {filtered.length === 0 && (
+                <div className="p-8 text-center text-muted-foreground text-sm">
+                  {search ? "No memories match your search." : "No memories yet."}
+                </div>
+              )}
+              {filtered.map((memory) => (
+                <div
+                  key={memory.id}
+                  className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-3 border-b last:border-b-0 hover:bg-muted/50 transition-colors group items-center"
+                >
+                  {/* Delete */}
+                  <button
+                    onClick={() => setDeleteConfirm(memory.id)}
+                    className="p-1 rounded-md hover:bg-destructive/10 transition-colors"
+                    aria-label="Delete memory"
                   >
-                    {/* Delete icon */}
-                    <button
-                      onClick={() => setDeleteConfirm(memory.id)}
-                      className="p-1 rounded-md hover:bg-destructive/10 transition-colors flex-shrink-0"
-                      aria-label="Delete memory"
-                    >
-                      <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                    </button>
+                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                  </button>
 
-                    {/* Memory text */}
-                    <p className="flex-1 text-sm truncate min-w-0 cursor-pointer" onClick={() => handleEdit(memory)}>
-                      {memory.text}
-                    </p>
+                  {/* Memory text — truncate with ellipsis */}
+                  <p
+                    className="text-sm truncate min-w-0 cursor-pointer"
+                    onClick={() => handleEdit(memory)}
+                  >
+                    {memory.text}
+                  </p>
 
-                    {/* Importance badge - border only */}
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap capitalize border ${importanceBorderColors[memory.importance]} bg-transparent w-20 text-center`}>
-                      {memory.importance}
-                    </span>
+                  {/* Importance badge */}
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full capitalize border bg-transparent text-center truncate ${importanceBorderColors[memory.importance]}`}>
+                    {memory.importance}
+                  </span>
 
-                    {/* Date */}
-                    <span className="text-xs text-muted-foreground whitespace-nowrap w-20 text-right">
-                      {formatDate(memory.createdAt)}
-                    </span>
+                  {/* Date */}
+                  <span className="text-xs text-muted-foreground text-right whitespace-nowrap">
+                    {formatDate(memory.createdAt)}
+                  </span>
 
-                    {/* Edit icon - hover */}
-                    <button
-                      onClick={() => handleEdit(memory)}
-                      className="p-1 rounded-md hover:bg-accent transition-colors flex-shrink-0 opacity-0 group-hover:opacity-100"
-                      aria-label="Edit memory"
-                    >
-                      <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                  {/* Edit — hover */}
+                  <button
+                    onClick={() => handleEdit(memory)}
+                    className="p-1 rounded-md hover:bg-accent transition-colors opacity-0 group-hover:opacity-100"
+                    aria-label="Edit memory"
+                  >
+                    <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
+                  </button>
+                </div>
+              ))}
             </div>
           </main>
         </SidebarInset>
