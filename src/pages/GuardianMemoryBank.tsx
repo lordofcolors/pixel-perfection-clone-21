@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Pencil, Trash2, Search, Brain, GripVertical } from "lucide-react";
+import { Pencil, Trash2, Search, Brain } from "lucide-react";
 
 type Importance = "high" | "medium" | "low";
 
@@ -66,9 +66,9 @@ const importanceOrder: Record<Importance, number> = { high: 0, medium: 1, low: 2
 // Border-only tag colors using xolv palette
 
 const importanceBorderColors: Record<Importance, string> = {
-  high: "border-xolv-magenta-500 text-xolv-magenta-400",
-  medium: "border-xolv-teal-500 text-xolv-teal-400",
-  low: "border-xolv-blue-500 text-xolv-blue-400",
+  high: "border-[#EED4F0] text-[#EED4F0]",
+  medium: "border-[#94DFE9] text-[#94DFE9]",
+  low: "border-[#B9C6FE] text-[#B9C6FE]",
 };
 
 export default function GuardianMemoryBank() {
@@ -86,8 +86,6 @@ export default function GuardianMemoryBank() {
   const [editText, setEditText] = useState("");
   const [editImportance, setEditImportance] = useState<Importance>("medium");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [dragId, setDragId] = useState<string | null>(null);
-  const [dragOverId, setDragOverId] = useState<string | null>(null);
 
   const memories = allMemories[selectedPerson] || [];
 
@@ -136,24 +134,6 @@ export default function GuardianMemoryBank() {
       [selectedPerson]: (prev[selectedPerson] || []).filter(m => m.id !== id),
     }));
     setDeleteConfirm(null);
-  };
-
-  const handleDrop = (targetId: string) => {
-    if (!dragId || dragId === targetId) return;
-    const src = memories.find(m => m.id === dragId);
-    const tgt = memories.find(m => m.id === targetId);
-    if (!src || !tgt || src.importance !== tgt.importance) return;
-    
-    setAllMemories(prev => {
-      const list = [...(prev[selectedPerson] || [])];
-      const srcIdx = list.findIndex(m => m.id === dragId);
-      const tgtIdx = list.findIndex(m => m.id === targetId);
-      const [moved] = list.splice(srcIdx, 1);
-      list.splice(tgtIdx, 0, moved);
-      return { ...prev, [selectedPerson]: list };
-    });
-    setDragId(null);
-    setDragOverId(null);
   };
 
   return (
@@ -213,7 +193,6 @@ export default function GuardianMemoryBank() {
             <div className="border rounded-lg">
               {/* Header row */}
               <div className="flex items-center gap-3 px-4 py-2 border-b bg-muted/30 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                <span className="w-6" /> {/* drag handle spacer */}
                 <span className="w-7" /> {/* delete spacer */}
                 <span className="flex-1 min-w-0">Memory</span>
                 <span className="w-20 text-center">Importance</span>
@@ -229,18 +208,8 @@ export default function GuardianMemoryBank() {
                 {filtered.map((memory) => (
                   <div
                     key={memory.id}
-                    draggable
-                    onDragStart={() => setDragId(memory.id)}
-                    onDragOver={(e) => { e.preventDefault(); setDragOverId(memory.id); }}
-                    onDragEnd={() => { setDragId(null); setDragOverId(null); }}
-                    onDrop={() => handleDrop(memory.id)}
-                    className={`flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors group ${
-                      dragOverId === memory.id && dragId !== memory.id ? "border-t-2 border-t-primary" : ""
-                    } ${dragId === memory.id ? "opacity-40" : ""}`}
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors group"
                   >
-                    {/* Drag handle */}
-                    <GripVertical className="h-3.5 w-3.5 text-muted-foreground/50 cursor-grab flex-shrink-0" />
-
                     {/* Delete icon */}
                     <button
                       onClick={() => setDeleteConfirm(memory.id)}
