@@ -60,7 +60,7 @@ export function QuickStartModal({ open, onClose, onStart }: QuickStartModalProps
     }
   };
 
-  const canStart = name.trim().length >= 2 && selectedRole && micStatus === "granted";
+  const canStart = name.trim().length >= 2 && selectedRole && micStatus !== "prompt";
 
   if (!open) return null;
 
