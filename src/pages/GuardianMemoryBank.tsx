@@ -312,6 +312,11 @@ export default function GuardianMemoryBank() {
           <DialogHeader>
             <DialogTitle>Delete memory?</DialogTitle>
           </DialogHeader>
+          {deleteConfirm && (
+            <p className="text-sm bg-muted/50 rounded-md p-3 my-1">
+              {memories.find(m => m.id === deleteConfirm)?.text}
+            </p>
+          )}
           <p className="text-sm text-muted-foreground">This memory will be permanently removed.</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
