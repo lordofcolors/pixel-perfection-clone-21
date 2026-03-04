@@ -18,6 +18,7 @@ import GuardianAnalyticsDashboard from "./pages/GuardianAnalyticsDashboard";
 import GuardianAccount from "./pages/GuardianAccount";
 import GuardianBilling from "./pages/GuardianBilling";
 import GuardianMemoryBank from "./pages/GuardianMemoryBank";
+import LearnerMemoryBank from "./pages/LearnerMemoryBank";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/learner/add-skill" element={<LearnerSkillSelection />} />
           <Route path="/learner/account" element={<LearnerAccount />} />
           <Route path="/learner/billing" element={<LearnerBilling />} />
+          <Route path="/learner/memory" element={<LearnerMemoryBank />} />
           <Route path="/guardian/manage" element={<GuardianManageDashboard />} />
           <Route path="/guardian/separate" element={<GuardianAnalyticsDashboard />} />
           <Route path="/guardian/account" element={<GuardianAccount />} />
