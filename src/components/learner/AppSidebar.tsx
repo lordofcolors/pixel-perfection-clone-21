@@ -316,6 +316,11 @@ export function AppSidebar({ learnerName }: { learnerName?: string }) {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isActive('/learner/memory')}>
+                <NavLink to="/learner/memory">Memory Bank</NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isActive('/learner/billing')}>
                 <NavLink to="/learner/billing">Billing</NavLink>
               </SidebarMenuButton>
