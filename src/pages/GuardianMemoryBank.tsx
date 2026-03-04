@@ -279,9 +279,23 @@ export default function GuardianMemoryBank() {
               </p>
             )}
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingMemory(null)}>Cancel</Button>
-            <Button onClick={handleSaveEdit}>Save</Button>
+          <DialogFooter className="flex !justify-between">
+            <button
+              onClick={() => {
+                if (editingMemory) {
+                  setEditingMemory(null);
+                  setDeleteConfirm(editingMemory.id);
+                }
+              }}
+              className="p-2 rounded-md hover:bg-destructive/10 transition-colors"
+              aria-label="Delete memory"
+            >
+              <Trash2 className="h-4 w-4 text-muted-foreground" />
+            </button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setEditingMemory(null)}>Cancel</Button>
+              <Button onClick={handleSaveEdit}>Save</Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
