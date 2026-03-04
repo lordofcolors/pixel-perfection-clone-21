@@ -237,6 +237,11 @@ export function ManageSidebar({ learners, guardianName, activeView, onSelectView
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
+                <NavLink to="/guardian/memory">Memory</NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
                 <NavLink to="/guardian/billing">Billing</NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

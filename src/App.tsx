@@ -17,6 +17,7 @@ import GuardianManageDashboard from "./pages/GuardianManageDashboard";
 import GuardianAnalyticsDashboard from "./pages/GuardianAnalyticsDashboard";
 import GuardianAccount from "./pages/GuardianAccount";
 import GuardianBilling from "./pages/GuardianBilling";
+import GuardianMemoryBank from "./pages/GuardianMemoryBank";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/guardian/separate" element={<GuardianAnalyticsDashboard />} />
           <Route path="/guardian/account" element={<GuardianAccount />} />
           <Route path="/guardian/billing" element={<GuardianBilling />} />
+          <Route path="/guardian/memory" element={<GuardianMemoryBank />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
