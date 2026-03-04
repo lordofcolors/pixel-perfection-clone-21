@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Pencil, Trash2, Search, Brain } from "lucide-react";
+import { Pencil, Trash2, Search, Brain, GripVertical } from "lucide-react";
 
 type Importance = "high" | "medium" | "low";
 
@@ -63,16 +63,12 @@ function formatDate(date: Date): string {
 
 const importanceOrder: Record<Importance, number> = { high: 0, medium: 1, low: 2 };
 
-const importanceColors: Record<Importance, string> = {
-  high: "text-xolv-magenta-200",
-  medium: "text-xolv-teal-200",
-  low: "text-xolv-blue-200",
-};
+// Border-only tag colors using xolv palette
 
-const importanceBgColors: Record<Importance, string> = {
-  high: "bg-xolv-magenta-800",
-  medium: "bg-xolv-teal-800",
-  low: "bg-xolv-blue-800",
+const importanceBorderColors: Record<Importance, string> = {
+  high: "border-xolv-magenta-500 text-xolv-magenta-400",
+  medium: "border-xolv-teal-500 text-xolv-teal-400",
+  low: "border-xolv-blue-500 text-xolv-blue-400",
 };
 
 export default function GuardianMemoryBank() {
@@ -90,6 +86,8 @@ export default function GuardianMemoryBank() {
   const [editText, setEditText] = useState("");
   const [editImportance, setEditImportance] = useState<Importance>("medium");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
 
   const memories = allMemories[selectedPerson] || [];
 
@@ -138,6 +136,24 @@ export default function GuardianMemoryBank() {
       [selectedPerson]: (prev[selectedPerson] || []).filter(m => m.id !== id),
     }));
     setDeleteConfirm(null);
+  };
+
+  const handleDrop = (targetId: string) => {
+    if (!dragId || dragId === targetId) return;
+    const src = memories.find(m => m.id === dragId);
+    const tgt = memories.find(m => m.id === targetId);
+    if (!src || !tgt || src.importance !== tgt.importance) return;
+    
+    setAllMemories(prev => {
+      const list = [...(prev[selectedPerson] || [])];
+      const srcIdx = list.findIndex(m => m.id === dragId);
+      const tgtIdx = list.findIndex(m => m.id === targetId);
+      const [moved] = list.splice(srcIdx, 1);
+      list.splice(tgtIdx, 0, moved);
+      return { ...prev, [selectedPerson]: list };
+    });
+    setDragId(null);
+    setDragOverId(null);
   };
 
   return (
@@ -194,51 +210,72 @@ export default function GuardianMemoryBank() {
             </div>
 
             {/* Memory List */}
-            <div className="border rounded-lg divide-y divide-border">
-              {filtered.length === 0 && (
-                <div className="p-8 text-center text-muted-foreground text-sm">
-                  {search ? "No memories match your search." : "No memories yet."}
-                </div>
-              )}
-              {filtered.map((memory) => (
-                <div
-                  key={memory.id}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors group"
-                >
-                  {/* Delete icon - left side */}
-                  <button
-                    onClick={() => setDeleteConfirm(memory.id)}
-                    className="p-1 rounded-md hover:bg-destructive/10 transition-colors flex-shrink-0"
-                    aria-label="Delete memory"
+            <div className="border rounded-lg">
+              {/* Header row */}
+              <div className="flex items-center gap-3 px-4 py-2 border-b bg-muted/30 text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                <span className="w-6" /> {/* drag handle spacer */}
+                <span className="w-7" /> {/* delete spacer */}
+                <span className="flex-1 min-w-0">Memory</span>
+                <span className="w-20 text-center">Importance</span>
+                <span className="w-20 text-right">Created</span>
+                <span className="w-7" /> {/* edit spacer */}
+              </div>
+              <div className="divide-y divide-border">
+                {filtered.length === 0 && (
+                  <div className="p-8 text-center text-muted-foreground text-sm">
+                    {search ? "No memories match your search." : "No memories yet."}
+                  </div>
+                )}
+                {filtered.map((memory) => (
+                  <div
+                    key={memory.id}
+                    draggable
+                    onDragStart={() => setDragId(memory.id)}
+                    onDragOver={(e) => { e.preventDefault(); setDragOverId(memory.id); }}
+                    onDragEnd={() => { setDragId(null); setDragOverId(null); }}
+                    onDrop={() => handleDrop(memory.id)}
+                    className={`flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors group ${
+                      dragOverId === memory.id && dragId !== memory.id ? "border-t-2 border-t-primary" : ""
+                    } ${dragId === memory.id ? "opacity-40" : ""}`}
                   >
-                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                  </button>
+                    {/* Drag handle */}
+                    <GripVertical className="h-3.5 w-3.5 text-muted-foreground/50 cursor-grab flex-shrink-0" />
 
-                  {/* Memory text */}
-                  <p className="flex-1 text-sm truncate min-w-0 cursor-pointer" onClick={() => handleEdit(memory)}>
-                    {memory.text}
-                  </p>
+                    {/* Delete icon */}
+                    <button
+                      onClick={() => setDeleteConfirm(memory.id)}
+                      className="p-1 rounded-md hover:bg-destructive/10 transition-colors flex-shrink-0"
+                      aria-label="Delete memory"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                    </button>
 
-                  {/* Importance badge */}
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap capitalize ${importanceColors[memory.importance]} ${importanceBgColors[memory.importance]}`}>
-                    {memory.importance}
-                  </span>
+                    {/* Memory text */}
+                    <p className="flex-1 text-sm truncate min-w-0 cursor-pointer" onClick={() => handleEdit(memory)}>
+                      {memory.text}
+                    </p>
 
-                  {/* Date */}
-                  <span className="text-xs text-muted-foreground whitespace-nowrap w-16 text-right">
-                    {formatDate(memory.createdAt)}
-                  </span>
+                    {/* Importance badge - border only */}
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap capitalize border ${importanceBorderColors[memory.importance]} bg-transparent w-20 text-center`}>
+                      {memory.importance}
+                    </span>
 
-                  {/* Edit icon - right side, visible on hover */}
-                  <button
-                    onClick={() => handleEdit(memory)}
-                    className="p-1 rounded-md hover:bg-accent transition-colors flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                    aria-label="Edit memory"
-                  >
-                    <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
-                  </button>
-                </div>
-              ))}
+                    {/* Date */}
+                    <span className="text-xs text-muted-foreground whitespace-nowrap w-20 text-right">
+                      {formatDate(memory.createdAt)}
+                    </span>
+
+                    {/* Edit icon - hover */}
+                    <button
+                      onClick={() => handleEdit(memory)}
+                      className="p-1 rounded-md hover:bg-accent transition-colors flex-shrink-0 opacity-0 group-hover:opacity-100"
+                      aria-label="Edit memory"
+                    >
+                      <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </main>
         </SidebarInset>
