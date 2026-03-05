@@ -9,67 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Pencil, Trash2, Search, Brain, Plus } from "lucide-react";
-
-type Importance = "high" | "medium" | "low";
-
-interface Memory {
-  id: string;
-  text: string;
-  importance: Importance;
-  createdAt: Date;
-  owner: string;
-}
-
-function buildMockMemories(guardianName: string, learners: { name: string }[]): Record<string, Memory[]> {
-  const l1 = learners[0]?.name || "Learner 1";
-  const l2 = learners[1]?.name || "Learner 2";
-
-  return {
-    [guardianName]: [
-      { id: "g1", text: "Prefers no emojis in any communications", importance: "high", createdAt: new Date(), owner: guardianName },
-      { id: "g2", text: "Wants bullet points to follow a specific format for updates", importance: "medium", createdAt: new Date(Date.now() - 86400000), owner: guardianName },
-      { id: "g3", text: "Prefers story-based lessons over direct practice for all learners", importance: "high", createdAt: new Date(Date.now() - 86400000 * 3), owner: guardianName },
-      { id: "g4", text: "Running weekly check-ins with the team on Tuesdays", importance: "low", createdAt: new Date(Date.now() - 86400000 * 5), owner: guardianName },
-    ],
-    [l1]: [
-      { id: "l1-1", text: "Knows a light tan spark plug color does not need replacing", importance: "high", createdAt: new Date(), owner: l1 },
-      { id: "l1-2", text: "Does landscaping work and wants to learn mower maintenance", importance: "high", createdAt: new Date(Date.now() - 86400000), owner: l1 },
-      { id: "l1-3", text: "Likes YouTube channels RAR Garage and Dude Perfect", importance: "low", createdAt: new Date(Date.now() - 86400000), owner: l1 },
-      { id: "l1-4", text: "Associates a white or chalky spark plug with too much air", importance: "medium", createdAt: new Date(Date.now() - 86400000 * 2), owner: l1 },
-      { id: "l1-5", text: "Knows to lift with legs when tilting a lawn mower", importance: "medium", createdAt: new Date(Date.now() - 86400000 * 3), owner: l1 },
-      { id: "l1-6", text: "Did not know basic lawn mower maintenance steps", importance: "high", createdAt: new Date(Date.now() - 86400000 * 4), owner: l1 },
-      { id: "l1-7", text: "Says sturdy boots should be worn for landscaping", importance: "low", createdAt: new Date(Date.now() - 86400000 * 5), owner: l1 },
-      { id: "l1-8", text: "Knows about horizontal directional drilling for fiber optics", importance: "medium", createdAt: new Date(Date.now() - 86400000 * 6), owner: l1 },
-    ],
-    [l2]: [
-      { id: "l2-1", text: "Enjoys math and recently solved a difficult equation", importance: "high", createdAt: new Date(), owner: l2 },
-      { id: "l2-2", text: "Plays Clash Royale every day and finds it strategic", importance: "medium", createdAt: new Date(Date.now() - 86400000), owner: l2 },
-      { id: "l2-3", text: "Fan of Manchester United but not actively watching anymore", importance: "low", createdAt: new Date(Date.now() - 86400000 * 2), owner: l2 },
-      { id: "l2-4", text: "Achieved Ultimate Champion rank in Clash Royale", importance: "low", createdAt: new Date(Date.now() - 86400000 * 4), owner: l2 },
-      { id: "l2-5", text: "Specifically enjoys using the Hog Rider deck", importance: "low", createdAt: new Date(Date.now() - 86400000 * 7), owner: l2 },
-    ],
-  };
-}
-
-function formatDate(date: Date): string {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const diff = today.getTime() - target.getTime();
-  const days = Math.floor(diff / 86400000);
-  if (days === 0) return "Today";
-  if (days === 1) return "Yesterday";
-  return `${date.getMonth() + 1}/${date.getDate()}`;
-}
-
-const importanceOrder: Record<Importance, number> = { high: 0, medium: 1, low: 2 };
-
-const importanceBorderColors: Record<Importance, string> = {
-  high: "border-[#EED4F0] text-[#EED4F0]",
-  medium: "border-[#94DFE9] text-[#94DFE9]",
-  low: "border-[#B9C6FE] text-[#B9C6FE]",
-};
+import { Pencil, Trash2, Search, Brain, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  type Importance, type Memory,
+  buildMockMemories, importanceOrder, importanceBorderColors, formatDate, PAGE_SIZE,
+} from "@/lib/mockMemories";
 
 interface GuardianMemoryBankProps {
   isLearnerView?: boolean;
@@ -85,7 +29,7 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
   const [allMemories, setAllMemories] = useState<Record<string, Memory[]>>(() =>
     buildMockMemories(guardianName, learners)
   );
-  
+
   const [selectedPerson, setSelectedPerson] = useState(
     isLearnerView && learnerName ? learnerName : guardianName
   );
@@ -99,6 +43,7 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
   const [activeView, setActiveView] = useState<"guardian" | "dashboard" | "skillSelection" | number>("guardian");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const memories = allMemories[selectedPerson] || [];
 
@@ -126,7 +71,11 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
     return result;
   }, [memories, search, sortBy]);
 
-  const allVisibleSelected = filtered.length > 0 && filtered.every(m => selectedIds.has(m.id));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  const allVisibleSelected = paginatedItems.length > 0 && paginatedItems.every(m => selectedIds.has(m.id));
   const someSelected = selectedIds.size > 0;
 
   const toggleSelect = (id: string) => {
@@ -140,9 +89,18 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
 
   const toggleSelectAll = () => {
     if (allVisibleSelected) {
-      setSelectedIds(new Set());
+      // Deselect only current page items
+      setSelectedIds(prev => {
+        const next = new Set(prev);
+        paginatedItems.forEach(m => next.delete(m.id));
+        return next;
+      });
     } else {
-      setSelectedIds(new Set(filtered.map(m => m.id)));
+      setSelectedIds(prev => {
+        const next = new Set(prev);
+        paginatedItems.forEach(m => next.add(m.id));
+        return next;
+      });
     }
   };
 
@@ -168,6 +126,7 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
       }));
       setIsCreating(false);
       setEditingMemory(null);
+      setCurrentPage(1);
       return;
     }
     if (!editingMemory) return;
@@ -210,11 +169,21 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
     setActiveView(view);
   };
 
-  // Clear selection when switching person
   const handlePersonChange = (v: string) => {
     setSelectedPerson(v);
     setSearch("");
     setSelectedIds(new Set());
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (v: string) => {
+    setSearch(v);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (v: string) => {
+    setSortBy(v as "importance" | "recent");
+    setCurrentPage(1);
   };
 
   return (
@@ -261,11 +230,11 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
                 <Input
                   placeholder="Search memories..."
                   value={search}
-                  onChange={e => setSearch(e.target.value)}
+                  onChange={e => handleSearchChange(e.target.value)}
                   className="pl-9"
                 />
               </div>
-              <Select value={sortBy} onValueChange={(v) => setSortBy(v as "importance" | "recent")}>
+              <Select value={sortBy} onValueChange={handleSortChange}>
                 <SelectTrigger className="w-48">
                   <SelectValue />
                 </SelectTrigger>
@@ -295,10 +264,10 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
               <div className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-2 border-b bg-muted/30 text-xs font-medium text-muted-foreground uppercase tracking-wide items-center">
                 <div className="flex items-center justify-center">
                   <Checkbox
-                    checked={allVisibleSelected && filtered.length > 0}
+                    checked={allVisibleSelected && paginatedItems.length > 0}
                     onCheckedChange={toggleSelectAll}
-                    aria-label="Select all"
-                    disabled={filtered.length === 0}
+                    aria-label="Select all on this page"
+                    disabled={paginatedItems.length === 0}
                   />
                 </div>
                 <span>Memory</span>
@@ -308,17 +277,16 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
               </div>
 
               {/* Rows */}
-              {filtered.length === 0 && (
+              {paginatedItems.length === 0 && (
                 <div className="p-8 text-center text-muted-foreground text-sm">
                   {search ? "No memories match your search." : "No memories yet."}
                 </div>
               )}
-              {filtered.map((memory) => (
+              {paginatedItems.map((memory) => (
                 <div
                   key={memory.id}
                   className={`grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-3 border-b last:border-b-0 hover:bg-muted/50 transition-colors group items-center ${selectedIds.has(memory.id) ? "bg-muted/30" : ""}`}
                 >
-                  {/* Checkbox */}
                   <div className="flex items-center justify-center">
                     <Checkbox
                       checked={selectedIds.has(memory.id)}
@@ -326,26 +294,18 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
                       aria-label={`Select memory: ${memory.text}`}
                     />
                   </div>
-
-                  {/* Memory text */}
                   <p
                     className="text-sm truncate min-w-0 cursor-pointer"
                     onClick={() => handleEdit(memory)}
                   >
                     {memory.text}
                   </p>
-
-                  {/* Importance badge */}
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full capitalize border bg-transparent text-center truncate ${importanceBorderColors[memory.importance]}`}>
                     {memory.importance}
                   </span>
-
-                  {/* Date */}
                   <span className="text-xs text-muted-foreground text-right whitespace-nowrap">
                     {formatDate(memory.createdAt)}
                   </span>
-
-                  {/* Edit — hover */}
                   <button
                     onClick={() => handleEdit(memory)}
                     className="p-1 rounded-md hover:bg-accent transition-colors opacity-0 group-hover:opacity-100"
@@ -383,6 +343,46 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
                 </div>
               )}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-4">
+                <span className="text-sm text-muted-foreground">
+                  Showing {(safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filtered.length)} of {filtered.length}
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={safePage <= 1}
+                    onClick={() => setCurrentPage(p => p - 1)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <Button
+                      key={page}
+                      variant={page === safePage ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(page)}
+                      className="h-8 w-8 p-0 text-xs"
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={safePage >= totalPages}
+                    onClick={() => setCurrentPage(p => p + 1)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </main>
         </SidebarInset>
       </div>
