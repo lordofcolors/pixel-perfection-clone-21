@@ -235,18 +235,16 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
                 </SelectContent>
               </Select>
               <Button
-                variant="outline"
-                size="icon"
-                className="h-10 w-10 flex-shrink-0"
+                className="h-10 px-4 flex-shrink-0 bg-gradient-to-r dark:from-xolv-magenta-300 dark:via-xolv-blue-300 dark:to-xolv-teal-300 from-xolv-magenta-700 via-xolv-blue-600 to-xolv-teal-500 text-black font-medium text-sm gap-1.5"
                 onClick={() => {
                   setIsCreating(true);
                   setEditingMemory({ id: "", text: "", importance: "medium", createdAt: new Date(), owner: selectedPerson });
                   setEditText("");
                   setEditImportance("medium");
                 }}
-                aria-label="Create memory"
               >
                 <Plus className="h-4 w-4" />
+                Add Memory
               </Button>
             </div>
 
@@ -318,7 +316,7 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
       <Dialog open={!!editingMemory} onOpenChange={(open) => { if (!open) { setEditingMemory(null); setIsCreating(false); } }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{isCreating ? "Create Memory" : "Edit Memory"}</DialogTitle>
+            <DialogTitle>{isCreating ? "Add Memory" : "Edit Memory"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div>
@@ -367,7 +365,7 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
             ) : <span />}
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => { setEditingMemory(null); setIsCreating(false); }}>Cancel</Button>
-              <Button onClick={handleSaveEdit}>{isCreating ? "Create" : "Save"}</Button>
+              <Button onClick={handleSaveEdit}>{isCreating ? "Add" : "Save"}</Button>
             </div>
           </DialogFooter>
         </DialogContent>
