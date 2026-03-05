@@ -371,8 +371,9 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
                       Deselect All
                     </Button>
                     <Button
-                      variant="destructive"
+                      variant="outline"
                       size="sm"
+                      className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
                       onClick={() => setBulkDeleteConfirm(true)}
                     >
                       <Trash2 className="h-3.5 w-3.5 mr-1.5" />
