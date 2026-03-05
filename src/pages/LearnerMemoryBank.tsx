@@ -282,9 +282,9 @@ export default function LearnerMemoryBank() {
                       Deselect All
                     </Button>
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
-                      className="border-destructive text-foreground hover:bg-destructive/10"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       onClick={() => setBulkDeleteConfirm(true)}
                     >
                       <Trash2 className="h-3.5 w-3.5 mr-1.5" />
