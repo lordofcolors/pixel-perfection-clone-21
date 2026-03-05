@@ -250,9 +250,9 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
             </div>
 
             {/* Memory table */}
-            <div className="border border-border/40 rounded-lg overflow-hidden">
+            <div className="border rounded-lg overflow-hidden">
               {/* Header */}
-              <div className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-2 border-b border-border/40 bg-muted/30 text-xs font-medium text-muted-foreground uppercase tracking-wide items-center">
+              <div className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-2 border-b bg-muted/30 text-xs font-medium text-muted-foreground uppercase tracking-wide items-center">
                 <span /> {/* delete */}
                 <span>Memory</span>
                 <span className="text-center">Importance</span>
@@ -269,7 +269,7 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
               {filtered.map((memory) => (
                 <div
                   key={memory.id}
-                  className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-3 border-b border-border/40 last:border-b-0 hover:bg-muted/50 transition-colors group items-center"
+                  className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-3 border-b last:border-b-0 hover:bg-muted/50 transition-colors group items-center"
                 >
                   {/* Delete */}
                   <button
