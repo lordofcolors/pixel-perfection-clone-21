@@ -226,12 +226,12 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
                 />
               </div>
               <Select value={sortBy} onValueChange={(v) => setSortBy(v as "importance" | "recent")}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-48">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="importance">By importance</SelectItem>
-                  <SelectItem value="recent">Most recent</SelectItem>
+                  <SelectItem value="importance">Sort by: Importance</SelectItem>
+                  <SelectItem value="recent">Sort by: Recency</SelectItem>
                 </SelectContent>
               </Select>
               <Button
