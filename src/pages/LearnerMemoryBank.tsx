@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Pencil, Trash2, Search, Brain, Plus } from "lucide-react";
 
 type Importance = "high" | "medium" | "low";
@@ -19,7 +20,6 @@ interface Memory {
 }
 
 function buildLearnerMockMemories(learnerName: string): Memory[] {
-  // Different mock data depending on learner name
   if (learnerName === "Jake") {
     return [
       { id: "l1-1", text: "Knows a light tan spark plug color does not need replacing", importance: "high", createdAt: new Date() },
@@ -66,7 +66,6 @@ const importanceBorderColors: Record<Importance, string> = {
 export default function LearnerMemoryBank() {
   const data = getGuardianSetup();
   const learners = data?.learners || [{ name: "Jake" }, { name: "Mia" }];
-  // For now, use first learner as the active one (in real app, this comes from auth)
   const learnerName = learners[0]?.name || "Learner";
 
   const [memories, setMemories] = useState<Memory[]>(() => buildLearnerMockMemories(learnerName));
@@ -77,6 +76,8 @@ export default function LearnerMemoryBank() {
   const [editImportance, setEditImportance] = useState<Importance>("medium");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
 
   const filtered = useMemo(() => {
     let result = memories;
@@ -94,6 +95,26 @@ export default function LearnerMemoryBank() {
     });
     return result;
   }, [memories, search, sortBy]);
+
+  const allVisibleSelected = filtered.length > 0 && filtered.every(m => selectedIds.has(m.id));
+  const someSelected = selectedIds.size > 0;
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (allVisibleSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filtered.map(m => m.id)));
+    }
+  };
 
   const handleEdit = (memory: Memory) => {
     setEditingMemory(memory);
@@ -125,6 +146,17 @@ export default function LearnerMemoryBank() {
   const handleDelete = (id: string) => {
     setMemories(prev => prev.filter(m => m.id !== id));
     setDeleteConfirm(null);
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  const handleBulkDelete = () => {
+    setMemories(prev => prev.filter(m => !selectedIds.has(m.id)));
+    setSelectedIds(new Set());
+    setBulkDeleteConfirm(false);
   };
 
   return (
@@ -141,7 +173,6 @@ export default function LearnerMemoryBank() {
           <main className="p-6">
             {/* Controls */}
             <div className="flex items-center gap-3 mb-4">
-              {/* Learner name — read-only, no dropdown since learners only see their own */}
               <div className="h-10 px-3 flex items-center rounded-md border border-input bg-background text-sm font-medium w-48 truncate">
                 {learnerName}
               </div>
@@ -180,9 +211,16 @@ export default function LearnerMemoryBank() {
             </div>
 
             {/* Memory table */}
-            <div className="border rounded-lg overflow-hidden">
+            <div className="border rounded-lg overflow-hidden relative">
               <div className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-2 border-b bg-muted/30 text-xs font-medium text-muted-foreground uppercase tracking-wide items-center">
-                <span />
+                <div className="flex items-center justify-center">
+                  <Checkbox
+                    checked={allVisibleSelected && filtered.length > 0}
+                    onCheckedChange={toggleSelectAll}
+                    aria-label="Select all"
+                    disabled={filtered.length === 0}
+                  />
+                </div>
                 <span>Memory</span>
                 <span className="text-center">Importance</span>
                 <span className="text-right">Created</span>
@@ -197,15 +235,15 @@ export default function LearnerMemoryBank() {
               {filtered.map((memory) => (
                 <div
                   key={memory.id}
-                  className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-3 border-b last:border-b-0 hover:bg-muted/50 transition-colors group items-center"
+                  className={`grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-3 border-b last:border-b-0 hover:bg-muted/50 transition-colors group items-center ${selectedIds.has(memory.id) ? "bg-muted/30" : ""}`}
                 >
-                  <button
-                    onClick={() => setDeleteConfirm(memory.id)}
-                    className="p-1 rounded-md hover:bg-destructive/10 transition-colors"
-                    aria-label="Delete memory"
-                  >
-                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                  </button>
+                  <div className="flex items-center justify-center">
+                    <Checkbox
+                      checked={selectedIds.has(memory.id)}
+                      onCheckedChange={() => toggleSelect(memory.id)}
+                      aria-label={`Select memory: ${memory.text}`}
+                    />
+                  </div>
 
                   <p className="text-sm truncate min-w-0 cursor-pointer" onClick={() => handleEdit(memory)}>
                     {memory.text}
@@ -228,6 +266,32 @@ export default function LearnerMemoryBank() {
                   </button>
                 </div>
               ))}
+
+              {/* Bulk action bar */}
+              {someSelected && (
+                <div className="sticky bottom-0 border-t bg-background px-4 py-2.5 flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {selectedIds.size} selected
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedIds(new Set())}
+                    >
+                      Deselect All
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => setBulkDeleteConfirm(true)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                      Delete Selected
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           </main>
         </SidebarInset>
@@ -292,7 +356,7 @@ export default function LearnerMemoryBank() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
+      {/* Single Delete Confirmation */}
       <Dialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
@@ -307,6 +371,22 @@ export default function LearnerMemoryBank() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
             <Button variant="destructive" onClick={() => deleteConfirm && handleDelete(deleteConfirm)}>Delete</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk Delete Confirmation */}
+      <Dialog open={bulkDeleteConfirm} onOpenChange={(open) => !open && setBulkDeleteConfirm(false)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Delete {selectedIds.size} {selectedIds.size === 1 ? "memory" : "memories"}?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            This will permanently remove {selectedIds.size} selected {selectedIds.size === 1 ? "memory" : "memories"}.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBulkDeleteConfirm(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleBulkDelete}>Delete</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

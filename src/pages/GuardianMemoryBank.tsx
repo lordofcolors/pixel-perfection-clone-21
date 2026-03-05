@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Pencil, Trash2, Search, Brain, Plus } from "lucide-react";
 
 type Importance = "high" | "medium" | "low";
@@ -85,7 +86,6 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
     buildMockMemories(guardianName, learners)
   );
   
-  // If learner view, lock to that learner's memories only
   const [selectedPerson, setSelectedPerson] = useState(
     isLearnerView && learnerName ? learnerName : guardianName
   );
@@ -97,10 +97,11 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [activeView, setActiveView] = useState<"guardian" | "dashboard" | "skillSelection" | number>("guardian");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
 
   const memories = allMemories[selectedPerson] || [];
 
-  // For guardian: show all people. For learner: only themselves
   const personOptions = isLearnerView
     ? [{ value: learnerName || "", label: learnerName || "" }]
     : [
@@ -124,6 +125,26 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
     });
     return result;
   }, [memories, search, sortBy]);
+
+  const allVisibleSelected = filtered.length > 0 && filtered.every(m => selectedIds.has(m.id));
+  const someSelected = selectedIds.size > 0;
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (allVisibleSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filtered.map(m => m.id)));
+    }
+  };
 
   const handleEdit = (memory: Memory) => {
     setEditingMemory(memory);
@@ -165,15 +186,35 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
       [selectedPerson]: (prev[selectedPerson] || []).filter(m => m.id !== id),
     }));
     setDeleteConfirm(null);
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  const handleBulkDelete = () => {
+    setAllMemories(prev => ({
+      ...prev,
+      [selectedPerson]: (prev[selectedPerson] || []).filter(m => !selectedIds.has(m.id)),
+    }));
+    setSelectedIds(new Set());
+    setBulkDeleteConfirm(false);
   };
 
   const handleSidebarViewChange = (view: "guardian" | "dashboard" | "skillSelection" | number) => {
     if (typeof view === "number") {
-      // Switching to a learner — navigate to learner dashboard
       navigate("/learner");
       return;
     }
     setActiveView(view);
+  };
+
+  // Clear selection when switching person
+  const handlePersonChange = (v: string) => {
+    setSelectedPerson(v);
+    setSearch("");
+    setSelectedIds(new Set());
   };
 
   return (
@@ -196,9 +237,8 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
           <main className="p-6">
             {/* Controls row */}
             <div className="flex items-center gap-3 mb-4">
-              {/* Person selector — no indent, using DropdownMenu-style or fixing SelectItem padding */}
               {!isLearnerView && personOptions.length > 1 ? (
-                <Select value={selectedPerson} onValueChange={(v) => { setSelectedPerson(v); setSearch(""); }}>
+                <Select value={selectedPerson} onValueChange={handlePersonChange}>
                   <SelectTrigger className="w-48 [&>span]:truncate">
                     <SelectValue />
                   </SelectTrigger>
@@ -250,14 +290,21 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
             </div>
 
             {/* Memory table */}
-            <div className="border rounded-lg overflow-hidden">
+            <div className="border rounded-lg overflow-hidden relative">
               {/* Header */}
               <div className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-2 border-b bg-muted/30 text-xs font-medium text-muted-foreground uppercase tracking-wide items-center">
-                <span /> {/* delete */}
+                <div className="flex items-center justify-center">
+                  <Checkbox
+                    checked={allVisibleSelected && filtered.length > 0}
+                    onCheckedChange={toggleSelectAll}
+                    aria-label="Select all"
+                    disabled={filtered.length === 0}
+                  />
+                </div>
                 <span>Memory</span>
                 <span className="text-center">Importance</span>
                 <span className="text-right">Created</span>
-                <span /> {/* edit */}
+                <span />
               </div>
 
               {/* Rows */}
@@ -269,18 +316,18 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
               {filtered.map((memory) => (
                 <div
                   key={memory.id}
-                  className="grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-3 border-b last:border-b-0 hover:bg-muted/50 transition-colors group items-center"
+                  className={`grid grid-cols-[2rem_1fr_5.5rem_5rem_1.5rem] gap-2 px-4 py-3 border-b last:border-b-0 hover:bg-muted/50 transition-colors group items-center ${selectedIds.has(memory.id) ? "bg-muted/30" : ""}`}
                 >
-                  {/* Delete */}
-                  <button
-                    onClick={() => setDeleteConfirm(memory.id)}
-                    className="p-1 rounded-md hover:bg-destructive/10 transition-colors"
-                    aria-label="Delete memory"
-                  >
-                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                  </button>
+                  {/* Checkbox */}
+                  <div className="flex items-center justify-center">
+                    <Checkbox
+                      checked={selectedIds.has(memory.id)}
+                      onCheckedChange={() => toggleSelect(memory.id)}
+                      aria-label={`Select memory: ${memory.text}`}
+                    />
+                  </div>
 
-                  {/* Memory text — truncate with ellipsis */}
+                  {/* Memory text */}
                   <p
                     className="text-sm truncate min-w-0 cursor-pointer"
                     onClick={() => handleEdit(memory)}
@@ -308,6 +355,32 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
                   </button>
                 </div>
               ))}
+
+              {/* Bulk action bar */}
+              {someSelected && (
+                <div className="sticky bottom-0 border-t bg-background px-4 py-2.5 flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {selectedIds.size} selected
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedIds(new Set())}
+                    >
+                      Deselect All
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => setBulkDeleteConfirm(true)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                      Delete Selected
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           </main>
         </SidebarInset>
@@ -372,7 +445,7 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
+      {/* Single Delete Confirmation */}
       <Dialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
@@ -387,6 +460,22 @@ export default function GuardianMemoryBank({ isLearnerView = false, learnerName 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
             <Button variant="destructive" onClick={() => deleteConfirm && handleDelete(deleteConfirm)}>Delete</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk Delete Confirmation */}
+      <Dialog open={bulkDeleteConfirm} onOpenChange={(open) => !open && setBulkDeleteConfirm(false)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Delete {selectedIds.size} {selectedIds.size === 1 ? "memory" : "memories"}?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            This will permanently remove {selectedIds.size} selected {selectedIds.size === 1 ? "memory" : "memories"}.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBulkDeleteConfirm(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleBulkDelete}>Delete</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
