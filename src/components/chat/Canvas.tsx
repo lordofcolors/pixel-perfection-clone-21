@@ -232,6 +232,14 @@ export function Canvas({
     };
   };
 
+  const canvasHeight = expandedPanel
+    ? 560 + extraH
+    : hasSidePanels
+      ? activeSidePanels.length >= 2
+        ? 572 + extraH
+        : 480 + extraH
+      : 580 + extraH;
+
   // -----------------------------------------------------------------------
   // Panel content renderer
   // -----------------------------------------------------------------------
