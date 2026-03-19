@@ -185,9 +185,9 @@ const ChatPage = () => {
               className={`relative rounded-xl border border-border/50 bg-card/20 overflow-hidden flex items-center justify-center cursor-pointer transition-all duration-500 ease-in-out ${
                 !hasSidePanels
                   ? "w-full"
-                  : isRiveExpanded
+                : expandedPanel === "rive"
                     ? "w-full"
-                    : expandedPanel && expandedPanel !== "rive"
+                    : expandedPanel !== null
                       ? "w-24 min-w-[96px] flex-shrink-0"
                       : activePanelCount === 2
                         ? "w-1/3"
