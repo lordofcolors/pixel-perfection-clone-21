@@ -113,8 +113,10 @@ const ChatPage = () => {
             onDisconnect={session.handleDisconnect}
             onToggleChat={() => setChatOpen((v) => !v)}
             onToggleScreenShare={() => setScreenShareOn((v) => !v)}
+            onToggleMute={() => setIsMuted((v) => !v)}
             isChatOpen={chatOpen}
             isScreenSharing={screenShareOn}
+            isMuted={isMuted}
           />
         </div>
 
