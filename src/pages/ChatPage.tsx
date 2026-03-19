@@ -259,11 +259,7 @@ const ChatPage = () => {
   // Render expanded panel content
   const renderExpandedContent = (key: "rive" | "image" | "skill") => {
     if (key === "rive") return riveTileContent("lg");
-    if (key === "image") return (
-      <div className="w-full h-full overflow-auto">
-        <ImageSearchPanel />
-      </div>
-    );
+    if (key === "image") return <ImageSearchPanel className="w-full h-full" />;
     if (key === "skill") return <SkillMapPanel />;
     return null;
   };
