@@ -232,14 +232,15 @@ export function Canvas({
     };
   };
 
-  // Canvas height must encompass ALL rows of panels
+  // Canvas height must encompass ALL rows of panels plus clearance for the subtitle/input stack
+  const canvasBottomClearance = hasSidePanels ? 120 : 24;
   const canvasHeight = expandedPanel
-    ? 560 + extraH
+    ? 560 + extraH + canvasBottomClearance
     : hasSidePanels
       ? activeSidePanels.length >= 2
-        ? (280 + extraH) + GAP + (280 + extraH) // first row + gap + second row
-        : 480 + extraH
-      : 580 + extraH;
+        ? (280 + extraH) + GAP + (280 + extraH) + canvasBottomClearance
+        : 480 + extraH + canvasBottomClearance
+      : 580 + extraH + canvasBottomClearance;
 
   // -----------------------------------------------------------------------
   // Panel content renderer
