@@ -420,7 +420,7 @@ const ChatPage = () => {
                         onClick={hasSidePanels ? () => setExpandedPanel("rive") : undefined}
                       >
                         <div className={`flex items-center justify-center p-2 h-full ${hasSidePanels ? "cursor-pointer" : ""}`}>
-                          <div className="h-full w-full max-h-[450px] max-w-[450px] transition-[max-width,max-height] duration-1000 ease-in-out" style={{ maxHeight: hasSidePanels ? 320 : 450, maxWidth: hasSidePanels ? 320 : 450 }}>
+                          <div className="h-full w-full transition-[max-width,max-height] duration-1000 ease-in-out" style={{ maxHeight: hasSidePanels ? 320 : 550, maxWidth: hasSidePanels ? 320 : 550 }}>
                             <RiveComponent className="h-full w-full" />
                           </div>
                         </div>
