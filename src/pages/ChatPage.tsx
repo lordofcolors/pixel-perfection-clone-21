@@ -159,6 +159,15 @@ const ChatPage = () => {
     layout: new Layout({ fit: Fit.Contain, alignment: Alignment.Center }),
   });
 
+  // Secondary small Rive for thumbnail in speaker view
+  const { rive: thumbRive, RiveComponent: ThumbRiveComponent } = useRive({
+    src: "/animations/robocat.riv",
+    stateMachines: "State Machine",
+    artboard: "Catbot",
+    autoplay: true,
+    layout: new Layout({ fit: Fit.Contain, alignment: Alignment.Center }),
+  });
+
   useEffect(() => {
     if (showContent && rive) rive.play();
   }, [showContent, rive]);
