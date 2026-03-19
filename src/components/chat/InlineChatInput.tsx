@@ -16,7 +16,7 @@
  * vertical space between the panel grid and the bottom toolbar.
  */
 
-import { Send, Smile, MessageCircle } from "lucide-react";
+import { Send, Smile, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
