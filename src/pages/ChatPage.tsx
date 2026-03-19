@@ -69,7 +69,7 @@ const ChatPage = () => {
     { id: "greeting", sender: "ai", text: greetingText },
   ]);
 
-  const hasSidePanels = imageSearchOn || skillMapOn;
+  const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn;
   const isSpeakerView = expandedPanel !== null;
 
   // Reset to gallery view when all side panels are turned off
