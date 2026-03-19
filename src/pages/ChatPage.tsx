@@ -420,7 +420,7 @@ const ChatPage = () => {
 
                       {imageSearchOn && (
                         <div
-                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all hover:border-secondary/50"
+                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50"
                           onClick={() => setExpandedPanel("image")}
                         >
                           <ImageSearchPanel />
@@ -429,7 +429,7 @@ const ChatPage = () => {
 
                       {skillMapOn && !imageSearchOn && (
                         <div
-                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all hover:border-secondary/50"
+                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50"
                           onClick={() => setExpandedPanel("skill")}
                         >
                           <SkillMapPanel />
