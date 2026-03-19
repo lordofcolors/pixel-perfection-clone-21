@@ -254,10 +254,10 @@ export function UnifiedPanelLayout({
                   key !== "rive" && isTransitioning ? "border border-transparent bg-card/20" : ""
                 } ${
                   isThumbnail
-                    ? `cursor-pointer hover:border-secondary/40`
+                    ? `cursor-pointer`
                     : ""
                 } ${
-                  isGalleryWithSides ? "cursor-pointer hover:border-secondary/50" : ""
+                  isGalleryWithSides ? "cursor-pointer" : ""
                 }`}
                 style={{ ...style, transition: TRANSITION }}
                 onClick={() => {
