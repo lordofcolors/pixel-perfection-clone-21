@@ -159,6 +159,15 @@ const ChatPage = () => {
     layout: new Layout({ fit: Fit.Contain, alignment: Alignment.Center }),
   });
 
+  // Secondary small Rive for thumbnail in speaker view
+  const { rive: thumbRive, RiveComponent: ThumbRiveComponent } = useRive({
+    src: "/animations/robocat.riv",
+    stateMachines: "State Machine",
+    artboard: "Catbot",
+    autoplay: true,
+    layout: new Layout({ fit: Fit.Contain, alignment: Alignment.Center }),
+  });
+
   useEffect(() => {
     if (showContent && rive) rive.play();
   }, [showContent, rive]);
@@ -251,11 +260,8 @@ const ChatPage = () => {
   const renderThumbnailContent = (key: "rive" | "image" | "skill") => {
     if (key === "rive") {
       return (
-        <div className="flex h-full w-full items-center justify-center">
-          <div className="h-14 w-14 opacity-50">
-            {/* Static placeholder for thumbnail - real Rive is persistent */}
-            <div className="h-full w-full rounded-full bg-primary/20" />
-          </div>
+        <div className="flex h-full w-full items-center justify-center p-1">
+          <ThumbRiveComponent className="h-full w-full" />
         </div>
       );
     }
@@ -397,8 +403,8 @@ const ChatPage = () => {
                 <div className={`px-4 ${hasSidePanels ? "pt-2 flex-shrink-0" : "flex flex-1 items-center"}`}>
                   <div className="mx-auto w-full max-w-5xl">
                     <div
-                      className={hasSidePanels ? "flex gap-3" : "flex justify-center"}
-                      style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 420) : undefined }}
+                      className={`${hasSidePanels ? "flex gap-3" : "flex justify-center"} transition-all duration-1000 ease-in-out`}
+                      style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 480) : undefined }}
                     >
                       {/* Rive - always rendered, just resized. No transition on position to prevent slide effect */}
                       <div
@@ -414,7 +420,7 @@ const ChatPage = () => {
 
                       {imageSearchOn && (
                         <div
-                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all hover:border-secondary/50"
+                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50"
                           onClick={() => setExpandedPanel("image")}
                         >
                           <ImageSearchPanel />
@@ -423,7 +429,7 @@ const ChatPage = () => {
 
                       {skillMapOn && !imageSearchOn && (
                         <div
-                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all hover:border-secondary/50"
+                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50"
                           onClick={() => setExpandedPanel("skill")}
                         >
                           <SkillMapPanel />
