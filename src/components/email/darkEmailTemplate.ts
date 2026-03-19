@@ -253,17 +253,17 @@ export function buildDarkEmailHTML(): string {
               <!-- Weekly Totals -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                 <tr>
-                  <td width="50%" style="padding: 0 4px 0 0; vertical-align: stretch;">
-                    <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                      <td style="text-align: center; padding: 10px 4px; border-radius: 10px; border: 1px solid rgba(238,212,240,0.12); vertical-align: middle;">
+                  <td width="50%" style="padding: 0 4px 0 0;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                      <td height="80" style="text-align: center; padding: 10px 4px; height: 80px; border-radius: 10px; border: 1px solid rgba(238,212,240,0.12); vertical-align: top;">
                         <p style="margin: 0; font-size: 26px; font-weight: 600; color: #EED4F0; font-family: ${FONT};">12</p>
                         <p style="margin: 4px 0 0; font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Sessions Combined</p>
                       </td>
                     </tr></table>
                   </td>
-                  <td width="50%" style="padding: 0 0 0 4px; vertical-align: stretch;">
-                    <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                      <td style="text-align: center; padding: 10px 4px; border-radius: 10px; border: 1px solid rgba(148,223,233,0.12); vertical-align: middle;">
+                  <td width="50%" style="padding: 0 0 0 4px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                      <td height="80" style="text-align: center; padding: 10px 4px; height: 80px; border-radius: 10px; border: 1px solid rgba(148,223,233,0.12); vertical-align: top;">
                         <p style="margin: 0; font-size: 26px; font-weight: 600; color: #94DFE9; font-family: ${FONT};">2h 45m</p>
                         <p style="margin: 4px 0 0; font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Total Learning Time</p>
                       </td>
