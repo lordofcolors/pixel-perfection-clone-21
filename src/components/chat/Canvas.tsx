@@ -400,6 +400,8 @@ export function Canvas({
             inputValue={inputValue}
             onInputChange={onInputChange}
             onSend={onSend}
+            onToggleChat={onToggleChat}
+            isChatOpen={chatOpen}
           />
         </div>
       )}
