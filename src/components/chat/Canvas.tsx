@@ -286,9 +286,9 @@ export function Canvas({
   // -----------------------------------------------------------------------
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
       {/* Panel container */}
-      <div className="relative flex-1 px-4 pt-4">
+      <div className="relative w-full flex-1 px-4 pt-4">
         <div className="relative mx-auto h-full w-full max-w-5xl">
           {allActivePanels.map((key) => {
             const isExiting = exitingPanels.has(key);
