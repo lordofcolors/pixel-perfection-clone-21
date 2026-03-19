@@ -180,19 +180,21 @@ export function SpeakerView({
       {/* ── Expanded content area ── */}
       <div className="flex min-h-0 flex-1 flex-col">
         {/* Rive expanded (no border container — just centred) */}
+        {/* Rive expanded: allow larger size when chat flyout absorbs the input */}
         {expandedPanel === "rive" && (
           <div className="flex flex-1 items-center justify-center px-4 py-1.5">
-            <div className="h-full w-full max-h-[380px] max-w-[380px]">
+            <div className={`h-full w-full max-w-[380px] ${chatOpen ? "max-h-[480px]" : "max-h-[380px]"} transition-all duration-300`}>
               <RiveComponent className="h-full w-full" />
             </div>
           </div>
         )}
 
         {/* Non-Rive expanded (inside a bordered, scrollable container) */}
+        {/* Non-Rive expanded: reclaim full height when chat flyout is open */}
         {expandedPanel !== "rive" && (
           <div
-            className="flex min-h-0 px-4 py-1.5"
-            style={{ flex: "1 1 0%", maxHeight: "calc(100% - 100px)" }}
+            className="flex min-h-0 px-4 py-1.5 transition-all duration-300"
+            style={{ flex: "1 1 0%", maxHeight: chatOpen ? "100%" : "calc(100% - 100px)" }}
           >
             <div className="relative mx-auto h-full w-full max-w-3xl overflow-auto rounded-lg border border-border/40 bg-card/20">
               {/* Minimize button → back to gallery view */}
