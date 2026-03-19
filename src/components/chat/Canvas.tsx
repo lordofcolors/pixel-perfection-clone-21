@@ -239,7 +239,7 @@ export function Canvas({
     : hasSidePanels
       ? activeSidePanels.length >= 2
         ? (280 + extraH) + GAP + (280 + extraH) + canvasBottomClearance
-        : 480 + extraH + canvasBottomClearance
+        : 440 + extraH + canvasBottomClearance
       : 540 + extraH + canvasBottomClearance;
 
   // -----------------------------------------------------------------------
