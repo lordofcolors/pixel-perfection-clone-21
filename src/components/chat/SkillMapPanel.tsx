@@ -1,10 +1,12 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   ReactFlow,
   Background,
   Controls,
   useNodesState,
   useEdgesState,
+  useReactFlow,
+  ReactFlowProvider,
   type Node,
   type Edge,
 } from "@xyflow/react";
@@ -146,10 +148,52 @@ interface SkillMapPanelProps {
   hideTitle?: boolean;
 }
 
-export function SkillMapPanel({ className, hideTitle }: SkillMapPanelProps) {
+/**
+ * Inner component that has access to useReactFlow for auto-fitting on resize.
+ */
+function SkillMapInner({ hideTitle }: { hideTitle?: boolean }) {
   const [nodes] = useNodesState(skillNodes);
   const [edges] = useEdgesState(skillEdges);
+  const { fitView } = useReactFlow();
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  // Auto-fit whenever the container resizes
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver(() => {
+      // Small delay lets React Flow update its internal dimensions first
+      requestAnimationFrame(() => {
+        fitView({ padding: 0.3, duration: 300 });
+      });
+    });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [fitView]);
+
+  return (
+    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        fitView
+        fitViewOptions={{ padding: 0.3 }}
+        panOnDrag
+        zoomOnScroll
+        nodesDraggable={false}
+        nodesConnectable={false}
+        proOptions={{ hideAttribution: true }}
+      >
+        <Background color="hsl(215 25% 20%)" gap={20} size={1} />
+        {!hideTitle && <Controls showInteractive={false} />}
+      </ReactFlow>
+    </div>
+  );
+}
+
+export function SkillMapPanel({ className, hideTitle }: SkillMapPanelProps) {
   return (
     <div className={`${className || ""} skill-map-panel`} style={{ width: "100%", height: "100%" }}>
       <style>{`
@@ -175,20 +219,9 @@ export function SkillMapPanel({ className, hideTitle }: SkillMapPanelProps) {
           fill: hsl(210 40% 80%);
         }
       `}</style>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        fitView
-        fitViewOptions={{ padding: 0.3 }}
-        panOnDrag
-        zoomOnScroll
-        nodesDraggable={false}
-        nodesConnectable={false}
-        proOptions={{ hideAttribution: true }}
-      >
-        <Background color="hsl(215 25% 20%)" gap={20} size={1} />
-        {!hideTitle && <Controls showInteractive={false} />}
-      </ReactFlow>
+      <ReactFlowProvider>
+        <SkillMapInner hideTitle={hideTitle} />
+      </ReactFlowProvider>
     </div>
   );
 }
