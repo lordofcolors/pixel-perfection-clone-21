@@ -400,47 +400,51 @@ const ChatPage = () => {
               </>
             ) : (
               <div className="flex min-h-0 flex-1 flex-col">
-                <div className={`px-4 ${hasSidePanels ? "pt-2 flex-shrink-0" : "flex flex-1 items-center"}`}>
+                <div className={`px-4 pt-6 ${hasSidePanels ? "flex-shrink-0" : "flex flex-1 items-center"}`}>
                   <div className="mx-auto w-full max-w-5xl">
                     <div
-                      className={`${hasSidePanels ? "flex gap-3" : "flex justify-center"} transition-all duration-1000 ease-in-out`}
+                      className="flex gap-3 justify-center transition-all duration-1000 ease-in-out"
                       style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 480) : undefined }}
                     >
-                      {/* Rive - always rendered, just resized. No transition on position to prevent slide effect */}
+                      {/* Rive - always rendered, just resized */}
                       <div
-                        className={`${hasSidePanels ? "flex-1 cursor-pointer overflow-hidden rounded-lg border border-transparent hover:border-border/50" : "flex w-full justify-center"}`}
+                        className={`transition-all duration-1000 ease-in-out ${hasSidePanels ? "flex-1 cursor-pointer overflow-hidden rounded-lg border border-transparent hover:border-border/50" : "flex w-full justify-center"}`}
                         onClick={hasSidePanels ? () => setExpandedPanel("rive") : undefined}
                       >
                         <div className={`flex items-center justify-center p-2 ${hasSidePanels ? "h-full" : ""}`}>
-                          <div className={`${hasSidePanels ? "h-full w-full max-h-[320px] max-w-[320px]" : "h-[350px] w-[350px] md:h-[450px] md:w-[450px]"}`}>
+                          <div className={`transition-all duration-1000 ease-in-out ${hasSidePanels ? "h-full w-full max-h-[320px] max-w-[320px]" : "h-[350px] w-[350px] md:h-[450px] md:w-[450px]"}`}>
                             <RiveComponent className="h-full w-full" />
                           </div>
                         </div>
                       </div>
 
-                      {imageSearchOn && (
-                        <div
-                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50"
-                          onClick={() => setExpandedPanel("image")}
-                        >
-                          <ImageSearchPanel />
-                        </div>
-                      )}
+                      {/* Image Search - always mounted, animated width */}
+                      <div
+                        className={`cursor-pointer overflow-hidden rounded-lg border bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50 ${
+                          imageSearchOn ? "flex-1 border-border/50 opacity-100" : "w-0 flex-none border-transparent opacity-0"
+                        }`}
+                        onClick={() => imageSearchOn && setExpandedPanel("image")}
+                        style={{ minWidth: imageSearchOn ? undefined : 0, padding: imageSearchOn ? undefined : 0 }}
+                      >
+                        <ImageSearchPanel />
+                      </div>
 
-                      {skillMapOn && !imageSearchOn && (
-                        <div
-                          className="flex-1 cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50"
-                          onClick={() => setExpandedPanel("skill")}
-                        >
-                          <SkillMapPanel />
-                        </div>
-                      )}
+                      {/* Skill Map (shown beside rive when no image search) - always mounted, animated width */}
+                      <div
+                        className={`cursor-pointer overflow-hidden rounded-lg border bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50 ${
+                          skillMapOn && !imageSearchOn ? "flex-1 border-border/50 opacity-100" : "w-0 flex-none border-transparent opacity-0"
+                        }`}
+                        onClick={() => skillMapOn && !imageSearchOn && setExpandedPanel("skill")}
+                        style={{ minWidth: skillMapOn && !imageSearchOn ? undefined : 0, padding: skillMapOn && !imageSearchOn ? undefined : 0 }}
+                      >
+                        <SkillMapPanel />
+                      </div>
                     </div>
 
                     {imageSearchOn && skillMapOn && (
                       <div className="mt-3 flex justify-center">
                         <div
-                          className="h-[280px] w-[55%] cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all hover:border-secondary/50"
+                          className="h-[280px] w-[55%] cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50"
                           onClick={() => setExpandedPanel("skill")}
                         >
                           <SkillMapPanel />
