@@ -236,9 +236,9 @@ const ChatPage = () => {
             {imageSearchOn && (
               <div
                 className={`relative rounded-xl border border-border/50 bg-card/20 overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${
-                  isImageExpanded
+                  expandedPanel === "image"
                     ? "w-full"
-                    : expandedPanel && expandedPanel !== "image"
+                    : expandedPanel !== null
                       ? "w-24 min-w-[96px] flex-shrink-0"
                       : activePanelCount === 2
                         ? "w-1/3"
