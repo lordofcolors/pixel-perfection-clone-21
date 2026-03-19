@@ -87,7 +87,58 @@ export function Canvas({
   if (screenShareOn) activeSidePanels.push("screen");
 
   const hasSidePanels = activeSidePanels.length > 0;
-  const allActivePanels: PanelKey[] = ["rive", ...activeSidePanels];
+
+  // Track exiting panels for slide-out animation
+  const [exitingPanels, setExitingPanels] = useState<Set<PanelKey>>(new Set());
+  const prevSidePanelsRef = useRef<Array<"image" | "skill" | "screen">>(activeSidePanels);
+
+  useEffect(() => {
+    const prev = prevSidePanelsRef.current;
+    const removed = prev.filter((p) => !activeSidePanels.includes(p));
+    if (removed.length > 0) {
+      setExitingPanels((s) => {
+        const next = new Set(s);
+        removed.forEach((p) => next.add(p));
+        return next;
+      });
+      // Remove from exiting after animation completes
+      const timer = setTimeout(() => {
+        setExitingPanels((s) => {
+          const next = new Set(s);
+          removed.forEach((p) => next.delete(p));
+          return next;
+        });
+      }, 500);
+      prevSidePanelsRef.current = activeSidePanels;
+      return () => clearTimeout(timer);
+    }
+    prevSidePanelsRef.current = activeSidePanels;
+  }, [activeSidePanels.join(",")]);
+
+  // Track entering panels for slide-in animation
+  const [enteringPanels, setEnteringPanels] = useState<Set<PanelKey>>(new Set());
+  const prevSidePanelsForEnterRef = useRef<Array<"image" | "skill" | "screen">>(activeSidePanels);
+
+  useEffect(() => {
+    const prev = prevSidePanelsForEnterRef.current;
+    const added = activeSidePanels.filter((p) => !prev.includes(p));
+    if (added.length > 0) {
+      setEnteringPanels(new Set(added));
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setEnteringPanels(new Set());
+        });
+      });
+    }
+    prevSidePanelsForEnterRef.current = activeSidePanels;
+  }, [activeSidePanels.join(",")]);
+
+  // Combine active + exiting for rendering
+  const allActivePanels: PanelKey[] = [
+    "rive",
+    ...activeSidePanels,
+    ...Array.from(exitingPanels).filter((p) => !activeSidePanels.includes(p as "image" | "skill" | "screen")),
+  ];
 
   const extraH = chatOpen ? 100 : 0;
 
@@ -240,18 +291,27 @@ export function Canvas({
       <div className="relative flex-1 px-4 pt-4">
         <div className="relative mx-auto h-full w-full max-w-5xl">
           {allActivePanels.map((key) => {
+            const isExiting = exitingPanels.has(key);
+            const isEntering = enteringPanels.has(key);
             const style = getPanelStyle(key);
             const isExpanded = expandedPanel === key;
             const isThumbnail = expandedPanel !== null && !isExpanded;
             const isGalleryWithSides = !expandedPanel && hasSidePanels;
 
+            // Slide transform for enter/exit
+            const slideTransform = isExiting
+              ? "translateX(120%)"
+              : isEntering
+                ? "translateX(120%)"
+                : "translateX(0)";
+
             return (
               <div
                 key={key}
                 className={`absolute overflow-hidden rounded-lg transition-colors ${
-                  key !== "rive" && !isTransitioning ? "border border-border/50 bg-card/20" : ""
+                  key !== "rive" && !isTransitioning && !isExiting ? "border border-border/50 bg-card/20" : ""
                 } ${
-                  key !== "rive" && isTransitioning ? "border border-transparent bg-card/20" : ""
+                  key !== "rive" && (isTransitioning || isExiting) ? "border border-transparent bg-card/20" : ""
                 } ${
                   isThumbnail
                     ? `cursor-pointer`
@@ -259,8 +319,14 @@ export function Canvas({
                 } ${
                   isGalleryWithSides ? "cursor-pointer" : ""
                 }`}
-                style={{ ...style, transition: TRANSITION }}
+                style={{
+                  ...style,
+                  transform: key !== "rive" ? slideTransform : undefined,
+                  opacity: isExiting ? 0 : 1,
+                  transition: `${TRANSITION}, transform 0.5s ease-in-out`,
+                }}
                 onClick={() => {
+                  if (isExiting) return;
                   if (isThumbnail) onExpandPanel(key);
                   else if (isGalleryWithSides) onExpandPanel(key);
                 }}
