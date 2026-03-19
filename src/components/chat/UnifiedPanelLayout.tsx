@@ -95,19 +95,20 @@ export function UnifiedPanelLayout({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const transitionTimer = useRef<ReturnType<typeof setTimeout>>();
   const prevExpandedPanel = useRef(expandedPanel);
-  const prevActivePanels = useRef(activeSidePanels.join(","));
+  const prevActivePanelsKey = useRef(activeSidePanels.join(","));
+
+  const activePanelsKey = activeSidePanels.join(",");
 
   useEffect(() => {
-    const panelsKey = activeSidePanels.join(",");
-    if (prevExpandedPanel.current !== expandedPanel || prevActivePanels.current !== panelsKey) {
+    if (prevExpandedPanel.current !== expandedPanel || prevActivePanelsKey.current !== activePanelsKey) {
       prevExpandedPanel.current = expandedPanel;
-      prevActivePanels.current = panelsKey;
+      prevActivePanelsKey.current = activePanelsKey;
       setIsTransitioning(true);
       clearTimeout(transitionTimer.current);
       transitionTimer.current = setTimeout(() => setIsTransitioning(false), 750);
     }
     return () => clearTimeout(transitionTimer.current);
-  }, [expandedPanel, activeSidePanels]);
+  }, [expandedPanel, activePanelsKey]);
 
   // -----------------------------------------------------------------------
   // Position calculator
