@@ -30,7 +30,7 @@ function buildChart(title: string, subtitle: string, days: string[], values: num
     </td>`;
   }).join('');
 
-  return `<td style="padding: 6px; width: 50%; vertical-align: top;">
+  return `<td class="chart-cell" style="padding: 6px; width: 50%; vertical-align: top;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
       <tr><td style="padding: 14px; height: 120px; background-color: ${BG_CARD}; border: 1px solid ${BORDER}; border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${title}</p>
@@ -56,7 +56,7 @@ function buildStackedChart(title: string, subtitle: string, days: string[], voic
     </td>`;
   }).join('');
 
-  return `<td style="padding: 6px; width: 50%; vertical-align: top;">
+  return `<td class="chart-cell" style="padding: 6px; width: 50%; vertical-align: top;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
       <tr><td style="padding: 14px; height: 120px; background-color: ${BG_CARD}; border: 1px solid ${BORDER}; border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${title}</p>
@@ -229,6 +229,15 @@ export function buildLightEmailHTML(): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light">
   <link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @media only screen and (max-width: 480px) {
+      .chart-cell { display: block !important; width: 100% !important; padding: 4px 0 !important; }
+      .stat-cell { display: block !important; width: 100% !important; padding: 0 0 6px 0 !important; }
+      .email-wrapper { padding: 12px 8px !important; }
+      .email-inner { padding: 16px 14px !important; }
+      .learner-card { padding: 14px 12px !important; }
+    }
+  </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color: #ffffff; padding: 24px 16px;">
