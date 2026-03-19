@@ -1,10 +1,10 @@
 import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, Image, Map, Send, Smile, Maximize2, Minimize2 } from "lucide-react";
+import { ArrowLeft, Image, Map, Send, Smile, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { SessionEndedView } from "@/components/chat/SessionEndedView";
 import { ContinueLearningModal } from "@/components/chat/ContinueLearningModal";
 import { SkillMapPanel } from "@/components/chat/SkillMapPanel";
@@ -20,6 +20,22 @@ const LOADING_STATES = [
   "Almost there — A can't wait to meet you…",
 ];
 const LOADING_INTERVAL = 1800;
+
+const AI_RESPONSES = [
+  "That's a great question! Let me think about that…",
+  "Interesting! Here's what I know about that topic.",
+  "I love your curiosity! Let's explore this together.",
+  "Great thinking! Let me explain a bit more.",
+  "You're doing amazing! Here's what comes next.",
+  "That's exactly right! Want to learn more?",
+  "Awesome observation! Let me share something cool about that.",
+];
+
+interface ChatMessage {
+  id: string;
+  sender: "user" | "ai";
+  text: string;
+}
 
 const ChatPage = () => {
   const location = useLocation();
@@ -45,7 +61,12 @@ const ChatPage = () => {
   const [chatOpen, setChatOpen] = useState(false);
   const [expandedPanel, setExpandedPanel] = useState<"rive" | "image" | "skill" | null>(null);
 
+  // Chat messages
   const greetingText = `Hi${firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!`;
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    { id: "greeting", sender: "ai", text: greetingText },
+  ]);
+
   const hasSidePanels = imageSearchOn || skillMapOn;
   const isSpeakerView = expandedPanel !== null;
 
@@ -109,14 +130,24 @@ const ChatPage = () => {
     setTimeout(() => setShowContinueModal(true), 1000);
   };
 
-  // Click a tile in gallery → expand to speaker view
-  const handleTileClick = (panel: "rive" | "image" | "skill") => {
-    setExpandedPanel(panel);
-  };
+  const handleSendMessage = useCallback((text: string) => {
+    const userMsg: ChatMessage = { id: `user-${Date.now()}`, sender: "user", text };
+    setChatMessages((prev) => [...prev, userMsg]);
 
-  // Return to gallery view
-  const handleMinimize = () => {
-    setExpandedPanel(null);
+    // Simulate AI response after a short delay
+    setTimeout(() => {
+      const aiText = AI_RESPONSES[Math.floor(Math.random() * AI_RESPONSES.length)];
+      const aiMsg: ChatMessage = { id: `ai-${Date.now()}`, sender: "ai", text: aiText };
+      setChatMessages((prev) => [...prev, aiMsg]);
+    }, 1200 + Math.random() * 800);
+  }, []);
+
+  const handleInlineSend = () => {
+    if (!message.trim()) return;
+    handleSendMessage(message.trim());
+    setMessage("");
+    // Auto-open chat panel to show the conversation
+    setChatOpen(true);
   };
 
   if (sessionEnded) {
@@ -138,7 +169,7 @@ const ChatPage = () => {
     );
   }
 
-  // Greeting bubble component (reused in Rive tile)
+  // Greeting bubble inside Rive tile
   const greetingBubble = (
     <div
       className={`rounded-xl border border-border/30 p-2.5 bg-card/40 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
@@ -152,7 +183,7 @@ const ChatPage = () => {
     </div>
   );
 
-  // Inline chat input
+  // Inline chat input (no expand button)
   const inlineChatInput = (
     <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-card/30 p-1.5">
       <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 text-amber-400">
@@ -161,19 +192,12 @@ const ChatPage = () => {
       <Input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleInlineSend()}
         placeholder="Type something here..."
         className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm h-8"
       />
-      <Button size="icon" className="flex-shrink-0 h-8 w-8 bg-primary hover:bg-primary/90">
+      <Button size="icon" className="flex-shrink-0 h-8 w-8 bg-primary hover:bg-primary/90" onClick={handleInlineSend}>
         <Send className="w-3 h-3" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="flex-shrink-0 h-8 w-8 text-muted-foreground"
-        onClick={() => setChatOpen(true)}
-      >
-        <Maximize2 className="w-3 h-3" />
       </Button>
     </div>
   );
@@ -181,7 +205,7 @@ const ChatPage = () => {
   // Rive tile content with greeting inside
   const riveTileContent = (size: "sm" | "md" | "lg") => {
     const sizeClasses = {
-      sm: "w-14 h-14",
+      sm: "w-full h-full",
       md: "w-[180px] h-[180px]",
       lg: "w-[300px] h-[300px] md:w-[380px] md:h-[380px]",
     };
@@ -200,6 +224,42 @@ const ChatPage = () => {
     { key: "image" as const, active: imageSearchOn, label: "Infographic" },
     { key: "skill" as const, active: skillMapOn, label: "Skill Map" },
   ].filter((p) => p.active);
+
+  // Render thumbnail content — actual miniature previews
+  const renderThumbnailContent = (key: "rive" | "image" | "skill") => {
+    if (key === "rive") {
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="w-14 h-14">
+            <RiveComponent className="w-full h-full" />
+          </div>
+        </div>
+      );
+    }
+    if (key === "image") {
+      return (
+        <div className="w-full h-full overflow-hidden">
+          <ImageSearchPanel className="pointer-events-none" />
+        </div>
+      );
+    }
+    if (key === "skill") {
+      return (
+        <div className="w-full h-full overflow-hidden relative">
+          <SkillMapPanel className="pointer-events-none" />
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Render expanded panel content
+  const renderExpandedContent = (key: "rive" | "image" | "skill") => {
+    if (key === "rive") return riveTileContent("lg");
+    if (key === "image") return <ImageSearchPanel />;
+    if (key === "skill") return <SkillMapPanel />;
+    return null;
+  };
 
   return (
     <main className="w-screen h-screen bg-background flex flex-col overflow-hidden">
@@ -246,50 +306,42 @@ const ChatPage = () => {
           <div
             className={`flex-1 flex flex-col transition-all duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`}
           >
-            {/* Speaker View: expanded panel is focused, thumbnails at top */}
+            {/* Speaker View: thumbnails at top, expanded panel below with minimize inside */}
             {hasSidePanels && isSpeakerView ? (
               <>
-                {/* Thumbnail strip + minimize button */}
+                {/* Thumbnail strip */}
                 <div className="flex items-center gap-1.5 px-4 pt-2 justify-center">
                   {panels.map((p) => (
                     <div
                       key={p.key}
-                      className={`w-28 h-[72px] rounded-md border overflow-hidden cursor-pointer transition-all duration-300 flex items-center justify-center flex-shrink-0 ${
+                      className={`w-28 h-[72px] rounded-md border overflow-hidden cursor-pointer transition-all duration-300 flex-shrink-0 ${
                         expandedPanel === p.key
                           ? "border-secondary bg-card/40"
                           : "border-border/40 bg-card/20 hover:border-secondary/40"
                       }`}
                       onClick={() => setExpandedPanel(p.key)}
                     >
-                      {p.key === "rive" ? (
-                        <div className="w-14 h-14">
-                          <RiveComponent className="w-full h-full" />
-                        </div>
-                      ) : p.key === "image" ? (
-                        <ImageSearchPanel className="pointer-events-none scale-[0.15] origin-center" />
-                      ) : (
-                        <span className="text-[10px] text-muted-foreground">{p.label}</span>
-                      )}
+                      {renderThumbnailContent(p.key)}
                     </div>
                   ))}
-                  {/* Minimize back to gallery */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-foreground ml-2"
-                    onClick={handleMinimize}
-                    title="Back to Gallery View"
-                  >
-                    <Minimize2 className="w-4 h-4" />
-                  </Button>
                 </div>
 
-                {/* Main expanded panel */}
+                {/* Main expanded panel with minimize button inside */}
                 <div className="flex-1 flex items-center justify-center px-4 py-2">
-                  <div className="w-full h-full max-w-4xl rounded-lg border border-border/40 bg-card/20 overflow-hidden relative flex items-center justify-center">
-                    {expandedPanel === "rive" && riveTileContent("lg")}
-                    {expandedPanel === "image" && <ImageSearchPanel />}
-                    {expandedPanel === "skill" && <SkillMapPanel />}
+                  <div className="w-full h-full max-w-4xl rounded-lg border border-border/40 bg-card/20 overflow-hidden relative">
+                    {/* Minimize button — top right of this box */}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-2 right-2 z-10 h-8 w-8 text-muted-foreground hover:text-foreground bg-background/50 hover:bg-background/80 backdrop-blur-sm"
+                      onClick={() => setExpandedPanel(null)}
+                      title="Back to Gallery View"
+                    >
+                      <Minimize2 className="w-4 h-4" />
+                    </Button>
+                    <div className="w-full h-full flex items-center justify-center">
+                      {renderExpandedContent(expandedPanel!)}
+                    </div>
                   </div>
                 </div>
 
@@ -301,14 +353,14 @@ const ChatPage = () => {
                 )}
               </>
             ) : hasSidePanels ? (
-              /* Gallery View: equal tiles, click to expand */
+              /* Gallery View: equal tiles with actual content previews */
               <>
                 <div className="flex-1 flex items-center justify-center px-4 pt-2">
                   <div className="flex gap-2 h-[65%] max-h-[420px] w-full max-w-5xl">
                     {/* Rive tile */}
                     <div
                       className="flex-1 rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
-                      onClick={() => handleTileClick("rive")}
+                      onClick={() => setExpandedPanel("rive")}
                     >
                       {riveTileContent("md")}
                     </div>
@@ -316,7 +368,7 @@ const ChatPage = () => {
                     {imageSearchOn && (
                       <div
                         className="flex-1 rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
-                        onClick={() => handleTileClick("image")}
+                        onClick={() => setExpandedPanel("image")}
                       >
                         <ImageSearchPanel />
                       </div>
@@ -325,7 +377,7 @@ const ChatPage = () => {
                     {skillMapOn && (
                       <div
                         className="flex-1 rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
-                        onClick={() => handleTileClick("skill")}
+                        onClick={() => setExpandedPanel("skill")}
                       >
                         <SkillMapPanel />
                       </div>
@@ -369,7 +421,14 @@ const ChatPage = () => {
           className={`transition-all duration-300 ease-in-out overflow-hidden ${chatOpen ? "w-80" : "w-0"}`}
         >
           {chatOpen && (
-            <ChatTranscriptPanel firstName={firstName} onClose={() => setChatOpen(false)} />
+            <ChatTranscriptPanel
+              firstName={firstName}
+              onClose={() => setChatOpen(false)}
+              messages={chatMessages}
+              onSendMessage={handleSendMessage}
+              inputValue={message}
+              onInputChange={setMessage}
+            />
           )}
         </div>
       </div>
