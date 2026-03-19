@@ -207,14 +207,9 @@ const ChatPage = () => {
 
   // Rive tile content with greeting inside
   const riveTileContent = (size: "sm" | "md" | "lg") => {
-    const sizeClasses = {
-      sm: "w-full h-full",
-      md: "w-[220px] h-[220px]",
-      lg: "w-[300px] h-[300px] md:w-[380px] md:h-[380px]",
-    };
     return (
       <div className="flex flex-col items-center justify-center gap-3 p-2 h-full">
-        <div className={sizeClasses[size]}>
+        <div className={size === "sm" ? "w-full h-full" : "w-full h-full max-w-[380px] max-h-[380px]"}>
           <RiveComponent className="w-full h-full" />
         </div>
         {size !== "sm" && greetingBubble(size)}
@@ -259,11 +254,7 @@ const ChatPage = () => {
   // Render expanded panel content
   const renderExpandedContent = (key: "rive" | "image" | "skill") => {
     if (key === "rive") return riveTileContent("lg");
-    if (key === "image") return (
-      <div className="w-full h-full overflow-auto">
-        <ImageSearchPanel />
-      </div>
-    );
+    if (key === "image") return <ImageSearchPanel className="w-full h-full" />;
     if (key === "skill") return <SkillMapPanel />;
     return null;
   };
@@ -360,33 +351,46 @@ const ChatPage = () => {
                 )}
               </>
             ) : hasSidePanels ? (
-              /* Gallery View: equal tiles with actual content previews */
+              /* Gallery View: tiles in landscape aspect ratios */
               <>
                 <div className="flex-1 flex items-center justify-center px-4 pt-2">
-                  <div className="flex gap-3 h-[65%] max-h-[420px] w-full max-w-5xl">
-                    {/* Rive tile — no border by default, border on hover */}
-                    <div
-                      className="flex-1 rounded-lg border border-transparent hover:border-border/50 overflow-hidden cursor-pointer transition-all"
-                      onClick={() => setExpandedPanel("rive")}
-                    >
-                      {riveTileContent("md")}
-                    </div>
-                    {/* Image tile */}
-                    {imageSearchOn && (
+                  <div className="flex flex-col gap-3 w-full max-w-5xl items-center">
+                    {/* Top row: Rive + one panel side by side */}
+                    <div className="flex gap-3 w-full" style={{ height: panels.length > 2 ? '45%' : '65%', maxHeight: panels.length > 2 ? '280px' : '420px' }}>
+                      {/* Rive tile — no border by default, border on hover */}
                       <div
-                        className="flex-1 rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
-                        onClick={() => setExpandedPanel("image")}
+                        className="flex-1 rounded-lg border border-transparent hover:border-border/50 overflow-hidden cursor-pointer transition-all"
+                        onClick={() => setExpandedPanel("rive")}
                       >
-                        <ImageSearchPanel />
+                        {riveTileContent("md")}
                       </div>
-                    )}
-                    {/* Skill Map tile */}
-                    {skillMapOn && (
-                      <div
-                        className="flex-1 rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
-                        onClick={() => setExpandedPanel("skill")}
-                      >
-                        <SkillMapPanel />
+                      {/* Show first toggled panel next to Rive */}
+                      {imageSearchOn && (
+                        <div
+                          className="flex-1 rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
+                          onClick={() => setExpandedPanel("image")}
+                        >
+                          <ImageSearchPanel />
+                        </div>
+                      )}
+                      {skillMapOn && !imageSearchOn && (
+                        <div
+                          className="flex-1 rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
+                          onClick={() => setExpandedPanel("skill")}
+                        >
+                          <SkillMapPanel />
+                        </div>
+                      )}
+                    </div>
+                    {/* Second row: if both panels are on, show skill map centered */}
+                    {imageSearchOn && skillMapOn && (
+                      <div className="flex justify-center w-full" style={{ height: '45%', maxHeight: '280px' }}>
+                        <div
+                          className="w-[50%] rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
+                          onClick={() => setExpandedPanel("skill")}
+                        >
+                          <SkillMapPanel />
+                        </div>
                       </div>
                     )}
                   </div>
