@@ -62,7 +62,12 @@ export function ChatTranscriptPanel({ firstName, onClose, messages, onSendMessag
         <div ref={bottomRef} />
       </div>
 
-      <div className="p-3 border-t border-border/50">
+      <div className="px-3 pt-2 pb-1">
+        <p className="text-[10px] text-muted-foreground/40 text-center">
+          Your video and audio data will NOT be saved
+        </p>
+      </div>
+      <div className="p-3 pt-1 border-t border-border/50">
         <div className="flex items-center gap-2 rounded-xl border border-border/50 p-1.5">
           <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 text-amber-400">
             <Smile className="w-4 h-4" />
