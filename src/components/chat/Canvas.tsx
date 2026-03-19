@@ -1,6 +1,6 @@
 /**
  * =============================================================================
- * UnifiedPanelLayout
+ * Canvas
  * =============================================================================
  *
  * A single layout component that replaces the old GalleryView + SpeakerView
