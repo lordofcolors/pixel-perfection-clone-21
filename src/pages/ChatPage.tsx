@@ -56,8 +56,9 @@ const ChatPage = () => {
 
   const [imageSearchOn, setImageSearchOn] = useState(false);
   const [skillMapOn, setSkillMapOn] = useState(false);
+  const [screenShareOn, setScreenShareOn] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const [expandedPanel, setExpandedPanel] = useState<"rive" | "image" | "skill" | null>(null);
+  const [expandedPanel, setExpandedPanel] = useState<"rive" | "image" | "skill" | "screen" | null>(null);
 
   const [latestAiText, setLatestAiText] = useState("");
   const [displayedAiText, setDisplayedAiText] = useState("");
