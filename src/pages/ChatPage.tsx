@@ -283,7 +283,7 @@ const ChatPage = () => {
     { key: "screen" as const, active: screenShareOn },
   ].filter((panel) => panel.active);
 
-  const renderThumbnailContent = (key: "rive" | "image" | "skill") => {
+  const renderThumbnailContent = (key: "rive" | "image" | "skill" | "screen") => {
     if (key === "rive") {
       return (
         <div className="flex h-full w-full items-center justify-center p-1">
@@ -296,6 +296,14 @@ const ChatPage = () => {
       return (
         <div className="h-full w-full overflow-hidden">
           <ImageSearchPanel className="pointer-events-none" />
+        </div>
+      );
+    }
+
+    if (key === "screen") {
+      return (
+        <div className="h-full w-full overflow-hidden">
+          <img src={screenShareImg} alt="Screen share" className="h-full w-full object-cover pointer-events-none" />
         </div>
       );
     }
