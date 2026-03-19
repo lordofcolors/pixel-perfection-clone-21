@@ -402,7 +402,7 @@ const ChatPage = () => {
                   <div className="w-[350px] h-[350px] md:w-[450px] md:h-[450px]">
                     <RiveComponent className="w-full h-full" />
                   </div>
-                  {greetingBubble}
+                  {greetingBubble("lg")}
                   <div className="mt-3 w-[85%] max-w-md">
                     {inlineChatInput}
                   </div>
