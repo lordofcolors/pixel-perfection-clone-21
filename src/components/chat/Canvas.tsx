@@ -63,7 +63,7 @@ const TRANSITION = "top 0.7s ease-in-out, left 0.7s ease-in-out, width 0.7s ease
 // Component
 // ---------------------------------------------------------------------------
 
-export function UnifiedPanelLayout({
+export function Canvas({
   RiveComponent,
   imageSearchOn,
   skillMapOn,
@@ -76,7 +76,7 @@ export function UnifiedPanelLayout({
   inputValue,
   onInputChange,
   onSend,
-}: UnifiedPanelLayoutProps) {
+}: CanvasProps) {
   // -----------------------------------------------------------------------
   // Active panels
   // -----------------------------------------------------------------------

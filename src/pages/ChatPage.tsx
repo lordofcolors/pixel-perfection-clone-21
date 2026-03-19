@@ -92,7 +92,7 @@ const ChatPage = () => {
               session.showContent ? "opacity-100" : "opacity-0"
             }`}
           >
-            <UnifiedPanelLayout
+            <Canvas
               RiveComponent={RiveComponent}
               imageSearchOn={imageSearchOn}
               skillMapOn={skillMapOn}
