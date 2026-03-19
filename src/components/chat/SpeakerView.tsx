@@ -190,10 +190,11 @@ export function SpeakerView({
         )}
 
         {/* Non-Rive expanded (inside a bordered, scrollable container) */}
+        {/* Non-Rive expanded: reclaim full height when chat flyout is open */}
         {expandedPanel !== "rive" && (
           <div
-            className="flex min-h-0 px-4 py-1.5"
-            style={{ flex: "1 1 0%", maxHeight: "calc(100% - 100px)" }}
+            className="flex min-h-0 px-4 py-1.5 transition-all duration-300"
+            style={{ flex: "1 1 0%", maxHeight: chatOpen ? "100%" : "calc(100% - 100px)" }}
           >
             <div className="relative mx-auto h-full w-full max-w-3xl overflow-auto rounded-lg border border-border/40 bg-card/20">
               {/* Minimize button → back to gallery view */}
