@@ -232,6 +232,14 @@ export function Canvas({
     };
   };
 
+  const canvasHeight = expandedPanel
+    ? 560 + extraH
+    : hasSidePanels
+      ? activeSidePanels.length >= 2
+        ? 572 + extraH
+        : 480 + extraH
+      : 580 + extraH;
+
   // -----------------------------------------------------------------------
   // Panel content renderer
   // -----------------------------------------------------------------------
@@ -288,7 +296,7 @@ export function Canvas({
   return (
     <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
       {/* Panel container */}
-      <div className="relative w-full flex-1 px-4 pt-4">
+      <div className="relative w-full px-4 pt-4" style={{ height: canvasHeight, transition: "height 0.7s ease-in-out" }}>
         <div className="relative mx-auto h-full w-full max-w-5xl">
           {allActivePanels.map((key) => {
             const isExiting = exitingPanels.has(key);
