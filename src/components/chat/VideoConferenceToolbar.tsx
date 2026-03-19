@@ -4,13 +4,17 @@ import { Button } from "@/components/ui/button";
 interface VideoConferenceToolbarProps {
   onDisconnect: () => void;
   onToggleChat: () => void;
+  onToggleScreenShare: () => void;
   isChatOpen: boolean;
+  isScreenSharing: boolean;
 }
 
 export function VideoConferenceToolbar({
   onDisconnect,
   onToggleChat,
+  onToggleScreenShare,
   isChatOpen,
+  isScreenSharing,
 }: VideoConferenceToolbarProps) {
   return (
     <div className="w-full border-t border-border/50 bg-card/30 backdrop-blur-sm px-6 py-2">
@@ -19,7 +23,8 @@ export function VideoConferenceToolbar({
           <Button
             variant="outline"
             size="icon"
-            className="rounded-full w-10 h-10 border-border/50"
+            className={`rounded-full w-10 h-10 border-border/50 ${isScreenSharing ? "bg-secondary/20 border-secondary/50" : ""}`}
+            onClick={onToggleScreenShare}
           >
             <Monitor className="w-4 h-4 text-muted-foreground" />
           </Button>
