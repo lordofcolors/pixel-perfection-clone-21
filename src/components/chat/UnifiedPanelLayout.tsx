@@ -247,13 +247,13 @@ export function UnifiedPanelLayout({
             return (
               <div
                 key={key}
-                className={`absolute overflow-hidden rounded-lg ${
-                  key !== "rive" ? "border border-border/50 bg-card/20" : ""
+                className={`absolute overflow-hidden rounded-lg transition-colors ${
+                  key !== "rive" && !isTransitioning ? "border border-border/50 bg-card/20" : ""
+                } ${
+                  key !== "rive" && isTransitioning ? "border border-transparent bg-card/20" : ""
                 } ${
                   isThumbnail
-                    ? `cursor-pointer hover:border-secondary/40 ${
-                        key !== "rive" ? "border-border/40" : ""
-                      }`
+                    ? `cursor-pointer hover:border-secondary/40`
                     : ""
                 } ${
                   isGalleryWithSides ? "cursor-pointer hover:border-secondary/50" : ""
