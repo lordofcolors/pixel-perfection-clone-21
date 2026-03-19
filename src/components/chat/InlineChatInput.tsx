@@ -16,21 +16,18 @@
  * vertical space between the panel grid and the bottom toolbar.
  */
 
-import { Send, Smile } from "lucide-react";
+import { Send, Smile, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface InlineChatInputProps {
-  /** The text to display in the AI response bubble. */
   responseBubbleText: string;
-  /** Whether to show the blinking typewriter cursor. */
   showCursor: boolean;
-  /** Current value of the text input. */
   inputValue: string;
-  /** Callback when the input value changes. */
   onInputChange: (value: string) => void;
-  /** Callback to send the current message. */
   onSend: () => void;
+  onToggleChat?: () => void;
+  isChatOpen?: boolean;
 }
 
 export function InlineChatInput({
