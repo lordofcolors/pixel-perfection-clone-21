@@ -403,8 +403,8 @@ const ChatPage = () => {
                 <div className={`px-4 ${hasSidePanels ? "pt-2 flex-shrink-0" : "flex flex-1 items-center"}`}>
                   <div className="mx-auto w-full max-w-5xl">
                     <div
-                      className={hasSidePanels ? "flex gap-3" : "flex justify-center"}
-                      style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 420) : undefined }}
+                      className={`${hasSidePanels ? "flex gap-3" : "flex justify-center"} transition-all duration-1000 ease-in-out`}
+                      style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 480) : undefined }}
                     >
                       {/* Rive - always rendered, just resized. No transition on position to prevent slide effect */}
                       <div
