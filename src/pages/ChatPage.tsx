@@ -206,12 +206,12 @@ const ChatPage = () => {
   const responseBubble = (
     <div
       className={`rounded-xl border border-border/30 p-3 bg-card/40 backdrop-blur-sm transition-opacity duration-700 ${
-        latestAiText || (showGreeting && typedText) ? "opacity-100" : "opacity-0"
+        displayedAiText || (showGreeting && typedText) ? "opacity-100" : "opacity-0"
       }`}
     >
       <p className="text-center text-foreground text-sm min-h-[1rem]">
-        {latestAiText || typedText}
-        {showGreeting && !latestAiText && typedText.length < greetingText.length && (
+        {displayedAiText || typedText}
+        {((showGreeting && !displayedAiText && typedText.length < greetingText.length) || isTypingResponse) && (
           <span className="inline-block w-[2px] h-[0.85em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
         )}
       </p>
