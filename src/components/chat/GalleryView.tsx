@@ -78,12 +78,13 @@ export function GalleryView({
   const activeSidePanelCount = [imageSearchOn, skillMapOn, screenShareOn].filter(Boolean).length;
 
   /**
-   * Height of the top row:
-   * - No panels: 580px (Rive is large and centred)
-   * - 1 panel: 480px
-   * - 2+ panels: 280px (to make room for the second row)
+   * Height of the top row. When the chat flyout is open the inline input
+   * is hidden, so we reclaim that vertical space for the panels.
    */
-  const topRowHeight = hasSidePanels ? (activeSidePanelCount >= 2 ? 280 : 480) : 580;
+  const extraHeight = chatOpen ? 100 : 0;
+  const topRowHeight = hasSidePanels
+    ? (activeSidePanelCount >= 2 ? 280 + extraHeight : 480 + extraHeight)
+    : 580 + extraHeight;
 
   /** The first active side panel goes in the top row next to Rive. */
   const topSidePanel: PanelKey | null = imageSearchOn
