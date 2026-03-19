@@ -249,7 +249,7 @@ export function Canvas({
               <div
                 key={key}
                 className={`absolute overflow-hidden rounded-lg transition-colors ${
-                  key !== "rive" && !isTransitioning ? "border border-border bg-card/20" : ""
+                  key !== "rive" && !isTransitioning ? "border border-border/50 bg-card/20" : ""
                 } ${
                   key !== "rive" && isTransitioning ? "border border-transparent bg-card/20" : ""
                 } ${
