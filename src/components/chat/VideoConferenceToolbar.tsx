@@ -93,22 +93,8 @@ export function VideoConferenceToolbar({
         </div>
       </div>
 
-      {/* Chat button — pinned far right */}
-      <div className="absolute bottom-4 right-6 flex flex-col items-center gap-1.5">
-        <Button
-          variant="outline"
-          size="icon"
-          className={`h-10 w-10 rounded-full border-border/50 ${
-            isChatOpen ? "bg-secondary/20 border-secondary/50" : ""
-          }`}
-          onClick={onToggleChat}
-        >
-          <MessageCircle className="h-4 w-4 text-muted-foreground" />
-        </Button>
-        <span className="text-[8px] uppercase tracking-wider text-muted-foreground">
-          Chat
-        </span>
-      </div>
+
+
     </div>
   );
 }
