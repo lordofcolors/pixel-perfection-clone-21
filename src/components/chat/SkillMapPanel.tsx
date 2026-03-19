@@ -154,7 +154,7 @@ export function SkillMapPanel({ className, hideTitle }: SkillMapPanelProps) {
     <div className={className} style={{ width: "100%", height: "100%" }}>
       {!hideTitle && (
         <div className="absolute top-3 left-4 z-10 text-sm font-semibold text-foreground">
-          Introduction to Jump Rope
+          Quick Start
         </div>
       )}
       <ReactFlow

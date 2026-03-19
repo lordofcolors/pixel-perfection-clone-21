@@ -61,8 +61,11 @@ const ChatPage = () => {
   const [chatOpen, setChatOpen] = useState(false);
   const [expandedPanel, setExpandedPanel] = useState<"rive" | "image" | "skill" | null>(null);
 
-  // Latest AI response to show above input
+  // Latest AI response to show above input — with typewriter
   const [latestAiText, setLatestAiText] = useState("");
+  const [displayedAiText, setDisplayedAiText] = useState("");
+  const [isTypingResponse, setIsTypingResponse] = useState(false);
+  const aiTypingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Chat messages
   const greetingText = `Hi${firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!`;
@@ -77,8 +80,28 @@ const ChatPage = () => {
   useEffect(() => {
     if (showGreeting && typedText === greetingText) {
       setLatestAiText(greetingText);
+      setDisplayedAiText(greetingText);
     }
   }, [showGreeting, typedText, greetingText]);
+
+  // Typewriter effect for all AI responses
+  useEffect(() => {
+    if (latestAiText && latestAiText !== greetingText) {
+      setDisplayedAiText("");
+      setIsTypingResponse(true);
+      let i = 0;
+      if (aiTypingRef.current) clearInterval(aiTypingRef.current);
+      aiTypingRef.current = setInterval(() => {
+        i++;
+        setDisplayedAiText(latestAiText.slice(0, i));
+        if (i >= latestAiText.length) {
+          if (aiTypingRef.current) clearInterval(aiTypingRef.current);
+          setIsTypingResponse(false);
+        }
+      }, 35);
+      return () => { if (aiTypingRef.current) clearInterval(aiTypingRef.current); };
+    }
+  }, [latestAiText, greetingText]);
 
   // Loading cycle
   useEffect(() => {
@@ -183,12 +206,12 @@ const ChatPage = () => {
   const responseBubble = (
     <div
       className={`rounded-xl border border-border/30 p-3 bg-card/40 backdrop-blur-sm transition-opacity duration-700 ${
-        latestAiText || (showGreeting && typedText) ? "opacity-100" : "opacity-0"
+        displayedAiText || (showGreeting && typedText) ? "opacity-100" : "opacity-0"
       }`}
     >
       <p className="text-center text-foreground text-sm min-h-[1rem]">
-        {latestAiText || typedText}
-        {showGreeting && !latestAiText && typedText.length < greetingText.length && (
+        {displayedAiText || typedText}
+        {((showGreeting && !displayedAiText && typedText.length < greetingText.length) || isTypingResponse) && (
           <span className="inline-block w-[2px] h-[0.85em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
         )}
       </p>
@@ -355,9 +378,9 @@ const ChatPage = () => {
                   </div>
                 </div>
 
-                {/* Inline chat below speaker */}
+                {/* Inline chat below speaker — centered in remaining space */}
                 {!chatOpen && (
-                  <div className="px-4 pb-2">
+                  <div className="flex items-center justify-center px-4 py-3">
                     {inlineChatWithResponse}
                   </div>
                 )}
@@ -410,9 +433,9 @@ const ChatPage = () => {
                   )}
                 </div>
 
-                {/* Inline chat below gallery tiles */}
+                {/* Inline chat below gallery tiles — centered in remaining space */}
                 {!chatOpen && (
-                  <div className="px-4 pb-2">
+                  <div className="flex items-center justify-center px-4 py-3">
                     {inlineChatWithResponse}
                   </div>
                 )}
@@ -425,7 +448,7 @@ const ChatPage = () => {
                     <RiveComponent className="w-full h-full" />
                   </div>
                 </div>
-                <div className="px-4 pb-2 w-full">
+                <div className="flex items-center justify-center px-4 py-3 w-full">
                   {inlineChatWithResponse}
                 </div>
               </div>
