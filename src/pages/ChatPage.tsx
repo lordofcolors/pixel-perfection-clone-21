@@ -406,8 +406,8 @@ const ChatPage = () => {
                 </div>
               </>
             ) : (
-              <div className="flex min-h-0 flex-1 flex-col">
-                <div className={`px-4 pt-6 ${hasSidePanels ? "flex-shrink-0" : "flex flex-1 items-center"}`}>
+              <div className="flex min-h-0 flex-1 flex-col justify-center">
+                <div className={`px-4 pt-6 ${hasSidePanels ? "flex-shrink-0" : "flex items-center justify-center"}`}>
                   <div className="mx-auto w-full max-w-5xl">
                     <div
                       className="flex gap-3 transition-all duration-1000 ease-in-out"
