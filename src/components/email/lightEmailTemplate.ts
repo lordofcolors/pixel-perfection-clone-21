@@ -1,9 +1,38 @@
 /**
- * Light mode email HTML template builder — clean, airy style matching the marketing site.
- * Uses Xolv brand colors: magenta (#CA7FCD), blue (#6166F3), teal (#24A1B6).
+ * ═══════════════════════════════════════════════════════════════════════════
+ * LIGHT MODE — Weekly Digest Email Template
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Generates a fully self-contained HTML email string using a clean, airy
+ * light theme matching the Xolv marketing site. Uses brand colours:
+ * magenta (#CA7FCD), blue (#6166F3), teal (#24A1B6).
+ *
+ * USAGE:
+ *   import { buildLightEmailHTML } from './lightEmailTemplate';
+ *   const html = buildLightEmailHTML(digestData);
+ *
+ * See darkEmailTemplate.ts header comments for full documentation on
+ * deep links, mobile responsiveness, and chart rendering — the same
+ * architecture applies here with light-theme colour swaps.
+ *
+ * COLOUR PALETTE (light mode):
+ *   Background:  #ffffff
+ *   Card BG:     #F8FAFC
+ *   Text:        #1E293B (primary), #475569 (secondary), #64748B (muted)
+ *   Borders:     #E2E8F0
+ *   Accents:     Magenta #CA7FCD, Blue #6166F3, Teal #24A1B6
+ * ═══════════════════════════════════════════════════════════════════════════
  */
-import { FONT, DAYS, VIVAAN, MAYA } from './emailHelpers';
+import {
+  FONT,
+  DAYS,
+  SAMPLE_DIGEST,
+  buildLearnerUrl,
+  type LearnerData,
+  type WeeklyDigestData,
+} from './emailHelpers';
 
+/* ── Light theme colour tokens ── */
 const MAGENTA = '#CA7FCD';
 const BLUE = '#6166F3';
 const TEAL = '#24A1B6';
@@ -16,11 +45,14 @@ const TEXT_MUTED = '#64748B';
 const BORDER = '#E2E8F0';
 const BG_CARD = '#F8FAFC';
 const CTA_COLOR = '#0F172A';
-const DATE_RANGE = 'Mar 10 \u2013 Mar 16, 2026';
-const DAY_LABELS = 'Monday \u2013 Sunday';
 
-/* ── Bar chart (light) ── */
-function buildChart(title: string, subtitle: string, days: string[], values: number[], color: string, maxVal: number) {
+/* ═══════════════════════════════════════════════════════════════════════════
+ * COMPONENT BUILDERS — Light variants
+ * Same structure as dark template; see darkEmailTemplate.ts for
+ * detailed JSDoc on each builder function.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+function buildChart(href: string, title: string, subtitle: string, days: string[], values: number[], color: string, maxVal: number) {
   const barH = 50;
   const bars = days.map((d, i) => {
     const h = Math.max(3, (values[i] / maxVal) * barH);
@@ -31,6 +63,7 @@ function buildChart(title: string, subtitle: string, days: string[], values: num
   }).join('');
 
   return `<td class="chart-cell" style="padding: 6px; width: 50%; vertical-align: top;">
+    <a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
       <tr><td style="padding: 14px; height: 120px; background-color: ${BG_CARD}; border: 1px solid ${BORDER}; border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${title}</p>
@@ -38,11 +71,11 @@ function buildChart(title: string, subtitle: string, days: string[], values: num
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${bars}</tr></table>
       </td></tr>
     </table>
+    </a>
   </td>`;
 }
 
-/* ── Stacked bar chart (light) ── */
-function buildStackedChart(title: string, subtitle: string, days: string[], voice: number[], text_: number[], maxVal: number) {
+function buildStackedChart(href: string, title: string, subtitle: string, days: string[], voice: number[], text_: number[], maxVal: number) {
   const barH = 50;
   const bars = days.map((d, i) => {
     const vH = Math.max(2, (voice[i] / maxVal) * barH);
@@ -57,6 +90,7 @@ function buildStackedChart(title: string, subtitle: string, days: string[], voic
   }).join('');
 
   return `<td class="chart-cell" style="padding: 6px; width: 50%; vertical-align: top;">
+    <a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
       <tr><td style="padding: 14px; height: 120px; background-color: ${BG_CARD}; border: 1px solid ${BORDER}; border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${title}</p>
@@ -68,21 +102,22 @@ function buildStackedChart(title: string, subtitle: string, days: string[], voic
         </p>
       </td></tr>
     </table>
+    </a>
   </td>`;
 }
 
-/* ── AI Insights (light) ── */
-function buildAIInsights(text: string) {
-  return `<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-top: 10px;">
+function buildAIInsights(href: string, text: string) {
+  return `<a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-top: 10px;">
     <tr><td style="padding: 14px 16px; background-color: #EEF2FF; border: 1px solid ${BLUE_LIGHT}; border-radius: 10px;">
       <p style="margin: 0 0 6px; font-size: 11px; font-weight: 600; color: ${BLUE}; font-family: ${FONT};">\u2728 AI Insights</p>
       <p style="margin: 0; font-size: 13px; color: ${TEXT_SECONDARY}; line-height: 1.5; font-family: ${FONT};">${text}</p>
     </td></tr>
-  </table>`;
+  </table>
+  </a>`;
 }
 
-/* ── Lessons list with count (light) ── */
-function buildLessonsList(lessons: string[], maxShow = 3) {
+function buildLessonsList(href: string, lessons: string[], maxShow = 3) {
   const shown = lessons.slice(0, maxShow);
   const remaining = lessons.length - maxShow;
   const colors = [TEAL, MAGENTA, BLUE];
@@ -94,17 +129,18 @@ function buildLessonsList(lessons: string[], maxShow = 3) {
   }).join('');
 
   const moreRow = remaining > 0 ? `<tr><td style="padding: 8px 14px;">
-    <a href="https://app-dev.abyxolv.com/dashboard/?role=parent" style="font-size: 12px; color: ${TEAL}; text-decoration: none; font-weight: 600; font-family: ${FONT};">+${remaining} more lessons \u2192</a>
+    <a href="${href}" style="font-size: 12px; color: ${TEAL}; text-decoration: none; font-weight: 600; font-family: ${FONT};">+${remaining} more lessons \u2192</a>
   </td></tr>` : '';
 
-  return `<p style="margin: 0 0 8px; font-size: 12px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; font-family: ${FONT};">${lessons.length} Lessons Explored</p>
+  return `<a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
+  <p style="margin: 0 0 8px; font-size: 12px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; font-family: ${FONT};">${lessons.length} Lessons Explored</p>
+  </a>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom: 12px;">
       ${rows}${moreRow}
     </table>`;
 }
 
-/* ── Memories list with count (light) ── */
-function buildMemoriesList(memories: string[], maxShow = 3) {
+function buildMemoriesList(href: string, memories: string[], maxShow = 3) {
   const shown = memories.slice(0, maxShow);
   const remaining = memories.length - maxShow;
   const colors = [BLUE, TEAL, MAGENTA];
@@ -116,31 +152,38 @@ function buildMemoriesList(memories: string[], maxShow = 3) {
   }).join('');
 
   const moreRow = remaining > 0 ? `<tr><td style="padding: 8px 14px;">
-    <a href="https://app-dev.abyxolv.com/dashboard/?role=parent" style="font-size: 12px; color: ${BLUE}; text-decoration: none; font-weight: 600; font-family: ${FONT};">+${remaining} more memories \u2192</a>
+    <a href="${href}" style="font-size: 12px; color: ${BLUE}; text-decoration: none; font-weight: 600; font-family: ${FONT};">+${remaining} more memories \u2192</a>
   </td></tr>` : '';
 
-  return `<p style="margin: 0 0 8px; font-size: 12px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; font-family: ${FONT};">${memories.length} New Memories</p>
+  return `<a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
+  <p style="margin: 0 0 8px; font-size: 12px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; font-family: ${FONT};">${memories.length} New Memories</p>
+  </a>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
       ${rows}${moreRow}
     </table>`;
 }
 
-/* ── Learner card (light) ── */
-function buildLearnerCard(data: typeof VIVAAN) {
+function buildLearnerCard(data: LearnerData, dateRange: string, dayLabels: string) {
+  const urlAnalytics = buildLearnerUrl(data.id);
+  const urlTrends    = buildLearnerUrl(data.id, 'behaviour-trends');
+  const urlInsights  = buildLearnerUrl(data.id, 'ai-insights');
+  const urlLessons   = buildLearnerUrl(data.id, 'lessons');
+  const urlMemories  = buildLearnerUrl(data.id, 'memories');
+
   const charts = `
     <p style="margin: 14px 0 2px; font-size: 11px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; font-family: ${FONT};">Behaviour Trends</p>
-    <p style="margin: 0 0 8px; font-size: 10px; color: ${TEXT_MUTED}; font-family: ${FONT};">${DATE_RANGE} \u00B7 ${DAY_LABELS}</p>
+    <p style="margin: 0 0 8px; font-size: 10px; color: ${TEXT_MUTED}; font-family: ${FONT};">${dateRange} \u00B7 ${dayLabels}</p>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
       <tr>
-        ${buildChart('Session Duration', 'Avg duration per session', DAYS, data.sessionDuration, MAGENTA, 40)}
-        ${buildStackedChart('Message Types', 'Voice vs text by day', DAYS, data.voice, data.text, 26)}
+        ${buildChart(urlTrends, 'Session Duration', 'Avg duration per session', DAYS, data.sessionDuration, MAGENTA, 40)}
+        ${buildStackedChart(urlTrends, 'Message Types', 'Voice vs text by day', DAYS, data.voice, data.text, 26)}
       </tr>
       <tr>
-        ${buildChart('Words per Message', 'Avg words per message', DAYS, data.wordsPerMsg, TEAL, 70)}
-        ${buildChart('Sessions per Day', 'Number of sessions', DAYS, data.sessionsPerDay, BLUE, 4)}
+        ${buildChart(urlTrends, 'Words per Message', 'Avg words per message', DAYS, data.wordsPerMsg, TEAL, 70)}
+        ${buildChart(urlTrends, 'Sessions per Day', 'Number of sessions', DAYS, data.sessionsPerDay, BLUE, 4)}
       </tr>
     </table>
-    ${buildAIInsights(data.aiInsight)}`;
+    ${buildAIInsights(urlInsights, data.aiInsight)}`;
 
   return `
   <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom: 16px;">
@@ -149,6 +192,7 @@ function buildLearnerCard(data: typeof VIVAAN) {
       <td style="background-color: #ffffff; border: 1px solid ${BORDER}; border-top: none; border-radius: 0 0 12px 12px; padding: 20px 24px;">
 
         <!-- Name row -->
+        <a href="${urlAnalytics}" target="_blank" style="text-decoration: none; color: inherit;">
         <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom: 12px;">
           <tr>
             <td style="padding: 0 12px 0 0; vertical-align: middle;" width="40">
@@ -170,8 +214,10 @@ function buildLearnerCard(data: typeof VIVAAN) {
             </td>
           </tr>
         </table>
+        </a>
 
-        <!-- Stats -->
+        <!-- Stat pills -->
+        <a href="${urlAnalytics}" target="_blank" style="text-decoration: none; color: inherit;">
         <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom: 14px;">
           <tr>
             <td width="50%" style="padding: 0 4px 6px 0;">
@@ -206,6 +252,7 @@ function buildLearnerCard(data: typeof VIVAAN) {
             </td>
           </tr>
         </table>
+        </a>
 
         ${charts}
 
@@ -214,14 +261,24 @@ function buildLearnerCard(data: typeof VIVAAN) {
           <tr><td style="height: 1px; background-color: ${BORDER};"></td></tr>
         </table>
 
-        ${buildLessonsList(data.lessonsExplored)}
-        ${buildMemoriesList(data.memories)}
+        ${buildLessonsList(urlLessons, data.lessonsExplored)}
+        ${buildMemoriesList(urlMemories, data.memories)}
       </td>
     </tr>
   </table>`;
 }
 
-export function buildLightEmailHTML(): string {
+/* ═══════════════════════════════════════════════════════════════════════════
+ * MAIN EXPORT
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+export function buildLightEmailHTML(data: WeeklyDigestData = SAMPLE_DIGEST): string {
+  const dashboardUrl = buildLearnerUrl();
+
+  const learnerCards = data.learners
+    .map((learner) => `<tr><td>${buildLearnerCard(learner, data.dateRange, data.dayLabels)}</td></tr>`)
+    .join('\n          ');
+
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -247,7 +304,9 @@ export function buildLightEmailHTML(): string {
           <!-- Logo -->
           <tr>
             <td align="center" style="padding: 0 0 20px;">
-              <img src="https://app-dev.abyxolv.com/images/logo.png" alt="A by Xolv" width="80" height="80" style="display: block; max-width: 100%;" />
+              <a href="${dashboardUrl}" target="_blank">
+                <img src="https://app-dev.abyxolv.com/images/logo.png" alt="A by Xolv" width="80" height="80" style="display: block; max-width: 100%;" />
+              </a>
             </td>
           </tr>
 
@@ -257,18 +316,19 @@ export function buildLightEmailHTML(): string {
               <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; color: ${TEXT_PRIMARY}; font-family: ${FONT};">
                 Your Weekly Update
               </h1>
-              <p style="margin: 0 0 16px; font-size: 13px; color: ${TEXT_MUTED}; font-family: ${FONT};">${DATE_RANGE}</p>
+              <p style="margin: 0 0 16px; font-size: 13px; color: ${TEXT_MUTED}; font-family: ${FONT};">${data.dateRange}</p>
               <p style="margin: 0 0 20px; font-size: 14px; color: ${TEXT_SECONDARY}; line-height: 1.6; font-family: ${FONT};">
-                Hi Vignesh, here is a summary of how your children engaged with A this week. Below you will find session activity, learning highlights, behaviour trends, and new memories for each learner.
+                Hi ${data.guardianName}, here is a summary of how your children engaged with A this week. Below you will find session activity, learning highlights, behaviour trends, and new memories for each learner.
               </p>
 
               <!-- Weekly Totals -->
+              <a href="${dashboardUrl}" target="_blank" style="text-decoration: none; color: inherit;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                 <tr>
                   <td width="50%" style="padding: 0 4px 0 0;">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                       <td height="80" style="text-align: center; padding: 12px 4px; height: 80px; border-radius: 10px; border: 1px solid ${BORDER}; background-color: #ffffff; vertical-align: middle;">
-                        <p style="margin: 0; font-size: 28px; font-weight: 600; color: ${BLUE}; font-family: ${FONT};">12</p>
+                        <p style="margin: 0; font-size: 28px; font-weight: 600; color: ${BLUE}; font-family: ${FONT};">${data.totalSessions}</p>
                         <p style="margin: 4px 0 0; font-size: 11px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Total Sessions Combined</p>
                       </td>
                     </tr></table>
@@ -276,23 +336,21 @@ export function buildLightEmailHTML(): string {
                   <td width="50%" style="padding: 0 0 0 4px;">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                       <td height="80" style="text-align: center; padding: 12px 4px; height: 80px; border-radius: 10px; border: 1px solid ${BORDER}; background-color: #ffffff; vertical-align: middle;">
-                        <p style="margin: 0; font-size: 28px; font-weight: 600; color: ${TEAL}; font-family: ${FONT};">2h 45m</p>
+                        <p style="margin: 0; font-size: 28px; font-weight: 600; color: ${TEAL}; font-family: ${FONT};">${data.totalTime}</p>
                         <p style="margin: 4px 0 0; font-size: 11px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Total Learning Time</p>
                       </td>
                     </tr></table>
                   </td>
                 </tr>
               </table>
+              </a>
             </td>
           </tr>
 
           <tr><td style="height: 16px;"></td></tr>
 
-          <!-- Vivaan -->
-          <tr><td>${buildLearnerCard(VIVAAN)}</td></tr>
-
-          <!-- Maya -->
-          <tr><td>${buildLearnerCard(MAYA)}</td></tr>
+          <!-- Learner Cards -->
+          ${learnerCards}
 
           <!-- CTA -->
           <tr>
@@ -301,7 +359,7 @@ export function buildLightEmailHTML(): string {
                 <tr>
                   <td align="center">
                     <p style="margin: 0 0 14px; font-size: 14px; color: ${TEXT_MUTED}; font-family: ${FONT};">View the full dashboard for detailed analytics and session transcripts.</p>
-                    <a href="https://app-dev.abyxolv.com/dashboard/?role=parent" target="_blank" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, ${MAGENTA_LIGHT} 0%, ${MAGENTA} 100%); background-color: ${MAGENTA}; color: ${CTA_COLOR}; font-family: ${FONT}; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(202,127,205,0.3);">
+                    <a href="${dashboardUrl}" target="_blank" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, ${MAGENTA_LIGHT} 0%, ${MAGENTA} 100%); background-color: ${MAGENTA}; color: ${CTA_COLOR}; font-family: ${FONT}; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(202,127,205,0.3);">
                         View Full Dashboard
                     </a>
                   </td>
