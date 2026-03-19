@@ -1,6 +1,6 @@
 /**
  * =============================================================================
- * UnifiedPanelLayout
+ * Canvas
  * =============================================================================
  *
  * A single layout component that replaces the old GalleryView + SpeakerView
@@ -33,7 +33,7 @@ import screenShareImg from "@/assets/screen-share-preview.png";
 // Props
 // ---------------------------------------------------------------------------
 
-interface UnifiedPanelLayoutProps {
+interface CanvasProps {
   RiveComponent: React.ComponentType<{ className?: string }>;
   imageSearchOn: boolean;
   skillMapOn: boolean;
@@ -63,7 +63,7 @@ const TRANSITION = "top 0.7s ease-in-out, left 0.7s ease-in-out, width 0.7s ease
 // Component
 // ---------------------------------------------------------------------------
 
-export function UnifiedPanelLayout({
+export function Canvas({
   RiveComponent,
   imageSearchOn,
   skillMapOn,
@@ -76,7 +76,7 @@ export function UnifiedPanelLayout({
   inputValue,
   onInputChange,
   onSend,
-}: UnifiedPanelLayoutProps) {
+}: CanvasProps) {
   // -----------------------------------------------------------------------
   // Active panels
   // -----------------------------------------------------------------------

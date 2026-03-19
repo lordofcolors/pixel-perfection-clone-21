@@ -15,7 +15,7 @@ import { useRiveAssistant } from "@/hooks/useRiveAssistant";
 
 import { ChatLoadingOverlay } from "@/components/chat/ChatLoadingOverlay";
 import { ChatTopBar } from "@/components/chat/ChatTopBar";
-import { UnifiedPanelLayout } from "@/components/chat/UnifiedPanelLayout";
+import { Canvas } from "@/components/chat/Canvas";
 import { VideoConferenceToolbar } from "@/components/chat/VideoConferenceToolbar";
 import { ChatTranscriptPanel } from "@/components/chat/ChatTranscriptPanel";
 import { SessionEndedView } from "@/components/chat/SessionEndedView";
@@ -92,7 +92,7 @@ const ChatPage = () => {
               session.showContent ? "opacity-100" : "opacity-0"
             }`}
           >
-            <UnifiedPanelLayout
+            <Canvas
               RiveComponent={RiveComponent}
               imageSearchOn={imageSearchOn}
               skillMapOn={skillMapOn}
