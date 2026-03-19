@@ -378,9 +378,9 @@ const ChatPage = () => {
                   </div>
                 </div>
 
-                {/* Inline chat below speaker */}
+                {/* Inline chat below speaker — centered in remaining space */}
                 {!chatOpen && (
-                  <div className="px-4 pb-2">
+                  <div className="flex items-center justify-center px-4 py-3">
                     {inlineChatWithResponse}
                   </div>
                 )}
