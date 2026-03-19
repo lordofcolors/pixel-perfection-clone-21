@@ -13,54 +13,48 @@ export function VideoConferenceToolbar({
   isChatOpen,
 }: VideoConferenceToolbarProps) {
   return (
-    <div className="w-full border-t border-border/50 bg-card/30 backdrop-blur-sm px-6 py-3">
-      <div className="flex flex-col items-center gap-2">
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col items-center gap-0.5">
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full w-10 h-10 border-border/50"
-            >
-              <Monitor className="w-4 h-4 text-muted-foreground" />
-            </Button>
-            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-              Share Screen
-            </span>
-          </div>
-
-          <div className="flex flex-col items-center gap-0.5">
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full w-10 h-10 border-destructive/30 bg-destructive/10 hover:bg-destructive/20"
-              onClick={onDisconnect}
-            >
-              <X className="w-4 h-4 text-destructive" />
-            </Button>
-            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-              Disconnect
-            </span>
-          </div>
-
-          <div className="flex flex-col items-center gap-0.5">
-            <Button
-              variant="outline"
-              size="icon"
-              className={`rounded-full w-10 h-10 border-border/50 ${isChatOpen ? "bg-secondary/20 border-secondary/50" : ""}`}
-              onClick={onToggleChat}
-            >
-              <MessageCircle className="w-4 h-4 text-muted-foreground" />
-            </Button>
-            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-              Chat
-            </span>
-          </div>
+    <div className="w-full border-t border-border/50 bg-card/30 backdrop-blur-sm px-6 py-2">
+      <div className="flex items-center justify-center gap-4">
+        <div className="flex flex-col items-center gap-0.5">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full w-10 h-10 border-border/50"
+          >
+            <Monitor className="w-4 h-4 text-muted-foreground" />
+          </Button>
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+            Share Screen
+          </span>
         </div>
 
-        <p className="text-[10px] text-muted-foreground/40">
-          Your video and audio data will NOT be saved
-        </p>
+        <div className="flex flex-col items-center gap-0.5">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full w-10 h-10 border-destructive/30 bg-destructive/10 hover:bg-destructive/20"
+            onClick={onDisconnect}
+          >
+            <X className="w-4 h-4 text-destructive" />
+          </Button>
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+            Disconnect
+          </span>
+        </div>
+
+        <div className="flex flex-col items-center gap-0.5">
+          <Button
+            variant="outline"
+            size="icon"
+            className={`rounded-full w-10 h-10 border-border/50 ${isChatOpen ? "bg-secondary/20 border-secondary/50" : ""}`}
+            onClick={onToggleChat}
+          >
+            <MessageCircle className="w-4 h-4 text-muted-foreground" />
+          </Button>
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+            Chat
+          </span>
+        </div>
       </div>
     </div>
   );
