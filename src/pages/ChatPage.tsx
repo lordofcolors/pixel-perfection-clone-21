@@ -349,34 +349,60 @@ const ChatPage = () => {
                 </div>
 
                 <div className="flex min-h-0 flex-1 flex-col">
-                  <div className="flex flex-1 items-stretch px-4 py-1.5">
-                    <div className="relative mx-auto h-full w-full max-w-4xl overflow-hidden rounded-lg border border-border/40 bg-card/20">
+                  {/* Persistent Rive in speaker view - shown when rive is expanded */}
+                  <div className={`flex flex-1 items-center justify-center px-4 py-1.5 ${expandedPanel === "rive" ? "" : "hidden"}`}>
+                    <div className="h-full w-full max-h-[380px] max-w-[380px]">
+                      <RiveComponent className="h-full w-full" />
+                    </div>
+                  </div>
+
+                  {/* Non-rive expanded content */}
+                  {expandedPanel && expandedPanel !== "rive" && (
+                    <div className="flex flex-1 items-stretch px-4 py-1.5">
+                      <div className="relative mx-auto h-full w-full max-w-4xl overflow-hidden rounded-lg border border-border/40 bg-card/20">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-2 top-2 z-10 h-8 w-8 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                          onClick={() => setExpandedPanel(null)}
+                          title="Back to Gallery View"
+                        >
+                          <Minimize2 className="h-4 w-4" />
+                        </Button>
+                        <div className="h-full w-full overflow-hidden">{renderExpandedContent(expandedPanel)}</div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Minimize button for rive speaker */}
+                  {expandedPanel === "rive" && (
+                    <div className="flex justify-center pb-1">
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="absolute right-2 top-2 z-10 h-8 w-8 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                        className="h-8 w-8 text-muted-foreground hover:text-foreground"
                         onClick={() => setExpandedPanel(null)}
                         title="Back to Gallery View"
                       >
                         <Minimize2 className="h-4 w-4" />
                       </Button>
-                      <div className="h-full w-full overflow-hidden">{renderExpandedContent(expandedPanel!)}</div>
                     </div>
-                  </div>
+                  )}
 
-                  {!chatOpen && <div className="flex min-h-[180px] items-center justify-center px-4 py-4">{inlineChatWithResponse}</div>}
+                  {!chatOpen && <div className="flex flex-1 items-center justify-center px-4 py-2">{inlineChatWithResponse}</div>}
                 </div>
               </>
             ) : (
               <div className="flex min-h-0 flex-1 flex-col">
-                <div className={`px-4 ${hasSidePanels ? "pt-2" : "flex flex-1 items-center"}`}>
+                <div className={`px-4 ${hasSidePanels ? "pt-2 flex-shrink-0" : "flex flex-1 items-center"}`}>
                   <div className="mx-auto w-full max-w-5xl">
                     <div
-                      className={hasSidePanels ? "flex gap-3" : "flex justify-center"}
+                      className={hasSidePanels ? "flex gap-3 transition-all duration-500" : "flex justify-center transition-all duration-500"}
                       style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 420) : undefined }}
                     >
+                      {/* Rive - always rendered, just resized */}
                       <div
-                        className={`${hasSidePanels ? "flex-1 cursor-pointer overflow-hidden rounded-lg border border-transparent transition-all duration-500 hover:border-border/50" : "flex w-full justify-center transition-all duration-500"}`}
+                        className={`transition-all duration-500 ${hasSidePanels ? "flex-1 cursor-pointer overflow-hidden rounded-lg border border-transparent hover:border-border/50" : "flex w-full justify-center"}`}
                         onClick={hasSidePanels ? () => setExpandedPanel("rive") : undefined}
                       >
                         <div className={`flex items-center justify-center p-2 transition-all duration-500 ${hasSidePanels ? "h-full" : ""}`}>
@@ -419,7 +445,7 @@ const ChatPage = () => {
                 </div>
 
                 {!chatOpen && (
-                  <div className={`flex items-center justify-center px-4 py-4 ${hasSidePanels ? "min-h-[180px]" : "min-h-[220px]"}`}>
+                  <div className="flex flex-1 items-center justify-center px-4 py-2">
                     {inlineChatWithResponse}
                   </div>
                 )}
