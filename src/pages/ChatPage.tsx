@@ -359,9 +359,91 @@ const ChatPage = () => {
 
       <div className="flex min-h-0 flex-1">
         <div className="flex min-w-0 flex-1 flex-col">
-          <div className={`flex min-h-0 flex-1 flex-col transition-all duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`}>
-            {hasSidePanels && isSpeakerView ? (
-              <>
+          <div className={`relative flex min-h-0 flex-1 flex-col transition-all duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`}>
+            <div className={`flex min-h-0 flex-1 flex-col transition-opacity duration-300 ${hasSidePanels && isSpeakerView ? "pointer-events-none opacity-0" : "opacity-100"}`}>
+              <div className={`px-4 pt-6 ${hasSidePanels ? "flex-shrink-0" : "flex items-center justify-center"}`}>
+                <div className="mx-auto w-full max-w-5xl">
+                  <div
+                    className="flex gap-3 transition-all duration-1000 ease-in-out"
+                    style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 480) : 580 }}
+                  >
+                    <div
+                      className="overflow-hidden rounded-lg transition-[width] duration-1000 ease-in-out"
+                      style={{ width: hasSidePanels ? "50%" : "100%", flexShrink: 0 }}
+                      onClick={hasSidePanels ? () => setExpandedPanel("rive") : undefined}
+                    >
+                      <div className={`flex h-full items-center justify-center p-2 ${hasSidePanels ? "cursor-pointer" : ""}`}>
+                        <div className="h-full w-full transition-[max-width,max-height] duration-1000 ease-in-out" style={{ maxHeight: hasSidePanels ? 320 : 550, maxWidth: hasSidePanels ? 320 : 550 }}>
+                          <RiveComponent className="h-full w-full" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      className="relative overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out cursor-pointer hover:border-secondary/50"
+                      style={{ width: imageSearchOn ? "50%" : "0%", flexShrink: 0, opacity: imageSearchOn ? 1 : 0 }}
+                      onClick={() => imageSearchOn && setExpandedPanel("image")}
+                    >
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-2 top-2 z-10 h-7 w-7 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExpandedPanel("image");
+                        }}
+                      >
+                        <Maximize2 className="h-3.5 w-3.5" />
+                      </Button>
+                      <div className="h-full w-full min-w-[300px]">
+                        <ImageSearchPanel />
+                      </div>
+                    </div>
+
+                    <div
+                      className="relative overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out cursor-pointer hover:border-secondary/50"
+                      style={{ width: skillMapOn && !imageSearchOn ? "50%" : "0%", flexShrink: 0, opacity: skillMapOn && !imageSearchOn ? 1 : 0 }}
+                      onClick={() => skillMapOn && !imageSearchOn && setExpandedPanel("skill")}
+                    >
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-2 top-2 z-10 h-7 w-7 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExpandedPanel("skill");
+                        }}
+                      >
+                        <Maximize2 className="h-3.5 w-3.5" />
+                      </Button>
+                      <div className="h-full w-full min-w-[300px]">
+                        <SkillMapPanel />
+                      </div>
+                    </div>
+                  </div>
+
+                  {imageSearchOn && skillMapOn && (
+                    <div className="mt-3 flex justify-center">
+                      <div
+                        className="h-[280px] w-[55%] cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50"
+                        onClick={() => setExpandedPanel("skill")}
+                      >
+                        <SkillMapPanel />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {!chatOpen && (
+                <div className="flex flex-1 items-center justify-center px-4 py-2">
+                  {inlineChatWithResponse}
+                </div>
+              )}
+            </div>
+
+            {hasSidePanels && isSpeakerView && (
+              <div className="absolute inset-0 z-10 flex min-h-0 flex-col bg-background">
                 <div className="flex justify-center gap-1.5 px-4 pt-1.5">
                   {panels.map((panel) => (
                     <div
@@ -379,14 +461,14 @@ const ChatPage = () => {
                 </div>
 
                 <div className="flex min-h-0 flex-1 flex-col">
-                  {/* Persistent Rive in speaker view - shown when rive is expanded */}
-                  <div className={`flex flex-1 items-center justify-center px-4 py-1.5 ${expandedPanel === "rive" ? "" : "hidden"}`}>
-                    <div className="h-full w-full max-h-[380px] max-w-[380px]">
-                      <RiveComponent className="h-full w-full" />
+                  {expandedPanel === "rive" && (
+                    <div className="flex flex-1 items-center justify-center px-4 py-1.5">
+                      <div className="h-full w-full max-h-[380px] max-w-[380px]">
+                        <RiveComponent className="h-full w-full" />
+                      </div>
                     </div>
-                  </div>
+                  )}
 
-                  {/* Non-rive expanded content */}
                   {expandedPanel && expandedPanel !== "rive" && (
                     <div className="flex min-h-0 px-4 py-1.5" style={{ flex: "1 1 0%", maxHeight: "calc(100% - 100px)" }}>
                       <div className="relative mx-auto h-full w-full max-w-3xl overflow-auto rounded-lg border border-border/40 bg-card/20">
@@ -404,7 +486,6 @@ const ChatPage = () => {
                     </div>
                   )}
 
-                  {/* Minimize button for rive speaker */}
                   {expandedPanel === "rive" && (
                     <div className="flex justify-center pb-1">
                       <Button
@@ -421,85 +502,6 @@ const ChatPage = () => {
 
                   {!chatOpen && <div className="flex-shrink-0 flex items-center justify-center px-4 py-2">{inlineChatWithResponse}</div>}
                 </div>
-              </>
-            ) : (
-              <div className="flex min-h-0 flex-1 flex-col justify-center">
-                <div className={`px-4 pt-6 ${hasSidePanels ? "flex-shrink-0" : "flex items-center justify-center"}`}>
-                  <div className="mx-auto w-full max-w-5xl">
-                    <div
-                      className="flex gap-3 transition-all duration-1000 ease-in-out"
-                      style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 480) : 580 }}
-                    >
-                      {/* Rive - always rendered, smoothly resizes via width % */}
-                      <div
-                        className="overflow-hidden rounded-lg transition-[width] duration-1000 ease-in-out"
-                        style={{ width: hasSidePanels ? "50%" : "100%", flexShrink: 0 }}
-                        onClick={hasSidePanels ? () => setExpandedPanel("rive") : undefined}
-                      >
-                        <div className={`flex items-center justify-center p-2 h-full ${hasSidePanels ? "cursor-pointer" : ""}`}>
-                          <div className="h-full w-full transition-[max-width,max-height] duration-1000 ease-in-out" style={{ maxHeight: hasSidePanels ? 320 : 550, maxWidth: hasSidePanels ? 320 : 550 }}>
-                            <RiveComponent className="h-full w-full" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Image Search */}
-                      <div
-                        className="relative overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out cursor-pointer hover:border-secondary/50"
-                        style={{ width: imageSearchOn ? "50%" : "0%", flexShrink: 0, opacity: imageSearchOn ? 1 : 0 }}
-                        onClick={() => imageSearchOn && setExpandedPanel("image")}
-                      >
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-2 top-2 z-10 h-7 w-7 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
-                          onClick={(e) => { e.stopPropagation(); setExpandedPanel("image"); }}
-                        >
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        </Button>
-                        <div className="h-full w-full min-w-[300px]">
-                          <ImageSearchPanel />
-                        </div>
-                      </div>
-
-                      {/* Skill Map (beside rive when no image search) */}
-                      <div
-                        className="relative overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out cursor-pointer hover:border-secondary/50"
-                        style={{ width: skillMapOn && !imageSearchOn ? "50%" : "0%", flexShrink: 0, opacity: skillMapOn && !imageSearchOn ? 1 : 0 }}
-                        onClick={() => skillMapOn && !imageSearchOn && setExpandedPanel("skill")}
-                      >
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-2 top-2 z-10 h-7 w-7 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
-                          onClick={(e) => { e.stopPropagation(); setExpandedPanel("skill"); }}
-                        >
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        </Button>
-                        <div className="h-full w-full min-w-[300px]">
-                          <SkillMapPanel />
-                        </div>
-                      </div>
-                    </div>
-
-                    {imageSearchOn && skillMapOn && (
-                      <div className="mt-3 flex justify-center">
-                        <div
-                          className="h-[280px] w-[55%] cursor-pointer overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out hover:border-secondary/50"
-                          onClick={() => setExpandedPanel("skill")}
-                        >
-                          <SkillMapPanel />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {!chatOpen && (
-                  <div className="flex flex-1 items-center justify-center px-4 py-2">
-                    {inlineChatWithResponse}
-                  </div>
-                )}
               </div>
             )}
           </div>
