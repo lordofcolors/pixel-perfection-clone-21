@@ -71,6 +71,13 @@ const ChatPage = () => {
   const hasSidePanels = imageSearchOn || skillMapOn;
   const isSpeakerView = expandedPanel !== null;
 
+  // Reset to gallery view when all side panels are turned off
+  useEffect(() => {
+    if (!hasSidePanels && expandedPanel !== null) {
+      setExpandedPanel(null);
+    }
+  }, [hasSidePanels, expandedPanel]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setLoadingIndex((prev) => {
