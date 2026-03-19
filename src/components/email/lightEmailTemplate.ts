@@ -174,32 +174,32 @@ function buildLearnerCard(data: typeof VIVAAN) {
         <!-- Stats -->
         <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom: 14px;">
           <tr>
-            <td width="50%" style="padding: 0 4px 6px 0;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 8px 12px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center;">
+            <td width="50%" style="padding: 0 4px 6px 0; vertical-align: stretch;">
+              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                <td style="padding: 8px 12px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${data.sessions} Total Sessions</p>
                 </td>
               </tr></table>
             </td>
-            <td width="50%" style="padding: 0 0 6px 4px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 8px 12px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center;">
+            <td width="50%" style="padding: 0 0 6px 4px; vertical-align: stretch;">
+              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                <td style="padding: 8px 12px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: ${TEXT_PRIMARY}; font-family: ${FONT};">Time Spent: ${data.time}</p>
                 </td>
               </tr></table>
             </td>
           </tr>
           <tr>
-            <td width="50%" style="padding: 0 4px 0 0;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 8px 12px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center;">
+            <td width="50%" style="padding: 0 4px 0 0; vertical-align: stretch;">
+              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                <td style="padding: 8px 12px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${data.lessons} Lessons Explored</p>
                 </td>
               </tr></table>
             </td>
-            <td width="50%" style="padding: 0 0 0 4px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 8px 12px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center;">
+            <td width="50%" style="padding: 0 0 0 4px; vertical-align: stretch;">
+              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                <td style="padding: 8px 12px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${data.chats} Total Chats</p>
                 </td>
               </tr></table>
