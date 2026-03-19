@@ -411,7 +411,7 @@ const ChatPage = () => {
                   <div className="mx-auto w-full max-w-5xl">
                     <div
                       className="flex gap-3 transition-all duration-1000 ease-in-out"
-                      style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 480) : undefined }}
+                      style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 480) : 580 }}
                     >
                       {/* Rive - always rendered, smoothly resizes via width % */}
                       <div
