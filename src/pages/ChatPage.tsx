@@ -364,7 +364,7 @@ const ChatPage = () => {
 
                   {/* Non-rive expanded content */}
                   {expandedPanel && expandedPanel !== "rive" && (
-                    <div className="flex flex-1 items-stretch px-4 py-1.5 min-h-0">
+                    <div className="flex min-h-0 px-4 py-1.5" style={{ flex: "1 1 0%", maxHeight: "calc(100% - 100px)" }}>
                       <div className="relative mx-auto h-full w-full max-w-3xl overflow-auto rounded-lg border border-border/40 bg-card/20">
                         <Button
                           variant="ghost"
