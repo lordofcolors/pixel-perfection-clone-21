@@ -63,7 +63,6 @@ export default function GuardianAccount() {
   const onSubmit = (data: GuardianForm) => {
     // persist changes
     const learnersOut = (data.learners || []).map((l) => ({ name: l.fullName || 'Learner' }));
-    const { saveGuardianSetup } = require("@/lib/store");
     saveGuardianSetup({ guardianName: data.fullName || 'Guardian', learners: learnersOut, accountMode: data.accountMode });
     toast.success("Account settings saved");
   };
