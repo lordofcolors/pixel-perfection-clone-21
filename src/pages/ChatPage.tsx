@@ -130,8 +130,7 @@ const ChatPage = () => {
     );
   }
 
-  // Determine grid layout
-  const _ = expandedPanel; // used in template
+  // Layout helpers
 
   return (
     <main className="w-screen h-screen bg-background flex flex-col overflow-hidden">
