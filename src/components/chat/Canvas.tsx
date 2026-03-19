@@ -77,6 +77,7 @@ export function Canvas({
   inputValue,
   onInputChange,
   onSend,
+  onToggleChat,
 }: CanvasProps) {
   // -----------------------------------------------------------------------
   // Active panels
