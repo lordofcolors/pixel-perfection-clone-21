@@ -1,6 +1,6 @@
 import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, Image, Map, Send, Smile, Minimize2 } from "lucide-react";
+import { ArrowLeft, Image, Map, Send, Smile, Minimize2, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -316,7 +316,7 @@ const ChatPage = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="h-8 w-8 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <span className="text-sm text-muted-foreground">A by Xolv Companion</span>
+          <span className="text-sm text-muted-foreground">Quick Start</span>
         </div>
 
         <div className="flex items-center gap-6">
@@ -419,23 +419,39 @@ const ChatPage = () => {
                         </div>
                       </div>
 
-                      {/* Image Search - always mounted, slides in from right via width */}
+                      {/* Image Search */}
                       <div
-                        className="overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out cursor-pointer hover:border-secondary/50"
+                        className="relative overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out cursor-pointer hover:border-secondary/50"
                         style={{ width: imageSearchOn ? "50%" : "0%", flexShrink: 0, opacity: imageSearchOn ? 1 : 0 }}
                         onClick={() => imageSearchOn && setExpandedPanel("image")}
                       >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-2 top-2 z-10 h-7 w-7 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                          onClick={(e) => { e.stopPropagation(); setExpandedPanel("image"); }}
+                        >
+                          <Maximize2 className="h-3.5 w-3.5" />
+                        </Button>
                         <div className="h-full w-full min-w-[300px]">
                           <ImageSearchPanel />
                         </div>
                       </div>
 
-                      {/* Skill Map (beside rive when no image search) - slides in from right */}
+                      {/* Skill Map (beside rive when no image search) */}
                       <div
-                        className="overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out cursor-pointer hover:border-secondary/50"
+                        className="relative overflow-hidden rounded-lg border border-border/50 bg-card/20 transition-all duration-1000 ease-in-out cursor-pointer hover:border-secondary/50"
                         style={{ width: skillMapOn && !imageSearchOn ? "50%" : "0%", flexShrink: 0, opacity: skillMapOn && !imageSearchOn ? 1 : 0 }}
                         onClick={() => skillMapOn && !imageSearchOn && setExpandedPanel("skill")}
                       >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-2 top-2 z-10 h-7 w-7 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                          onClick={(e) => { e.stopPropagation(); setExpandedPanel("skill"); }}
+                        >
+                          <Maximize2 className="h-3.5 w-3.5" />
+                        </Button>
                         <div className="h-full w-full min-w-[300px]">
                           <SkillMapPanel />
                         </div>
