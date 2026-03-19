@@ -321,7 +321,10 @@ export function Canvas({
                   ...style,
                   transform: key !== "rive" ? slideTransform : undefined,
                   opacity: isExiting ? 0 : 1,
-                  transition: `${TRANSITION}, transform 0.5s ease-in-out`,
+                  // Suppress transition when entering so element appears off-screen instantly
+                  transition: isEntering
+                    ? "none"
+                    : `${TRANSITION}, transform 0.5s ease-in-out`,
                 }}
                 onClick={() => {
                   if (isExiting) return;
