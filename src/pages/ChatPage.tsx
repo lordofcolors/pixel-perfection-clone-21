@@ -15,7 +15,7 @@ import { useRiveAssistant } from "@/hooks/useRiveAssistant";
 
 import { ChatLoadingOverlay } from "@/components/chat/ChatLoadingOverlay";
 import { ChatTopBar } from "@/components/chat/ChatTopBar";
-import { Canvas } from "@/components/chat/Canvas";
+import { Canvas } from "@/components/chat/canvas";
 import { VideoConferenceToolbar } from "@/components/chat/VideoConferenceToolbar";
 import { ChatTranscriptPanel } from "@/components/chat/ChatTranscriptPanel";
 import { SessionEndedView } from "@/components/chat/SessionEndedView";
