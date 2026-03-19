@@ -130,10 +130,8 @@ const ChatPage = () => {
     );
   }
 
-  // Determine grid layout based on expanded state and active panels
-  const isRiveExpanded = expandedPanel === "rive";
-  const isImageExpanded = expandedPanel === "image";
-  const isSkillExpanded = expandedPanel === "skill";
+  // Determine grid layout
+  const _ = expandedPanel; // used in template
 
   return (
     <main className="w-screen h-screen bg-background flex flex-col overflow-hidden">
