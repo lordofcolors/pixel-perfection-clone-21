@@ -526,7 +526,13 @@ const ChatPage = () => {
             )}
           </div>
 
-          <VideoConferenceToolbar onDisconnect={handleDisconnect} onToggleChat={() => setChatOpen((v) => !v)} isChatOpen={chatOpen} />
+          <VideoConferenceToolbar
+            onDisconnect={handleDisconnect}
+            onToggleChat={() => setChatOpen((v) => !v)}
+            onToggleScreenShare={() => setScreenShareOn((v) => !v)}
+            isChatOpen={chatOpen}
+            isScreenSharing={screenShareOn}
+          />
         </div>
 
         <div className={`overflow-hidden transition-all duration-300 ease-in-out ${chatOpen ? "w-80" : "w-0"}`}>
