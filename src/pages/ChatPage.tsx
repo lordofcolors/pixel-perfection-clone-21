@@ -346,7 +346,7 @@ const ChatPage = () => {
                     >
                       <Minimize2 className="w-4 h-4" />
                     </Button>
-                    <div className="w-full h-full flex items-center justify-center">
+                    <div className="w-full h-full overflow-hidden">
                       {renderExpandedContent(expandedPanel!)}
                     </div>
                   </div>
