@@ -394,7 +394,7 @@ export function Canvas({
 
       {/* Inline chat input (hidden when chat flyout is open) */}
       {!chatOpen && (
-        <div className="flex flex-shrink-0 items-center justify-center px-4 py-2">
+        <div className="flex w-full flex-shrink-0 items-center justify-center px-4 pb-4 pt-2">
           <InlineChatInput
             responseBubbleText={responseBubbleText}
             showCursor={showResponseCursor}
