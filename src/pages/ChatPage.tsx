@@ -169,19 +169,22 @@ const ChatPage = () => {
     );
   }
 
-  // Greeting bubble inside Rive tile
-  const greetingBubble = (
-    <div
-      className={`rounded-xl border border-border/30 p-2.5 bg-card/40 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
-    >
-      <p className="text-center text-foreground text-xs min-h-[1rem]">
-        {typedText}
-        {showGreeting && typedText.length < greetingText.length && (
-          <span className="inline-block w-[2px] h-[0.85em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
-        )}
-      </p>
-    </div>
-  );
+  // Greeting bubble inside Rive tile — larger text
+  const greetingBubble = (size: "sm" | "md" | "lg" = "md") => {
+    const textSize = size === "lg" ? "text-base" : size === "md" ? "text-sm" : "text-xs";
+    return (
+      <div
+        className={`rounded-xl border border-border/30 p-3 bg-card/40 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
+      >
+        <p className={`text-center text-foreground ${textSize} min-h-[1rem]`}>
+          {typedText}
+          {showGreeting && typedText.length < greetingText.length && (
+            <span className="inline-block w-[2px] h-[0.85em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
+          )}
+        </p>
+      </div>
+    );
+  };
 
   // Inline chat input (no expand button)
   const inlineChatInput = (
@@ -206,15 +209,15 @@ const ChatPage = () => {
   const riveTileContent = (size: "sm" | "md" | "lg") => {
     const sizeClasses = {
       sm: "w-full h-full",
-      md: "w-[180px] h-[180px]",
+      md: "w-[220px] h-[220px]",
       lg: "w-[300px] h-[300px] md:w-[380px] md:h-[380px]",
     };
     return (
-      <div className="flex flex-col items-center justify-center gap-2 p-2 h-full">
+      <div className="flex flex-col items-center justify-center gap-3 p-2 h-full">
         <div className={sizeClasses[size]}>
           <RiveComponent className="w-full h-full" />
         </div>
-        {size !== "sm" && greetingBubble}
+        {size !== "sm" && greetingBubble(size)}
       </div>
     );
   };
@@ -246,7 +249,7 @@ const ChatPage = () => {
     if (key === "skill") {
       return (
         <div className="w-full h-full overflow-hidden relative">
-          <SkillMapPanel className="pointer-events-none" />
+          <SkillMapPanel className="pointer-events-none" hideTitle />
         </div>
       );
     }
@@ -256,7 +259,11 @@ const ChatPage = () => {
   // Render expanded panel content
   const renderExpandedContent = (key: "rive" | "image" | "skill") => {
     if (key === "rive") return riveTileContent("lg");
-    if (key === "image") return <ImageSearchPanel />;
+    if (key === "image") return (
+      <div className="w-full h-full overflow-auto">
+        <ImageSearchPanel />
+      </div>
+    );
     if (key === "skill") return <SkillMapPanel />;
     return null;
   };
@@ -339,7 +346,7 @@ const ChatPage = () => {
                     >
                       <Minimize2 className="w-4 h-4" />
                     </Button>
-                    <div className="w-full h-full flex items-center justify-center">
+                    <div className="w-full h-full overflow-hidden">
                       {renderExpandedContent(expandedPanel!)}
                     </div>
                   </div>
@@ -356,10 +363,10 @@ const ChatPage = () => {
               /* Gallery View: equal tiles with actual content previews */
               <>
                 <div className="flex-1 flex items-center justify-center px-4 pt-2">
-                  <div className="flex gap-2 h-[65%] max-h-[420px] w-full max-w-5xl">
-                    {/* Rive tile */}
+                  <div className="flex gap-3 h-[65%] max-h-[420px] w-full max-w-5xl">
+                    {/* Rive tile — no border by default, border on hover */}
                     <div
-                      className="flex-1 rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
+                      className="flex-1 rounded-lg border border-transparent hover:border-border/50 overflow-hidden cursor-pointer transition-all"
                       onClick={() => setExpandedPanel("rive")}
                     >
                       {riveTileContent("md")}
@@ -399,7 +406,7 @@ const ChatPage = () => {
                   <div className="w-[350px] h-[350px] md:w-[450px] md:h-[450px]">
                     <RiveComponent className="w-full h-full" />
                   </div>
-                  {greetingBubble}
+                  {greetingBubble("lg")}
                   <div className="mt-3 w-[85%] max-w-md">
                     {inlineChatInput}
                   </div>
