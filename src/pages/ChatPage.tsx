@@ -315,9 +315,9 @@ const ChatPage = () => {
     );
   };
 
-  const renderExpandedContent = (key: "rive" | "image" | "skill") => {
+  const renderExpandedContent = (key: "rive" | "image" | "skill" | "screen") => {
     if (key === "rive") {
-      return null; // Rive is rendered persistently outside
+      return null;
     }
 
     if (key === "image") {
@@ -325,6 +325,16 @@ const ChatPage = () => {
         <div className="h-full overflow-auto p-4">
           <div className="mx-auto w-full max-w-2xl max-h-full overflow-hidden rounded-md">
             <ImageSearchPanel className="w-full" variant="expanded" />
+          </div>
+        </div>
+      );
+    }
+
+    if (key === "screen") {
+      return (
+        <div className="h-full overflow-auto p-4">
+          <div className="mx-auto w-full max-w-2xl max-h-full overflow-hidden rounded-md">
+            <img src={screenShareImg} alt="Screen share" className="w-full h-auto rounded-md" />
           </div>
         </div>
       );
