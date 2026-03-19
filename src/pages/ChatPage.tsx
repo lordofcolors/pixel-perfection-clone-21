@@ -397,16 +397,16 @@ const ChatPage = () => {
                 <div className={`px-4 ${hasSidePanels ? "pt-2 flex-shrink-0" : "flex flex-1 items-center"}`}>
                   <div className="mx-auto w-full max-w-5xl">
                     <div
-                      className={hasSidePanels ? "flex gap-3 transition-all duration-500" : "flex justify-center transition-all duration-500"}
+                      className={hasSidePanels ? "flex gap-3" : "flex justify-center"}
                       style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 420) : undefined }}
                     >
-                      {/* Rive - always rendered, just resized */}
+                      {/* Rive - always rendered, just resized. No transition on position to prevent slide effect */}
                       <div
-                        className={`transition-all duration-500 ${hasSidePanels ? "flex-1 cursor-pointer overflow-hidden rounded-lg border border-transparent hover:border-border/50" : "flex w-full justify-center"}`}
+                        className={`${hasSidePanels ? "flex-1 cursor-pointer overflow-hidden rounded-lg border border-transparent hover:border-border/50" : "flex w-full justify-center"}`}
                         onClick={hasSidePanels ? () => setExpandedPanel("rive") : undefined}
                       >
-                        <div className={`flex items-center justify-center p-2 transition-all duration-500 ${hasSidePanels ? "h-full" : ""}`}>
-                          <div className={`transition-all duration-500 ${hasSidePanels ? "h-full w-full max-h-[320px] max-w-[320px]" : "h-[350px] w-[350px] md:h-[450px] md:w-[450px]"}`}>
+                        <div className={`flex items-center justify-center p-2 ${hasSidePanels ? "h-full" : ""}`}>
+                          <div className={`${hasSidePanels ? "h-full w-full max-h-[320px] max-w-[320px]" : "h-[350px] w-[350px] md:h-[450px] md:w-[450px]"}`}>
                             <RiveComponent className="h-full w-full" />
                           </div>
                         </div>
