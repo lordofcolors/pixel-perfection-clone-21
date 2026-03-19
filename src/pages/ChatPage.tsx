@@ -209,15 +209,15 @@ const ChatPage = () => {
   const riveTileContent = (size: "sm" | "md" | "lg") => {
     const sizeClasses = {
       sm: "w-full h-full",
-      md: "w-[180px] h-[180px]",
+      md: "w-[220px] h-[220px]",
       lg: "w-[300px] h-[300px] md:w-[380px] md:h-[380px]",
     };
     return (
-      <div className="flex flex-col items-center justify-center gap-2 p-2 h-full">
+      <div className="flex flex-col items-center justify-center gap-3 p-2 h-full">
         <div className={sizeClasses[size]}>
           <RiveComponent className="w-full h-full" />
         </div>
-        {size !== "sm" && greetingBubble}
+        {size !== "sm" && greetingBubble(size)}
       </div>
     );
   };
