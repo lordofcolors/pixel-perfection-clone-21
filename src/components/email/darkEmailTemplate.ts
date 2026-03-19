@@ -3,6 +3,10 @@
  */
 import { FONT, DAYS, VIVAAN, MAYA } from './emailHelpers';
 
+const DATE_RANGE = 'Mar 10 \u2013 Mar 16, 2026';
+const DAY_LABELS = 'Monday \u2013 Sunday';
+const CTA_COLOR = '#0F172A';
+
 /* ── Bar chart (dark) ── */
 function buildChart(title: string, subtitle: string, days: string[], values: number[], color: string, maxVal: number) {
   const barH = 50;
@@ -14,9 +18,9 @@ function buildChart(title: string, subtitle: string, days: string[], values: num
     </td>`;
   }).join('');
 
-  return `<td style="padding: 6px; width: 50%;">
+  return `<td style="padding: 6px; width: 50%; vertical-align: top;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
-      <tr><td style="padding: 12px; background-color: #111827; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;">
+      <tr><td style="padding: 12px; height: 120px; background-color: #111827; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: #E2E8F0; font-family: ${FONT};">${title}</p>
         <p style="margin: 0 0 10px; font-size: 9px; color: #94A3B8; font-family: ${FONT};">${subtitle}</p>
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${bars}</tr></table>
@@ -40,9 +44,9 @@ function buildStackedChart(title: string, subtitle: string, days: string[], voic
     </td>`;
   }).join('');
 
-  return `<td style="padding: 6px; width: 50%;">
+  return `<td style="padding: 6px; width: 50%; vertical-align: top;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
-      <tr><td style="padding: 12px; background-color: #111827; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;">
+      <tr><td style="padding: 12px; height: 120px; background-color: #111827; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: #E2E8F0; font-family: ${FONT};">${title}</p>
         <p style="margin: 0 0 10px; font-size: 9px; color: #94A3B8; font-family: ${FONT};">${subtitle}</p>
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${bars}</tr></table>
@@ -59,7 +63,7 @@ function buildStackedChart(title: string, subtitle: string, days: string[], voic
 function buildAIInsights(text: string) {
   return `<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-top: 10px;">
     <tr><td style="padding: 14px 16px; background-color: #0E1225; border: 1px solid rgba(185,198,254,0.15); border-radius: 10px;">
-      <p style="margin: 0 0 6px; font-size: 11px; font-weight: 600; color: #B9C6FE; font-family: ${FONT};">AI Insights</p>
+      <p style="margin: 0 0 6px; font-size: 11px; font-weight: 600; color: #B9C6FE; font-family: ${FONT};">\u2728 AI Insights</p>
       <p style="margin: 0; font-size: 13px; color: #CBD5E1; line-height: 1.5; font-family: ${FONT};">${text}</p>
     </td></tr>
   </table>`;
@@ -78,7 +82,7 @@ function buildLessonsList(lessons: string[], maxShow = 3) {
   }).join('');
 
   const moreRow = remaining > 0 ? `<tr><td style="padding: 8px 14px;">
-    <a href="https://app-dev.abyxolv.com/dashboard/?role=parent" style="font-size: 12px; color: #94DFE9; text-decoration: none; font-family: ${FONT};">+${remaining} more lessons →</a>
+    <a href="https://app-dev.abyxolv.com/dashboard/?role=parent" style="font-size: 12px; color: #94DFE9; text-decoration: none; font-family: ${FONT};">+${remaining} more lessons \u2192</a>
   </td></tr>` : '';
 
   return `<p style="margin: 0 0 8px; font-size: 12px; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; font-family: ${FONT};">${lessons.length} Lessons Explored</p>
@@ -100,7 +104,7 @@ function buildMemoriesList(memories: string[], maxShow = 3) {
   }).join('');
 
   const moreRow = remaining > 0 ? `<tr><td style="padding: 8px 14px;">
-    <a href="https://app-dev.abyxolv.com/dashboard/?role=parent" style="font-size: 12px; color: #B9C6FE; text-decoration: none; font-family: ${FONT};">+${remaining} more memories →</a>
+    <a href="https://app-dev.abyxolv.com/dashboard/?role=parent" style="font-size: 12px; color: #B9C6FE; text-decoration: none; font-family: ${FONT};">+${remaining} more memories \u2192</a>
   </td></tr>` : '';
 
   return `<p style="margin: 0 0 8px; font-size: 12px; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; font-family: ${FONT};">${memories.length} New Memories</p>
@@ -112,7 +116,8 @@ function buildMemoriesList(memories: string[], maxShow = 3) {
 /* ── Learner card (dark) ── */
 function buildLearnerCard(data: typeof VIVAAN) {
   const charts = `
-    <p style="margin: 12px 0 8px; font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; font-family: ${FONT};">Behaviour Trends</p>
+    <p style="margin: 12px 0 2px; font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; font-family: ${FONT};">Behaviour Trends</p>
+    <p style="margin: 0 0 8px; font-size: 10px; color: #64748B; font-family: ${FONT};">${DATE_RANGE} \u00B7 ${DAY_LABELS}</p>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
       <tr>
         ${buildChart('Session Duration', 'Avg duration per session', DAYS, data.sessionDuration, '#EED4F0', 40)}
@@ -159,14 +164,14 @@ function buildLearnerCard(data: typeof VIVAAN) {
           <tr>
             <td width="50%" style="padding: 0 4px 6px 0;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(238,212,240,0.15); text-align: center;">
+                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(238,212,240,0.15); text-align: center;">
                   <p style="margin: 0; font-size: 14px; color: #EED4F0; font-family: ${FONT};">${data.sessions} Total Sessions</p>
                 </td>
               </tr></table>
             </td>
             <td width="50%" style="padding: 0 0 6px 4px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(148,223,233,0.15); text-align: center;">
+                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(148,223,233,0.15); text-align: center;">
                   <p style="margin: 0; font-size: 14px; color: #94DFE9; font-family: ${FONT};">Time Spent: ${data.time}</p>
                 </td>
               </tr></table>
@@ -175,14 +180,14 @@ function buildLearnerCard(data: typeof VIVAAN) {
           <tr>
             <td width="50%" style="padding: 0 4px 0 0;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(185,198,254,0.15); text-align: center;">
+                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(185,198,254,0.15); text-align: center;">
                   <p style="margin: 0; font-size: 14px; color: #B9C6FE; font-family: ${FONT};">${data.lessons} Lessons Explored</p>
                 </td>
               </tr></table>
             </td>
             <td width="50%" style="padding: 0 0 0 4px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
                   <p style="margin: 0; font-size: 14px; color: #E2E8F0; font-family: ${FONT};">${data.chats} Total Chats</p>
                 </td>
               </tr></table>
@@ -229,9 +234,10 @@ export function buildDarkEmailHTML(): string {
           <!-- Header Card -->
           <tr>
             <td style="background-color: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; text-align: center;">
-              <h1 style="margin: 0 0 6px; font-size: 24px; font-weight: 600; color: #ffffff; font-family: ${FONT};">
+              <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; color: #ffffff; font-family: ${FONT};">
                 Your Weekly Update
               </h1>
+              <p style="margin: 0 0 16px; font-size: 13px; color: #64748B; font-family: ${FONT};">${DATE_RANGE}</p>
               <p style="margin: 0 0 20px; font-size: 14px; color: #94A3B8; line-height: 1.6; font-family: ${FONT};">
                 Hi Vignesh, here is a summary of how your children engaged with A this week. Below you will find session activity, learning highlights, behaviour trends, and new memories for each learner.
               </p>
@@ -275,7 +281,7 @@ export function buildDarkEmailHTML(): string {
                 <tr>
                   <td align="center">
                     <p style="margin: 0 0 14px; font-size: 14px; color: #94A3B8; font-family: ${FONT};">View the full dashboard for detailed analytics and session transcripts.</p>
-                    <a href="https://app-dev.abyxolv.com/dashboard/?role=parent" target="_blank" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #EED4F0 0%, #CA7FCD 100%); background-color: #CA7FCD; color: #1E293B; font-family: ${FONT}; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(238,212,240,0.3);">
+                    <a href="https://app-dev.abyxolv.com/dashboard/?role=parent" target="_blank" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #EED4F0 0%, #CA7FCD 100%); background-color: #CA7FCD; color: ${CTA_COLOR}; font-family: ${FONT}; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(238,212,240,0.3);">
                         View Full Dashboard
                     </a>
                   </td>
