@@ -232,7 +232,6 @@ export function buildLightEmailHTML(): string {
   <style>
     @media only screen and (max-width: 480px) {
       .chart-cell { display: block !important; width: 100% !important; padding: 4px 0 !important; }
-      .stat-cell { display: block !important; width: 100% !important; padding: 0 0 6px 0 !important; }
       .email-wrapper { padding: 12px 8px !important; }
       .email-inner { padding: 16px 14px !important; }
       .learner-card { padding: 14px 12px !important; }
