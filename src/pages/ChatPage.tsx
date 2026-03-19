@@ -1,7 +1,8 @@
 import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, Image, Map, ChevronDown } from "lucide-react";
+import { ArrowLeft, Image, Map, ChevronDown, Send, Smile, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState, useEffect, useRef } from "react";
