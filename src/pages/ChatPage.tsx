@@ -175,111 +175,110 @@ const ChatPage = () => {
         {/* Panels area */}
         <div className="flex-1 flex flex-col min-w-0">
           <div
-            className={`flex-1 flex gap-2 p-2 transition-all duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`}
+            className={`flex-1 flex items-center justify-center transition-all duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`}
           >
-            {/* Rive animation panel */}
-            <div
-              className={`relative rounded-xl border border-border/50 bg-card/20 overflow-hidden flex items-center justify-center cursor-pointer transition-all duration-500 ease-in-out ${
-                !hasSidePanels
-                  ? "w-full"
-                : expandedPanel === "rive"
-                    ? "w-full"
-                    : expandedPanel !== null
-                      ? "w-24 min-w-[96px] flex-shrink-0"
-                      : activePanelCount === 2
-                        ? "w-1/3"
-                        : "w-1/2"
-              }`}
-              onClick={() => hasSidePanels && handlePanelClick("rive")}
-            >
-              {hasSidePanels && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
-                  onClick={(e) => { e.stopPropagation(); handlePanelClick("rive"); }}
-                >
-                  {expandedPanel === "rive" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
-                </Button>
-              )}
+            {/* Panels grid - centered with 4:3 aspect ratio tiles */}
+            <div className={`flex gap-1 h-[70%] max-h-[500px] w-full max-w-5xl px-4 ${
+              !hasSidePanels ? "justify-center" : ""
+            }`}>
+              {/* Rive animation panel */}
               <div
-                className={`transition-all duration-500 ease-in-out ${
-                  expandedPanel && expandedPanel !== "rive"
-                    ? "w-[80px] h-[80px]"
-                    : hasSidePanels
-                      ? "w-[300px] h-[300px]"
-                      : "w-[400px] h-[400px] md:w-[550px] md:h-[550px]"
+                className={`relative rounded-lg bg-card/20 overflow-hidden flex items-center justify-center cursor-pointer transition-all duration-500 ease-in-out aspect-[4/3] ${
+                  !hasSidePanels
+                    ? "w-full max-w-2xl"
+                    : expandedPanel === "rive"
+                      ? "flex-[3]"
+                      : expandedPanel !== null
+                        ? "flex-[0.5] min-w-[80px]"
+                        : "flex-1"
                 }`}
+                onClick={() => hasSidePanels && handlePanelClick("rive")}
               >
-                <RiveComponent className="w-full h-full" />
+                {hasSidePanels && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
+                    onClick={(e) => { e.stopPropagation(); handlePanelClick("rive"); }}
+                  >
+                    {expandedPanel === "rive" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
+                  </Button>
+                )}
+                <div
+                  className={`transition-all duration-500 ease-in-out ${
+                    expandedPanel && expandedPanel !== "rive"
+                      ? "w-[60px] h-[60px]"
+                      : hasSidePanels
+                        ? "w-[250px] h-[250px]"
+                        : "w-[350px] h-[350px] md:w-[450px] md:h-[450px]"
+                  }`}
+                >
+                  <RiveComponent className="w-full h-full" />
+                </div>
+
+                {/* Greeting bubble - show when no panels active */}
+                {!hasSidePanels && (
+                  <div
+                    className={`absolute bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-md rounded-2xl border border-border/30 p-3 bg-card/40 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
+                  >
+                    <p className="text-center text-foreground text-sm min-h-[1.5rem]">
+                      {typedText}
+                      {showGreeting && typedText.length < greetingText.length && (
+                        <span className="inline-block w-[2px] h-[1em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
+                      )}
+                    </p>
+                  </div>
+                )}
               </div>
 
-              {/* Greeting bubble - show when no panels active */}
-              {!hasSidePanels && (
+              {/* Image Search panel */}
+              {imageSearchOn && (
                 <div
-                  className={`absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-lg rounded-2xl border border-border/50 p-4 bg-card/50 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
+                  className={`relative rounded-lg bg-card/20 overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${
+                    expandedPanel === "image"
+                      ? "flex-[3]"
+                      : expandedPanel !== null
+                        ? "flex-[0.5] min-w-[80px]"
+                        : "flex-1"
+                  }`}
+                  onClick={() => handlePanelClick("image")}
                 >
-                  <p className="text-center text-foreground text-base min-h-[1.5rem]">
-                    {typedText}
-                    {showGreeting && typedText.length < greetingText.length && (
-                      <span className="inline-block w-[2px] h-[1em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
-                    )}
-                  </p>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
+                    onClick={(e) => { e.stopPropagation(); handlePanelClick("image"); }}
+                  >
+                    {expandedPanel === "image" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
+                  </Button>
+                  <ImageSearchPanel />
+                </div>
+              )}
+
+              {/* Skill Map panel */}
+              {skillMapOn && (
+                <div
+                  className={`relative rounded-lg bg-card/20 overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${
+                    expandedPanel === "skill"
+                      ? "flex-[3]"
+                      : expandedPanel !== null
+                        ? "flex-[0.5] min-w-[80px]"
+                        : "flex-1"
+                  }`}
+                  onClick={() => handlePanelClick("skill")}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
+                    onClick={(e) => { e.stopPropagation(); handlePanelClick("skill"); }}
+                  >
+                    {expandedPanel === "skill" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
+                  </Button>
+                  <SkillMapPanel />
                 </div>
               )}
             </div>
-
-            {/* Image Search panel */}
-            {imageSearchOn && (
-              <div
-                className={`relative rounded-xl border border-border/50 bg-card/20 overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${
-                  expandedPanel === "image"
-                    ? "w-full"
-                    : expandedPanel !== null
-                      ? "w-24 min-w-[96px] flex-shrink-0"
-                      : activePanelCount === 2
-                        ? "w-1/3"
-                        : "w-1/2"
-                }`}
-                onClick={() => handlePanelClick("image")}
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
-                  onClick={(e) => { e.stopPropagation(); handlePanelClick("image"); }}
-                >
-                  {expandedPanel === "image" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
-                </Button>
-                <ImageSearchPanel />
-              </div>
-            )}
-
-            {/* Skill Map panel */}
-            {skillMapOn && (
-              <div
-                className={`relative rounded-xl border border-border/50 bg-card/20 overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${
-                  expandedPanel === "skill"
-                    ? "w-full"
-                    : expandedPanel !== null
-                      ? "w-24 min-w-[96px] flex-shrink-0"
-                      : activePanelCount === 2
-                        ? "w-1/3"
-                        : "w-1/2"
-                }`}
-                onClick={() => handlePanelClick("skill")}
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
-                  onClick={(e) => { e.stopPropagation(); handlePanelClick("skill"); }}
-                >
-                  {expandedPanel === "skill" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
-                </Button>
-                <SkillMapPanel />
-              </div>
-            )}
           </div>
 
           {/* Bottom toolbar */}
