@@ -105,7 +105,7 @@ const VIVAAN_CHARTS = `
     <tr><td>
       ${buildChart('📝 Words per Message', 'Avg words per message by day', DAYS, [4.2, 5.1, 3.8, 6.5, 5.9, 4.0, 5.3].map(v => v*10), '#94DFE9', 70, v => (v/10).toFixed(1))}
       <span style="display:inline-block;width:4%;"></span>
-      ${buildChart('📅 Sessions per Day', 'Number of sessions', DAYS, [1, 2, 1, 3, 2, 1, 1], '#CA7FCD', 4, v => String(v))}
+      ${buildChart('📅 Sessions per Day', 'Number of sessions', DAYS, [1, 2, 1, 3, 2, 1, 1], '#B9C6FE', 4, v => String(v))}
     </td></tr>
   </table>
   ${buildAIInsights("Vivaan had a very active week with 8 sessions across 5 days. He engaged most deeply during Thursday's solar system lesson, asking follow-up questions about Jupiter's moons. His voice message usage increased by 40% compared to last week, suggesting growing confidence in verbal expression. He responds best to visual examples and hands-on exploration.")}
