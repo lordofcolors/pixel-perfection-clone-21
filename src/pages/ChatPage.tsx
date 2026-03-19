@@ -204,95 +204,147 @@ const ChatPage = () => {
           <div
             className={`flex-1 flex flex-col transition-all duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`}
           >
-            {/* Speaker View: thumbnails at top, main panel fills below */}
+            {/* Speaker View: all panels as thumbnails at top, clicked one is main */}
             {hasSidePanels && viewMode === "speaker" ? (
               <>
-                {/* Thumbnail strip at top */}
-                <div className="flex gap-1 px-4 pt-2 justify-center">
+                {/* Thumbnail strip at top — show ALL panels */}
+                <div className="flex gap-1.5 px-4 pt-2 justify-center">
                   {[
-                    { key: "rive" as const, active: true },
-                    { key: "image" as const, active: imageSearchOn },
-                    { key: "skill" as const, active: skillMapOn },
+                    { key: "rive" as const, active: true, label: "A" },
+                    { key: "image" as const, active: imageSearchOn, label: "Infographic" },
+                    { key: "skill" as const, active: skillMapOn, label: "Skill Map" },
                   ]
-                    .filter((p) => p.active && p.key !== expandedPanel)
+                    .filter((p) => p.active)
                     .map((p) => (
                       <div
                         key={p.key}
-                        className="w-32 h-20 rounded-md bg-card/30 overflow-hidden cursor-pointer hover:ring-1 hover:ring-secondary/50 transition-all duration-300 flex items-center justify-center flex-shrink-0"
+                        className={`w-28 h-[72px] rounded-md bg-card/30 overflow-hidden cursor-pointer transition-all duration-300 flex items-center justify-center flex-shrink-0 ${
+                          expandedPanel === p.key ? "ring-1 ring-secondary" : "hover:ring-1 hover:ring-secondary/40"
+                        }`}
                         onClick={() => handlePanelClick(p.key)}
                       >
-                        {p.key === "rive" && (
-                          <div className="w-16 h-16">
+                        {p.key === "rive" ? (
+                          <div className="w-14 h-14">
                             <RiveComponent className="w-full h-full" />
                           </div>
-                        )}
-                        {p.key === "image" && (
-                          <span className="text-[10px] text-muted-foreground">Image Search</span>
-                        )}
-                        {p.key === "skill" && (
-                          <span className="text-[10px] text-muted-foreground">Skill Map</span>
+                        ) : (
+                          <span className="text-[10px] text-muted-foreground">{p.label}</span>
                         )}
                       </div>
                     ))}
                 </div>
 
                 {/* Main expanded panel */}
-                <div className="flex-1 flex items-center justify-center p-4">
+                <div className="flex-1 flex items-center justify-center px-4 py-2">
                   <div className="w-full h-full max-w-4xl rounded-lg bg-card/20 overflow-hidden relative flex items-center justify-center">
                     {expandedPanel === "rive" && (
-                      <div className="w-[350px] h-[350px] md:w-[450px] md:h-[450px] transition-all duration-500">
+                      <div className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] transition-all duration-500">
                         <RiveComponent className="w-full h-full" />
                       </div>
                     )}
                     {expandedPanel === "image" && <ImageSearchPanel />}
                     {expandedPanel === "skill" && <SkillMapPanel />}
+                  </div>
+                </div>
 
-                    {/* Greeting bubble in speaker view when rive is focused */}
-                    {expandedPanel === "rive" && (
-                      <div
-                        className={`absolute bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-md rounded-2xl border border-border/30 p-3 bg-card/40 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
+                {/* Inline chat below speaker */}
+                {!chatOpen && (
+                  <div className="px-4 pb-2 max-w-2xl mx-auto w-full">
+                    <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-card/30 p-1.5">
+                      <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 text-amber-400">
+                        <Smile className="w-4 h-4" />
+                      </Button>
+                      <Input
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder="Type something here..."
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm h-8"
+                      />
+                      <Button size="icon" className="flex-shrink-0 h-8 w-8 bg-primary hover:bg-primary/90">
+                        <Send className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="flex-shrink-0 h-8 w-8 text-muted-foreground"
+                        onClick={() => setChatOpen(true)}
                       >
-                        <p className="text-center text-foreground text-sm min-h-[1.5rem]">
-                          {typedText}
-                          {showGreeting && typedText.length < greetingText.length && (
-                            <span className="inline-block w-[2px] h-[1em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
-                          )}
-                        </p>
+                        <Maximize2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : hasSidePanels && viewMode === "gallery" ? (
+              /* Gallery View: equal tiles + chat input below */
+              <>
+                <div className="flex-1 flex items-center justify-center px-4 pt-2">
+                  <div className="flex gap-1.5 h-[65%] max-h-[400px] w-full max-w-5xl">
+                    <div
+                      className="flex-1 rounded-lg bg-card/20 overflow-hidden flex items-center justify-center cursor-pointer hover:ring-1 hover:ring-secondary/30 transition-all"
+                      onClick={() => { setViewMode("speaker"); setExpandedPanel("rive"); }}
+                    >
+                      <div className="w-[220px] h-[220px]">
+                        <RiveComponent className="w-full h-full" />
+                      </div>
+                    </div>
+                    {imageSearchOn && (
+                      <div
+                        className="flex-1 rounded-lg bg-card/20 overflow-hidden cursor-pointer hover:ring-1 hover:ring-secondary/30 transition-all"
+                        onClick={() => { setViewMode("speaker"); setExpandedPanel("image"); }}
+                      >
+                        <ImageSearchPanel />
+                      </div>
+                    )}
+                    {skillMapOn && (
+                      <div
+                        className="flex-1 rounded-lg bg-card/20 overflow-hidden cursor-pointer hover:ring-1 hover:ring-secondary/30 transition-all"
+                        onClick={() => { setViewMode("speaker"); setExpandedPanel("skill"); }}
+                      >
+                        <SkillMapPanel />
                       </div>
                     )}
                   </div>
                 </div>
-              </>
-            ) : hasSidePanels && viewMode === "gallery" ? (
-              /* Gallery View: equal tiles */
-              <div className="flex-1 flex items-center justify-center p-4">
-                <div className="flex gap-2 h-[65%] max-h-[450px] w-full max-w-5xl">
-                  <div
-                    className="flex-1 rounded-lg bg-card/20 overflow-hidden flex items-center justify-center cursor-pointer hover:ring-1 hover:ring-secondary/30 transition-all"
-                    onClick={() => { setViewMode("speaker"); setExpandedPanel("rive"); }}
-                  >
-                    <div className="w-[250px] h-[250px]">
-                      <RiveComponent className="w-full h-full" />
+
+                {/* Greeting + inline chat below gallery tiles */}
+                {!chatOpen && (
+                  <div className="px-4 pb-2 max-w-2xl mx-auto w-full space-y-2">
+                    <div
+                      className={`rounded-xl border border-border/30 p-3 bg-card/30 transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
+                    >
+                      <p className="text-center text-foreground text-sm min-h-[1.25rem]">
+                        {typedText}
+                        {showGreeting && typedText.length < greetingText.length && (
+                          <span className="inline-block w-[2px] h-[1em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
+                        )}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-card/30 p-1.5">
+                      <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 text-amber-400">
+                        <Smile className="w-4 h-4" />
+                      </Button>
+                      <Input
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder="Type something here..."
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm h-8"
+                      />
+                      <Button size="icon" className="flex-shrink-0 h-8 w-8 bg-primary hover:bg-primary/90">
+                        <Send className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="flex-shrink-0 h-8 w-8 text-muted-foreground"
+                        onClick={() => setChatOpen(true)}
+                      >
+                        <Maximize2 className="w-3 h-3" />
+                      </Button>
                     </div>
                   </div>
-                  {imageSearchOn && (
-                    <div
-                      className="flex-1 rounded-lg bg-card/20 overflow-hidden cursor-pointer hover:ring-1 hover:ring-secondary/30 transition-all"
-                      onClick={() => { setViewMode("speaker"); setExpandedPanel("image"); }}
-                    >
-                      <ImageSearchPanel />
-                    </div>
-                  )}
-                  {skillMapOn && (
-                    <div
-                      className="flex-1 rounded-lg bg-card/20 overflow-hidden cursor-pointer hover:ring-1 hover:ring-secondary/30 transition-all"
-                      onClick={() => { setViewMode("speaker"); setExpandedPanel("skill"); }}
-                    >
-                      <SkillMapPanel />
-                    </div>
-                  )}
-                </div>
-              </div>
+                )}
+              </>
             ) : (
               /* No side panels - just Rive centered */
               <div className="flex-1 flex items-center justify-center">
@@ -309,6 +361,22 @@ const ChatPage = () => {
                         <span className="inline-block w-[2px] h-[1em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
                       )}
                     </p>
+                  </div>
+                  <div className="mt-3 w-[85%] max-w-md">
+                    <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-card/30 p-1.5">
+                      <Button variant="ghost" size="icon" className="flex-shrink-0 h-8 w-8 text-amber-400">
+                        <Smile className="w-4 h-4" />
+                      </Button>
+                      <Input
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder="Type something here..."
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm h-8"
+                      />
+                      <Button size="icon" className="flex-shrink-0 h-8 w-8 bg-primary hover:bg-primary/90">
+                        <Send className="w-3 h-3" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
