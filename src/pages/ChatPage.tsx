@@ -199,7 +199,7 @@ const ChatPage = () => {
                   className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
                   onClick={(e) => { e.stopPropagation(); handlePanelClick("rive"); }}
                 >
-                  {isRiveExpanded ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
+                  {expandedPanel === "rive" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
                 </Button>
               )}
               <div
