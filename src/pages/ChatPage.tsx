@@ -252,8 +252,9 @@ const ChatPage = () => {
     if (key === "rive") {
       return (
         <div className="flex h-full w-full items-center justify-center">
-          <div className="h-14 w-14">
-            <RiveComponent className="h-full w-full" />
+          <div className="h-14 w-14 opacity-50">
+            {/* Static placeholder for thumbnail - real Rive is persistent */}
+            <div className="h-full w-full rounded-full bg-primary/20" />
           </div>
         </div>
       );
