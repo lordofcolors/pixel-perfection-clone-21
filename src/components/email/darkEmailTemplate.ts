@@ -162,32 +162,32 @@ function buildLearnerCard(data: typeof VIVAAN) {
         <!-- Stats -->
         <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom: 12px;">
           <tr>
-            <td width="50%" style="padding: 0 4px 6px 0;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(238,212,240,0.15); text-align: center;">
+            <td width="50%" style="padding: 0 4px 6px 0; vertical-align: stretch;">
+              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(238,212,240,0.15); text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: #EED4F0; font-family: ${FONT};">${data.sessions} Total Sessions</p>
                 </td>
               </tr></table>
             </td>
-            <td width="50%" style="padding: 0 0 6px 4px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(148,223,233,0.15); text-align: center;">
+            <td width="50%" style="padding: 0 0 6px 4px; vertical-align: stretch;">
+              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(148,223,233,0.15); text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: #94DFE9; font-family: ${FONT};">Time Spent: ${data.time}</p>
                 </td>
               </tr></table>
             </td>
           </tr>
           <tr>
-            <td width="50%" style="padding: 0 4px 0 0;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(185,198,254,0.15); text-align: center;">
+            <td width="50%" style="padding: 0 4px 0 0; vertical-align: stretch;">
+              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(185,198,254,0.15); text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: #B9C6FE; font-family: ${FONT};">${data.lessons} Lessons Explored</p>
                 </td>
               </tr></table>
             </td>
-            <td width="50%" style="padding: 0 0 0 4px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+            <td width="50%" style="padding: 0 0 0 4px; vertical-align: stretch;">
+              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                <td style="padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: #E2E8F0; font-family: ${FONT};">${data.chats} Total Chats</p>
                 </td>
               </tr></table>
@@ -220,7 +220,6 @@ export function buildDarkEmailHTML(): string {
   <style>
     @media only screen and (max-width: 480px) {
       .chart-cell { display: block !important; width: 100% !important; padding: 4px 0 !important; }
-      .stat-cell { display: block !important; width: 100% !important; padding: 0 0 6px 0 !important; }
       .email-wrapper { padding: 12px 8px !important; }
       .email-inner { padding: 16px 14px !important; }
       .learner-card { padding: 14px 12px !important; }
@@ -254,17 +253,17 @@ export function buildDarkEmailHTML(): string {
               <!-- Weekly Totals -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                 <tr>
-                  <td width="50%" style="padding: 0 4px 0 0;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                      <td style="text-align: center; padding: 10px 4px; border-radius: 10px; border: 1px solid rgba(238,212,240,0.12);">
+                  <td width="50%" style="padding: 0 4px 0 0; vertical-align: stretch;">
+                    <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                      <td style="text-align: center; padding: 10px 4px; border-radius: 10px; border: 1px solid rgba(238,212,240,0.12); vertical-align: middle;">
                         <p style="margin: 0; font-size: 26px; font-weight: 600; color: #EED4F0; font-family: ${FONT};">12</p>
                         <p style="margin: 4px 0 0; font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Sessions Combined</p>
                       </td>
                     </tr></table>
                   </td>
-                  <td width="50%" style="padding: 0 0 0 4px;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                      <td style="text-align: center; padding: 10px 4px; border-radius: 10px; border: 1px solid rgba(148,223,233,0.12);">
+                  <td width="50%" style="padding: 0 0 0 4px; vertical-align: stretch;">
+                    <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                      <td style="text-align: center; padding: 10px 4px; border-radius: 10px; border: 1px solid rgba(148,223,233,0.12); vertical-align: middle;">
                         <p style="margin: 0; font-size: 26px; font-weight: 600; color: #94DFE9; font-family: ${FONT};">2h 45m</p>
                         <p style="margin: 4px 0 0; font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Total Learning Time</p>
                       </td>
