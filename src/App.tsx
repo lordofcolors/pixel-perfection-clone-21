@@ -45,6 +45,7 @@ const App = () => (
           <Route path="/guardian/account" element={<GuardianAccount />} />
           <Route path="/guardian/billing" element={<GuardianBilling />} />
           <Route path="/guardian/memory" element={<GuardianMemoryBank />} />
+          <Route path="/email" element={<EmailPreview />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
