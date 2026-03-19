@@ -17,7 +17,7 @@ export function VideoConferenceToolbar({
   isScreenSharing,
 }: VideoConferenceToolbarProps) {
   return (
-    <div className="w-full border-t border-border/50 bg-card/30 backdrop-blur-sm px-6 py-2">
+    <div className="w-full border-t border-border/50 bg-card/30 backdrop-blur-sm px-6 py-4">
       <div className="flex items-center justify-center gap-4">
         <div className="flex flex-col items-center gap-0.5">
           <Button
