@@ -36,6 +36,7 @@ const ChatPage = () => {
   const [screenShareOn, setScreenShareOn] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [expandedPanel, setExpandedPanel] = useState<PanelKey | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
 
   const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn;
 
@@ -112,8 +113,10 @@ const ChatPage = () => {
             onDisconnect={session.handleDisconnect}
             onToggleChat={() => setChatOpen((v) => !v)}
             onToggleScreenShare={() => setScreenShareOn((v) => !v)}
+            onToggleMute={() => setIsMuted((v) => !v)}
             isChatOpen={chatOpen}
             isScreenSharing={screenShareOn}
+            isMuted={isMuted}
           />
         </div>
 
