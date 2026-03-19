@@ -174,56 +174,133 @@ const ChatPage = () => {
         </div>
       </div>
 
+      {/* View mode selector - below header */}
+      {hasSidePanels && (
+        <div className={`flex justify-end px-4 py-1.5 transition-opacity duration-[2000ms] ${showContent ? "opacity-100" : "opacity-0"}`}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1 h-7">
+                {viewMode === "speaker" ? "Speaker View" : "Gallery View"}
+                <ChevronDown className="w-3 h-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setViewMode("speaker")}>
+                Speaker View
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setViewMode("gallery")}>
+                Gallery View
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
+
       {/* Main content area */}
       <div className="flex flex-1 min-h-0">
         {/* Panels area */}
         <div className="flex-1 flex flex-col min-w-0">
           <div
-            className={`flex-1 flex items-center justify-center transition-all duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`}
+            className={`flex-1 flex flex-col transition-all duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`}
           >
-            {/* Panels grid - centered with 4:3 aspect ratio tiles */}
-            <div className={`flex gap-1 h-[70%] max-h-[500px] w-full max-w-5xl px-4 ${
-              !hasSidePanels ? "justify-center" : ""
-            }`}>
-              {/* Rive animation panel */}
-              <div
-                className={`relative rounded-lg bg-card/20 overflow-hidden flex items-center justify-center cursor-pointer transition-all duration-500 ease-in-out aspect-[4/3] ${
-                  !hasSidePanels
-                    ? "w-full max-w-2xl"
-                    : expandedPanel === "rive"
-                      ? "flex-[3]"
-                      : expandedPanel !== null
-                        ? "flex-[0.5] min-w-[80px]"
-                        : "flex-1"
-                }`}
-                onClick={() => hasSidePanels && handlePanelClick("rive")}
-              >
-                {hasSidePanels && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
-                    onClick={(e) => { e.stopPropagation(); handlePanelClick("rive"); }}
-                  >
-                    {expandedPanel === "rive" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
-                  </Button>
-                )}
-                <div
-                  className={`transition-all duration-500 ease-in-out ${
-                    expandedPanel && expandedPanel !== "rive"
-                      ? "w-[60px] h-[60px]"
-                      : hasSidePanels
-                        ? "w-[250px] h-[250px]"
-                        : "w-[350px] h-[350px] md:w-[450px] md:h-[450px]"
-                  }`}
-                >
-                  <RiveComponent className="w-full h-full" />
+            {/* Speaker View: thumbnails at top, main panel fills below */}
+            {hasSidePanels && viewMode === "speaker" ? (
+              <>
+                {/* Thumbnail strip at top */}
+                <div className="flex gap-1 px-4 pt-2 justify-center">
+                  {[
+                    { key: "rive" as const, active: true },
+                    { key: "image" as const, active: imageSearchOn },
+                    { key: "skill" as const, active: skillMapOn },
+                  ]
+                    .filter((p) => p.active && p.key !== expandedPanel)
+                    .map((p) => (
+                      <div
+                        key={p.key}
+                        className="w-32 h-20 rounded-md bg-card/30 overflow-hidden cursor-pointer hover:ring-1 hover:ring-secondary/50 transition-all duration-300 flex items-center justify-center flex-shrink-0"
+                        onClick={() => handlePanelClick(p.key)}
+                      >
+                        {p.key === "rive" && (
+                          <div className="w-16 h-16">
+                            <RiveComponent className="w-full h-full" />
+                          </div>
+                        )}
+                        {p.key === "image" && (
+                          <span className="text-[10px] text-muted-foreground">Image Search</span>
+                        )}
+                        {p.key === "skill" && (
+                          <span className="text-[10px] text-muted-foreground">Skill Map</span>
+                        )}
+                      </div>
+                    ))}
                 </div>
 
-                {/* Greeting bubble - show when no panels active */}
-                {!hasSidePanels && (
+                {/* Main expanded panel */}
+                <div className="flex-1 flex items-center justify-center p-4">
+                  <div className="w-full h-full max-w-4xl rounded-lg bg-card/20 overflow-hidden relative flex items-center justify-center">
+                    {expandedPanel === "rive" && (
+                      <div className="w-[350px] h-[350px] md:w-[450px] md:h-[450px] transition-all duration-500">
+                        <RiveComponent className="w-full h-full" />
+                      </div>
+                    )}
+                    {expandedPanel === "image" && <ImageSearchPanel />}
+                    {expandedPanel === "skill" && <SkillMapPanel />}
+
+                    {/* Greeting bubble in speaker view when rive is focused */}
+                    {expandedPanel === "rive" && (
+                      <div
+                        className={`absolute bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-md rounded-2xl border border-border/30 p-3 bg-card/40 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
+                      >
+                        <p className="text-center text-foreground text-sm min-h-[1.5rem]">
+                          {typedText}
+                          {showGreeting && typedText.length < greetingText.length && (
+                            <span className="inline-block w-[2px] h-[1em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
+                          )}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : hasSidePanels && viewMode === "gallery" ? (
+              /* Gallery View: equal tiles */
+              <div className="flex-1 flex items-center justify-center p-4">
+                <div className="flex gap-2 h-[65%] max-h-[450px] w-full max-w-5xl">
                   <div
-                    className={`absolute bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-md rounded-2xl border border-border/30 p-3 bg-card/40 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
+                    className="flex-1 rounded-lg bg-card/20 overflow-hidden flex items-center justify-center cursor-pointer hover:ring-1 hover:ring-secondary/30 transition-all"
+                    onClick={() => { setViewMode("speaker"); setExpandedPanel("rive"); }}
+                  >
+                    <div className="w-[250px] h-[250px]">
+                      <RiveComponent className="w-full h-full" />
+                    </div>
+                  </div>
+                  {imageSearchOn && (
+                    <div
+                      className="flex-1 rounded-lg bg-card/20 overflow-hidden cursor-pointer hover:ring-1 hover:ring-secondary/30 transition-all"
+                      onClick={() => { setViewMode("speaker"); setExpandedPanel("image"); }}
+                    >
+                      <ImageSearchPanel />
+                    </div>
+                  )}
+                  {skillMapOn && (
+                    <div
+                      className="flex-1 rounded-lg bg-card/20 overflow-hidden cursor-pointer hover:ring-1 hover:ring-secondary/30 transition-all"
+                      onClick={() => { setViewMode("speaker"); setExpandedPanel("skill"); }}
+                    >
+                      <SkillMapPanel />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              /* No side panels - just Rive centered */
+              <div className="flex-1 flex items-center justify-center">
+                <div className="flex flex-col items-center">
+                  <div className="w-[350px] h-[350px] md:w-[450px] md:h-[450px]">
+                    <RiveComponent className="w-full h-full" />
+                  </div>
+                  <div
+                    className={`w-[85%] max-w-md rounded-2xl border border-border/30 p-3 bg-card/40 backdrop-blur-sm mt-4 transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
                   >
                     <p className="text-center text-foreground text-sm min-h-[1.5rem]">
                       {typedText}
@@ -232,57 +309,9 @@ const ChatPage = () => {
                       )}
                     </p>
                   </div>
-                )}
+                </div>
               </div>
-
-              {/* Image Search panel */}
-              {imageSearchOn && (
-                <div
-                  className={`relative rounded-lg bg-card/20 overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${
-                    expandedPanel === "image"
-                      ? "flex-[3]"
-                      : expandedPanel !== null
-                        ? "flex-[0.5] min-w-[80px]"
-                        : "flex-1"
-                  }`}
-                  onClick={() => handlePanelClick("image")}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
-                    onClick={(e) => { e.stopPropagation(); handlePanelClick("image"); }}
-                  >
-                    {expandedPanel === "image" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
-                  </Button>
-                  <ImageSearchPanel />
-                </div>
-              )}
-
-              {/* Skill Map panel */}
-              {skillMapOn && (
-                <div
-                  className={`relative rounded-lg bg-card/20 overflow-hidden cursor-pointer transition-all duration-500 ease-in-out ${
-                    expandedPanel === "skill"
-                      ? "flex-[3]"
-                      : expandedPanel !== null
-                        ? "flex-[0.5] min-w-[80px]"
-                        : "flex-1"
-                  }`}
-                  onClick={() => handlePanelClick("skill")}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-2 right-2 z-10 h-7 w-7 bg-background/50 hover:bg-background/80"
-                    onClick={(e) => { e.stopPropagation(); handlePanelClick("skill"); }}
-                  >
-                    {expandedPanel === "skill" ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
-                  </Button>
-                  <SkillMapPanel />
-                </div>
-              )}
-            </div>
+            )}
           </div>
 
           {/* Bottom toolbar */}
