@@ -56,7 +56,7 @@ function buildStackedChart(title: string, subtitle: string, days: string[], voic
     </td>`;
   }).join('');
 
-  return `<td style="padding: 6px; width: 50%; vertical-align: top;">
+  return `<td class="chart-cell" style="padding: 6px; width: 50%; vertical-align: top;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
       <tr><td style="padding: 14px; height: 120px; background-color: ${BG_CARD}; border: 1px solid ${BORDER}; border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${title}</p>
