@@ -232,11 +232,12 @@ export function Canvas({
     };
   };
 
+  // Canvas height must encompass ALL rows of panels
   const canvasHeight = expandedPanel
     ? 560 + extraH
     : hasSidePanels
       ? activeSidePanels.length >= 2
-        ? 572 + extraH
+        ? (280 + extraH) + GAP + (280 + extraH) // first row + gap + second row
         : 480 + extraH
       : 580 + extraH;
 
