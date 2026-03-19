@@ -363,10 +363,10 @@ const ChatPage = () => {
               /* Gallery View: equal tiles with actual content previews */
               <>
                 <div className="flex-1 flex items-center justify-center px-4 pt-2">
-                  <div className="flex gap-2 h-[65%] max-h-[420px] w-full max-w-5xl">
-                    {/* Rive tile */}
+                  <div className="flex gap-3 h-[65%] max-h-[420px] w-full max-w-5xl">
+                    {/* Rive tile — no border by default, border on hover */}
                     <div
-                      className="flex-1 rounded-lg border border-border/50 bg-card/20 overflow-hidden cursor-pointer hover:border-secondary/50 transition-all"
+                      className="flex-1 rounded-lg border border-transparent hover:border-border/50 overflow-hidden cursor-pointer transition-all"
                       onClick={() => setExpandedPanel("rive")}
                     >
                       {riveTileContent("md")}
