@@ -91,6 +91,24 @@ export function UnifiedPanelLayout({
 
   const extraH = chatOpen ? 100 : 0;
 
+  // Track transitioning state to hide borders during resize animations
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimer = useRef<ReturnType<typeof setTimeout>>();
+  const prevExpandedPanel = useRef(expandedPanel);
+  const prevActivePanels = useRef(activeSidePanels.join(","));
+
+  useEffect(() => {
+    const panelsKey = activeSidePanels.join(",");
+    if (prevExpandedPanel.current !== expandedPanel || prevActivePanels.current !== panelsKey) {
+      prevExpandedPanel.current = expandedPanel;
+      prevActivePanels.current = panelsKey;
+      setIsTransitioning(true);
+      clearTimeout(transitionTimer.current);
+      transitionTimer.current = setTimeout(() => setIsTransitioning(false), 750);
+    }
+    return () => clearTimeout(transitionTimer.current);
+  }, [expandedPanel, activeSidePanels]);
+
   // -----------------------------------------------------------------------
   // Position calculator
   // -----------------------------------------------------------------------
