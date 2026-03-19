@@ -406,14 +406,14 @@ const ChatPage = () => {
                       className="flex gap-3 transition-all duration-1000 ease-in-out"
                       style={{ height: hasSidePanels ? (imageSearchOn && skillMapOn ? 280 : 480) : undefined }}
                     >
-                      {/* Rive - always rendered, slides between 100% and 50% width */}
+                      {/* Rive - always rendered, smoothly resizes via width % */}
                       <div
-                        className="transition-all duration-1000 ease-in-out overflow-hidden rounded-lg"
+                        className="overflow-hidden rounded-lg transition-[width] duration-1000 ease-in-out"
                         style={{ width: hasSidePanels ? "50%" : "100%", flexShrink: 0 }}
                         onClick={hasSidePanels ? () => setExpandedPanel("rive") : undefined}
                       >
                         <div className={`flex items-center justify-center p-2 h-full ${hasSidePanels ? "cursor-pointer" : ""}`}>
-                          <div className={`transition-all duration-1000 ease-in-out ${hasSidePanels ? "h-full w-full max-h-[320px] max-w-[320px]" : "h-[350px] w-[350px] md:h-[450px] md:w-[450px]"}`}>
+                          <div className="h-full w-full max-h-[450px] max-w-[450px] transition-[max-width,max-height] duration-1000 ease-in-out" style={{ maxHeight: hasSidePanels ? 320 : 450, maxWidth: hasSidePanels ? 320 : 450 }}>
                             <RiveComponent className="h-full w-full" />
                           </div>
                         </div>
