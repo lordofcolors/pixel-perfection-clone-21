@@ -176,14 +176,14 @@ function buildLearnerCard(data: typeof VIVAAN) {
           <tr>
             <td width="50%" style="padding: 0 4px 6px 0;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: top;">
+                <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${data.sessions} Total Sessions</p>
                 </td>
               </tr></table>
             </td>
             <td width="50%" style="padding: 0 0 6px 4px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: top;">
+                <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: ${TEXT_PRIMARY}; font-family: ${FONT};">Time Spent: ${data.time}</p>
                 </td>
               </tr></table>
@@ -192,14 +192,14 @@ function buildLearnerCard(data: typeof VIVAAN) {
           <tr>
             <td width="50%" style="padding: 0 4px 0 0;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: top;">
+                <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${data.lessons} Lessons Explored</p>
                 </td>
               </tr></table>
             </td>
             <td width="50%" style="padding: 0 0 0 4px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: top;">
+                <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
                   <p style="margin: 0; font-size: 14px; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${data.chats} Total Chats</p>
                 </td>
               </tr></table>
@@ -267,7 +267,7 @@ export function buildLightEmailHTML(): string {
                 <tr>
                   <td width="50%" style="padding: 0 4px 0 0;">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                      <td height="80" style="text-align: center; padding: 12px 4px; height: 80px; border-radius: 10px; border: 1px solid ${BORDER}; background-color: #ffffff; vertical-align: top;">
+                      <td height="80" style="text-align: center; padding: 12px 4px; height: 80px; border-radius: 10px; border: 1px solid ${BORDER}; background-color: #ffffff; vertical-align: middle;">
                         <p style="margin: 0; font-size: 28px; font-weight: 600; color: ${BLUE}; font-family: ${FONT};">12</p>
                         <p style="margin: 4px 0 0; font-size: 11px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Sessions Combined</p>
                       </td>
@@ -275,7 +275,7 @@ export function buildLightEmailHTML(): string {
                   </td>
                   <td width="50%" style="padding: 0 0 0 4px;">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-                      <td height="80" style="text-align: center; padding: 12px 4px; height: 80px; border-radius: 10px; border: 1px solid ${BORDER}; background-color: #ffffff; vertical-align: top;">
+                      <td height="80" style="text-align: center; padding: 12px 4px; height: 80px; border-radius: 10px; border: 1px solid ${BORDER}; background-color: #ffffff; vertical-align: middle;">
                         <p style="margin: 0; font-size: 28px; font-weight: 600; color: ${TEAL}; font-family: ${FONT};">2h 45m</p>
                         <p style="margin: 4px 0 0; font-size: 11px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Total Learning Time</p>
                       </td>
