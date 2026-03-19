@@ -80,8 +80,28 @@ const ChatPage = () => {
   useEffect(() => {
     if (showGreeting && typedText === greetingText) {
       setLatestAiText(greetingText);
+      setDisplayedAiText(greetingText);
     }
   }, [showGreeting, typedText, greetingText]);
+
+  // Typewriter effect for all AI responses
+  useEffect(() => {
+    if (latestAiText && latestAiText !== greetingText) {
+      setDisplayedAiText("");
+      setIsTypingResponse(true);
+      let i = 0;
+      if (aiTypingRef.current) clearInterval(aiTypingRef.current);
+      aiTypingRef.current = setInterval(() => {
+        i++;
+        setDisplayedAiText(latestAiText.slice(0, i));
+        if (i >= latestAiText.length) {
+          if (aiTypingRef.current) clearInterval(aiTypingRef.current);
+          setIsTypingResponse(false);
+        }
+      }, 35);
+      return () => { if (aiTypingRef.current) clearInterval(aiTypingRef.current); };
+    }
+  }, [latestAiText, greetingText]);
 
   // Loading cycle
   useEffect(() => {
