@@ -36,6 +36,8 @@ export function InlineChatInput({
   inputValue,
   onInputChange,
   onSend,
+  onToggleChat,
+  isChatOpen,
 }: InlineChatInputProps) {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-2">
