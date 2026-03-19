@@ -90,47 +90,45 @@ export function Canvas({
 
   // Track exiting panels for slide-out animation
   const [exitingPanels, setExitingPanels] = useState<Set<PanelKey>>(new Set());
+  // Track entering panels — start off-screen, then animate to final position
+  const [enteringPanels, setEnteringPanels] = useState<Set<PanelKey>>(new Set());
   const prevSidePanelsRef = useRef<Array<"image" | "skill" | "screen">>(activeSidePanels);
 
   useEffect(() => {
     const prev = prevSidePanelsRef.current;
     const removed = prev.filter((p) => !activeSidePanels.includes(p));
+    const added = activeSidePanels.filter((p) => !prev.includes(p));
+    prevSidePanelsRef.current = activeSidePanels;
+
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    // Exit animation: keep panel mounted, slide it out, then unmount
     if (removed.length > 0) {
       setExitingPanels((s) => {
         const next = new Set(s);
         removed.forEach((p) => next.add(p));
         return next;
       });
-      // Remove from exiting after animation completes
-      const timer = setTimeout(() => {
+      timers.push(setTimeout(() => {
         setExitingPanels((s) => {
           const next = new Set(s);
           removed.forEach((p) => next.delete(p));
           return next;
         });
-      }, 500);
-      prevSidePanelsRef.current = activeSidePanels;
-      return () => clearTimeout(timer);
+      }, 500));
     }
-    prevSidePanelsRef.current = activeSidePanels;
-  }, [activeSidePanels.join(",")]);
 
-  // Track entering panels for slide-in animation
-  const [enteringPanels, setEnteringPanels] = useState<Set<PanelKey>>(new Set());
-  const prevSidePanelsForEnterRef = useRef<Array<"image" | "skill" | "screen">>(activeSidePanels);
-
-  useEffect(() => {
-    const prev = prevSidePanelsForEnterRef.current;
-    const added = activeSidePanels.filter((p) => !prev.includes(p));
+    // Enter animation: render off-screen first, then after a frame settle into position
     if (added.length > 0) {
+      // Mark as entering (off-screen) immediately
       setEnteringPanels(new Set(added));
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setEnteringPanels(new Set());
-        });
-      });
+      // After a brief delay let the browser paint the off-screen state, then remove entering flag to trigger slide-in
+      timers.push(setTimeout(() => {
+        setEnteringPanels(new Set());
+      }, 50));
     }
-    prevSidePanelsForEnterRef.current = activeSidePanels;
+
+    return () => timers.forEach(clearTimeout);
   }, [activeSidePanels.join(",")]);
 
   // Combine active + exiting for rendering
@@ -323,7 +321,10 @@ export function Canvas({
                   ...style,
                   transform: key !== "rive" ? slideTransform : undefined,
                   opacity: isExiting ? 0 : 1,
-                  transition: `${TRANSITION}, transform 0.5s ease-in-out`,
+                  // Suppress transition when entering so element appears off-screen instantly
+                  transition: isEntering
+                    ? "none"
+                    : `${TRANSITION}, transform 0.5s ease-in-out`,
                 }}
                 onClick={() => {
                   if (isExiting) return;
