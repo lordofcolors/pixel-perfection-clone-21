@@ -110,7 +110,9 @@ const ChatPage = () => {
   };
 
   const handlePanelClick = (panel: "rive" | "image" | "skill") => {
-    setExpandedPanel((prev) => (prev === panel ? null : panel));
+    if (viewMode === "speaker") {
+      setExpandedPanel(panel);
+    }
   };
 
   if (sessionEnded) {
