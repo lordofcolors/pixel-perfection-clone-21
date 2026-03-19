@@ -105,7 +105,7 @@ const VIVAAN_CHARTS = `
     <tr><td>
       ${buildChart('📝 Words per Message', 'Avg words per message by day', DAYS, [4.2, 5.1, 3.8, 6.5, 5.9, 4.0, 5.3].map(v => v*10), '#94DFE9', 70, v => (v/10).toFixed(1))}
       <span style="display:inline-block;width:4%;"></span>
-      ${buildChart('📅 Sessions per Day', 'Number of sessions', DAYS, [1, 2, 1, 3, 2, 1, 1], '#CA7FCD', 4, v => String(v))}
+      ${buildChart('📅 Sessions per Day', 'Number of sessions', DAYS, [1, 2, 1, 3, 2, 1, 1], '#B9C6FE', 4, v => String(v))}
     </td></tr>
   </table>
   ${buildAIInsights("Vivaan had a very active week with 8 sessions across 5 days. He engaged most deeply during Thursday's solar system lesson, asking follow-up questions about Jupiter's moons. His voice message usage increased by 40% compared to last week, suggesting growing confidence in verbal expression. He responds best to visual examples and hands-on exploration.")}
@@ -127,7 +127,7 @@ const MAYA_CHARTS = `
     <tr><td>
       ${buildChart('📝 Words per Message', 'Avg words per message by day', DAYS, [0, 3.5, 0, 4.8, 0, 3.2, 0].map(v => v*10), '#94DFE9', 50, v => (v/10).toFixed(1))}
       <span style="display:inline-block;width:4%;"></span>
-      ${buildChart('📅 Sessions per Day', 'Number of sessions', DAYS, [0, 1, 0, 2, 0, 1, 0], '#CA7FCD', 3, v => String(v))}
+      ${buildChart('📅 Sessions per Day', 'Number of sessions', DAYS, [0, 1, 0, 2, 0, 1, 0], '#B9C6FE', 3, v => String(v))}
     </td></tr>
   </table>
   ${buildAIInsights("Maya had 4 sessions across 3 active days this week. She's most engaged during counting exercises and loves using colors as a learning tool. Her sessions tend to be focused and productive, averaging about 18 minutes each. She's making steady progress on numbers 16-20 and shows strong pattern recognition skills.")}
@@ -249,8 +249,8 @@ const EMAIL_HTML = `<!DOCTYPE html>
                         </td>
                         <td width="50%" style="padding: 0 0 0 4px;">
                           <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"><tr>
-                            <td style="padding: 6px 12px; background: rgba(238, 212, 240, 0.06); background-color: #12101C; border-radius: 20px; text-align: center;">
-                              <p style="margin: 0; font-size: 15px; color: #CA7FCD; font-family: ${FONT};">&#128172; 3 chats</p>
+                            <td style="padding: 6px 12px; background: rgba(255, 255, 255, 0.04); background-color: #12101C; border-radius: 20px; text-align: center;">
+                              <p style="margin: 0; font-size: 15px; color: #E2E8F0; font-family: ${FONT};">&#128172; 3 chats</p>
                             </td>
                           </tr></table>
                         </td>
@@ -354,8 +354,8 @@ const EMAIL_HTML = `<!DOCTYPE html>
                         </td>
                         <td width="50%" style="padding: 0 0 0 4px;">
                           <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"><tr>
-                            <td style="padding: 6px 12px; background: rgba(238, 212, 240, 0.06); background-color: #12101C; border-radius: 20px; text-align: center;">
-                              <p style="margin: 0; font-size: 15px; color: #CA7FCD; font-family: ${FONT};">&#128172; 1 chat</p>
+                            <td style="padding: 6px 12px; background: rgba(255, 255, 255, 0.04); background-color: #12101C; border-radius: 20px; text-align: center;">
+                              <p style="margin: 0; font-size: 15px; color: #E2E8F0; font-family: ${FONT};">&#128172; 1 chat</p>
                             </td>
                           </tr></table>
                         </td>
