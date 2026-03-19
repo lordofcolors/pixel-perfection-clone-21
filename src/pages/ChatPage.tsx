@@ -1,3 +1,4 @@
+import screenShareImg from "@/assets/screen-share-preview.png";
 import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Image, Map, Send, Smile, Minimize2, Maximize2 } from "lucide-react";
