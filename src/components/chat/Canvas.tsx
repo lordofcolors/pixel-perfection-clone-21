@@ -46,6 +46,7 @@ interface CanvasProps {
   inputValue: string;
   onInputChange: (val: string) => void;
   onSend: () => void;
+  onToggleChat: () => void;
 }
 
 // ---------------------------------------------------------------------------
