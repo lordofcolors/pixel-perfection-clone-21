@@ -395,7 +395,7 @@ const ChatPage = () => {
                     </div>
                   )}
 
-                  {!chatOpen && <div className="flex flex-1 items-center justify-center px-4 py-2">{inlineChatWithResponse}</div>}
+                  {!chatOpen && <div className="flex-shrink-0 flex items-center justify-center px-4 py-2">{inlineChatWithResponse}</div>}
                 </div>
               </>
             ) : (
