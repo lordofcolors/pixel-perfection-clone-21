@@ -233,7 +233,7 @@ export function Canvas({
   };
 
   // Canvas height must encompass ALL rows of panels plus clearance for the subtitle/input stack
-  const canvasBottomClearance = hasSidePanels ? 120 : 24;
+  const canvasBottomClearance = hasSidePanels ? (activeSidePanels.length >= 2 ? 120 : 80) : 24;
   const canvasHeight = expandedPanel
     ? 560 + extraH + canvasBottomClearance
     : hasSidePanels
