@@ -61,8 +61,11 @@ const ChatPage = () => {
   const [chatOpen, setChatOpen] = useState(false);
   const [expandedPanel, setExpandedPanel] = useState<"rive" | "image" | "skill" | null>(null);
 
-  // Latest AI response to show above input
+  // Latest AI response to show above input — with typewriter
   const [latestAiText, setLatestAiText] = useState("");
+  const [displayedAiText, setDisplayedAiText] = useState("");
+  const [isTypingResponse, setIsTypingResponse] = useState(false);
+  const aiTypingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Chat messages
   const greetingText = `Hi${firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!`;
