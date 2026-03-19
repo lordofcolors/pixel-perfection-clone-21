@@ -151,7 +151,30 @@ export function SkillMapPanel({ className, hideTitle }: SkillMapPanelProps) {
   const [edges] = useEdgesState(skillEdges);
 
   return (
-    <div className={className} style={{ width: "100%", height: "100%" }}>
+    <div className={`${className || ""} skill-map-panel`} style={{ width: "100%", height: "100%" }}>
+      <style>{`
+        .skill-map-panel .react-flow__controls {
+          background: hsl(222 47% 11% / 0.9);
+          border: 1px solid hsl(215 25% 27%);
+          border-radius: 8px;
+          box-shadow: 0 2px 8px hsl(0 0% 0% / 0.3);
+        }
+        .skill-map-panel .react-flow__controls-button {
+          background: transparent;
+          border-bottom: 1px solid hsl(215 25% 27%);
+          fill: hsl(210 40% 80%);
+          color: hsl(210 40% 80%);
+        }
+        .skill-map-panel .react-flow__controls-button:hover {
+          background: hsl(215 25% 20%);
+        }
+        .skill-map-panel .react-flow__controls-button:last-child {
+          border-bottom: none;
+        }
+        .skill-map-panel .react-flow__controls-button svg {
+          fill: hsl(210 40% 80%);
+        }
+      `}</style>
       <ReactFlow
         nodes={nodes}
         edges={edges}
