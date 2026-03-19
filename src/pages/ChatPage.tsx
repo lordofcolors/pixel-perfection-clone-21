@@ -358,8 +358,8 @@ const ChatPage = () => {
 
                   {/* Non-rive expanded content */}
                   {expandedPanel && expandedPanel !== "rive" && (
-                    <div className="flex flex-1 items-stretch px-4 py-1.5">
-                      <div className="relative mx-auto h-full w-full max-w-4xl overflow-hidden rounded-lg border border-border/40 bg-card/20">
+                    <div className="flex flex-1 items-stretch px-4 py-1.5 min-h-0">
+                      <div className="relative mx-auto h-full w-full max-w-3xl overflow-auto rounded-lg border border-border/40 bg-card/20">
                         <Button
                           variant="ghost"
                           size="icon"
@@ -369,7 +369,7 @@ const ChatPage = () => {
                         >
                           <Minimize2 className="h-4 w-4" />
                         </Button>
-                        <div className="h-full w-full overflow-hidden">{renderExpandedContent(expandedPanel)}</div>
+                        <div className="h-full w-full">{renderExpandedContent(expandedPanel)}</div>
                       </div>
                     </div>
                   )}
