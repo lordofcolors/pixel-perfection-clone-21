@@ -106,6 +106,7 @@ const ChatPage = () => {
               inputValue={session.inputValue}
               onInputChange={session.setInputValue}
               onSend={session.handleInlineSend}
+              onToggleChat={() => setChatOpen((v) => !v)}
             />
           </div>
 

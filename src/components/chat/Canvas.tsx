@@ -46,6 +46,7 @@ interface CanvasProps {
   inputValue: string;
   onInputChange: (val: string) => void;
   onSend: () => void;
+  onToggleChat: () => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -76,6 +77,7 @@ export function Canvas({
   inputValue,
   onInputChange,
   onSend,
+  onToggleChat,
 }: CanvasProps) {
   // -----------------------------------------------------------------------
   // Active panels
@@ -399,6 +401,8 @@ export function Canvas({
             inputValue={inputValue}
             onInputChange={onInputChange}
             onSend={onSend}
+            onToggleChat={onToggleChat}
+            isChatOpen={chatOpen}
           />
         </div>
       )}

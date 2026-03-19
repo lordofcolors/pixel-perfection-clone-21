@@ -16,21 +16,18 @@
  * vertical space between the panel grid and the bottom toolbar.
  */
 
-import { Send, Smile } from "lucide-react";
+import { Send, Smile, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface InlineChatInputProps {
-  /** The text to display in the AI response bubble. */
   responseBubbleText: string;
-  /** Whether to show the blinking typewriter cursor. */
   showCursor: boolean;
-  /** Current value of the text input. */
   inputValue: string;
-  /** Callback when the input value changes. */
   onInputChange: (value: string) => void;
-  /** Callback to send the current message. */
   onSend: () => void;
+  onToggleChat?: () => void;
+  isChatOpen?: boolean;
 }
 
 export function InlineChatInput({
@@ -39,22 +36,38 @@ export function InlineChatInput({
   inputValue,
   onInputChange,
   onSend,
+  onToggleChat,
+  isChatOpen,
 }: InlineChatInputProps) {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-2">
       {/* AI response bubble with typewriter effect */}
-      <div
-        className={`rounded-xl border border-border/30 bg-card/40 p-3 backdrop-blur-sm transition-opacity duration-700 ${
-          responseBubbleText ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <p className="min-h-[1rem] text-center text-sm text-foreground">
-          {responseBubbleText}
-          {/* Blinking cursor shown while the typewriter is active */}
-          {showCursor && (
-            <span className="ml-0.5 inline-block h-[0.85em] w-[2px] animate-pulse bg-foreground align-text-bottom" />
-          )}
-        </p>
+      <div className="flex items-center gap-2">
+        <div
+          className={`flex-1 rounded-xl border border-border/30 bg-card/40 p-3 backdrop-blur-sm transition-opacity duration-700 ${
+            responseBubbleText ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <p className="min-h-[1rem] text-center text-sm text-foreground">
+            {responseBubbleText}
+            {showCursor && (
+              <span className="ml-0.5 inline-block h-[0.85em] w-[2px] animate-pulse bg-foreground align-text-bottom" />
+            )}
+          </p>
+        </div>
+        {onToggleChat && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`h-8 w-8 flex-shrink-0 rounded-full ${
+              isChatOpen ? "text-foreground" : "text-muted-foreground"
+            }`}
+            onClick={onToggleChat}
+            title={isChatOpen ? "Close chat" : "Open chat"}
+          >
+            <MessageCircle className="h-4 w-4" />
+          </Button>
+        )}
       </div>
 
       {/* Text input bar */}
