@@ -280,6 +280,7 @@ const ChatPage = () => {
     { key: "rive" as const, active: true },
     { key: "image" as const, active: imageSearchOn },
     { key: "skill" as const, active: skillMapOn },
+    { key: "screen" as const, active: screenShareOn },
   ].filter((panel) => panel.active);
 
   const renderThumbnailContent = (key: "rive" | "image" | "skill") => {
