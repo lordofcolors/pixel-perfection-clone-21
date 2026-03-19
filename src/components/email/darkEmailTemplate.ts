@@ -172,7 +172,7 @@ function buildLearnerCard(data: typeof VIVAAN) {
             <td width="50%" style="padding: 0 0 6px 4px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid rgba(148,223,233,0.15); text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; color: #94DFE9; font-family: ${FONT};">Time Spent: ${data.time}</p>
+                  <p style="margin: 0; font-size: 14px; color: #94DFE9; font-family: ${FONT};">Total Time: ${data.time}</p>
                 </td>
               </tr></table>
             </td>
