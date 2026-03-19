@@ -249,7 +249,7 @@ const ChatPage = () => {
     if (key === "skill") {
       return (
         <div className="w-full h-full overflow-hidden relative">
-          <SkillMapPanel className="pointer-events-none" />
+          <SkillMapPanel className="pointer-events-none" hideTitle />
         </div>
       );
     }
