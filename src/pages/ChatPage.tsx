@@ -179,6 +179,23 @@ const ChatPage = () => {
     if (showContent && rive) rive.play();
   }, [showContent, rive]);
 
+  useEffect(() => {
+    if (!rive) return;
+
+    const syncLayout = () => {
+      window.dispatchEvent(new Event("resize"));
+      (rive as unknown as { resizeDrawingSurfaceToCanvas?: () => void }).resizeDrawingSurfaceToCanvas?.();
+    };
+
+    const rafId = requestAnimationFrame(syncLayout);
+    const timeoutId = window.setTimeout(syncLayout, 1050);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.clearTimeout(timeoutId);
+    };
+  }, [rive, hasSidePanels, expandedPanel]);
+
   const handleDisconnect = () => {
     setSessionEnded(true);
     setTimeout(() => setShowContinueModal(true), 1000);
