@@ -316,7 +316,7 @@ const ChatPage = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="h-8 w-8 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <span className="text-sm text-muted-foreground">A by Xolv Companion</span>
+          <span className="text-sm text-muted-foreground">Quick Start</span>
         </div>
 
         <div className="flex items-center gap-6">

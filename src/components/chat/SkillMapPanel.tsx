@@ -152,11 +152,6 @@ export function SkillMapPanel({ className, hideTitle }: SkillMapPanelProps) {
 
   return (
     <div className={className} style={{ width: "100%", height: "100%" }}>
-      {!hideTitle && (
-        <div className="absolute top-3 left-4 z-10 text-sm font-semibold text-foreground">
-          Quick Start
-        </div>
-      )}
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -169,6 +164,7 @@ export function SkillMapPanel({ className, hideTitle }: SkillMapPanelProps) {
         proOptions={{ hideAttribution: true }}
       >
         <Background color="hsl(215 25% 20%)" gap={20} size={1} />
+        {!hideTitle && <Controls showInteractive={false} />}
       </ReactFlow>
     </div>
   );
