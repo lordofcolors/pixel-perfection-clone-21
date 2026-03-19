@@ -87,7 +87,58 @@ export function Canvas({
   if (screenShareOn) activeSidePanels.push("screen");
 
   const hasSidePanels = activeSidePanels.length > 0;
-  const allActivePanels: PanelKey[] = ["rive", ...activeSidePanels];
+
+  // Track exiting panels for slide-out animation
+  const [exitingPanels, setExitingPanels] = useState<Set<PanelKey>>(new Set());
+  const prevSidePanelsRef = useRef<Array<"image" | "skill" | "screen">>(activeSidePanels);
+
+  useEffect(() => {
+    const prev = prevSidePanelsRef.current;
+    const removed = prev.filter((p) => !activeSidePanels.includes(p));
+    if (removed.length > 0) {
+      setExitingPanels((s) => {
+        const next = new Set(s);
+        removed.forEach((p) => next.add(p));
+        return next;
+      });
+      // Remove from exiting after animation completes
+      const timer = setTimeout(() => {
+        setExitingPanels((s) => {
+          const next = new Set(s);
+          removed.forEach((p) => next.delete(p));
+          return next;
+        });
+      }, 500);
+      prevSidePanelsRef.current = activeSidePanels;
+      return () => clearTimeout(timer);
+    }
+    prevSidePanelsRef.current = activeSidePanels;
+  }, [activeSidePanels.join(",")]);
+
+  // Track entering panels for slide-in animation
+  const [enteringPanels, setEnteringPanels] = useState<Set<PanelKey>>(new Set());
+  const prevSidePanelsForEnterRef = useRef<Array<"image" | "skill" | "screen">>(activeSidePanels);
+
+  useEffect(() => {
+    const prev = prevSidePanelsForEnterRef.current;
+    const added = activeSidePanels.filter((p) => !prev.includes(p));
+    if (added.length > 0) {
+      setEnteringPanels(new Set(added));
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setEnteringPanels(new Set());
+        });
+      });
+    }
+    prevSidePanelsForEnterRef.current = activeSidePanels;
+  }, [activeSidePanels.join(",")]);
+
+  // Combine active + exiting for rendering
+  const allActivePanels: PanelKey[] = [
+    "rive",
+    ...activeSidePanels,
+    ...Array.from(exitingPanels).filter((p) => !activeSidePanels.includes(p as "image" | "skill" | "screen")),
+  ];
 
   const extraH = chatOpen ? 100 : 0;
 
