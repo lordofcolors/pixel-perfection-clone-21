@@ -269,7 +269,7 @@ export function buildLightEmailHTML(): string {
                     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                       <td height="80" style="text-align: center; padding: 12px 4px; height: 80px; border-radius: 10px; border: 1px solid ${BORDER}; background-color: #ffffff; vertical-align: middle;">
                         <p style="margin: 0; font-size: 28px; font-weight: 600; color: ${BLUE}; font-family: ${FONT};">12</p>
-                        <p style="margin: 4px 0 0; font-size: 11px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Sessions Combined</p>
+                        <p style="margin: 4px 0 0; font-size: 11px; color: ${TEXT_MUTED}; text-transform: uppercase; letter-spacing: 0.5px; font-family: ${FONT};">Total Sessions Combined</p>
                       </td>
                     </tr></table>
                   </td>
