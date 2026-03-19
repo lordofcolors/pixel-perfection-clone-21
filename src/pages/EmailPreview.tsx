@@ -249,8 +249,8 @@ const EMAIL_HTML = `<!DOCTYPE html>
                         </td>
                         <td width="50%" style="padding: 0 0 0 4px;">
                           <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"><tr>
-                            <td style="padding: 6px 12px; background: rgba(238, 212, 240, 0.06); background-color: #12101C; border-radius: 20px; text-align: center;">
-                              <p style="margin: 0; font-size: 15px; color: #CA7FCD; font-family: ${FONT};">&#128172; 3 chats</p>
+                            <td style="padding: 6px 12px; background: rgba(255, 255, 255, 0.04); background-color: #12101C; border-radius: 20px; text-align: center;">
+                              <p style="margin: 0; font-size: 15px; color: #E2E8F0; font-family: ${FONT};">&#128172; 3 chats</p>
                             </td>
                           </tr></table>
                         </td>
