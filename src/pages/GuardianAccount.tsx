@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { saveGuardianSetup } from "@/lib/store";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -62,7 +63,6 @@ export default function GuardianAccount() {
   const onSubmit = (data: GuardianForm) => {
     // persist changes
     const learnersOut = (data.learners || []).map((l) => ({ name: l.fullName || 'Learner' }));
-    const { saveGuardianSetup } = require("@/lib/store");
     saveGuardianSetup({ guardianName: data.fullName || 'Guardian', learners: learnersOut, accountMode: data.accountMode });
     toast.success("Account settings saved");
   };
