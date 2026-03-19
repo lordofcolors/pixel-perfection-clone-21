@@ -62,8 +62,8 @@ export function ChatTranscriptPanel({ firstName, onClose, messages, onSendMessag
         <div ref={bottomRef} />
       </div>
 
-      <div className="px-3 pt-2 pb-1">
-        <p className="text-[10px] text-muted-foreground/40 text-center">
+      <div className="px-3 pt-2 pb-3">
+        <p className="text-[10px] text-foreground/50 text-center">
           Your video and audio data will NOT be saved
         </p>
       </div>
