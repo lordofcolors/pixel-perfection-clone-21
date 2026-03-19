@@ -143,17 +143,20 @@ const skillEdges: Edge[] = [
 
 interface SkillMapPanelProps {
   className?: string;
+  hideTitle?: boolean;
 }
 
-export function SkillMapPanel({ className }: SkillMapPanelProps) {
+export function SkillMapPanel({ className, hideTitle }: SkillMapPanelProps) {
   const [nodes] = useNodesState(skillNodes);
   const [edges] = useEdgesState(skillEdges);
 
   return (
     <div className={className} style={{ width: "100%", height: "100%" }}>
-      <div className="absolute top-3 left-4 z-10 text-sm font-semibold text-foreground">
-        Introduction to Jump Rope
-      </div>
+      {!hideTitle && (
+        <div className="absolute top-3 left-4 z-10 text-sm font-semibold text-foreground">
+          Introduction to Jump Rope
+        </div>
+      )}
       <ReactFlow
         nodes={nodes}
         edges={edges}

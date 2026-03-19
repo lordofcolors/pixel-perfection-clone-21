@@ -169,19 +169,22 @@ const ChatPage = () => {
     );
   }
 
-  // Greeting bubble inside Rive tile
-  const greetingBubble = (
-    <div
-      className={`rounded-xl border border-border/30 p-2.5 bg-card/40 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
-    >
-      <p className="text-center text-foreground text-xs min-h-[1rem]">
-        {typedText}
-        {showGreeting && typedText.length < greetingText.length && (
-          <span className="inline-block w-[2px] h-[0.85em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
-        )}
-      </p>
-    </div>
-  );
+  // Greeting bubble inside Rive tile — larger text
+  const greetingBubble = (size: "sm" | "md" | "lg" = "md") => {
+    const textSize = size === "lg" ? "text-base" : size === "md" ? "text-sm" : "text-xs";
+    return (
+      <div
+        className={`rounded-xl border border-border/30 p-3 bg-card/40 backdrop-blur-sm transition-opacity duration-[2000ms] ${showGreeting ? "opacity-100" : "opacity-0"}`}
+      >
+        <p className={`text-center text-foreground ${textSize} min-h-[1rem]`}>
+          {typedText}
+          {showGreeting && typedText.length < greetingText.length && (
+            <span className="inline-block w-[2px] h-[0.85em] bg-foreground ml-0.5 animate-pulse align-text-bottom" />
+          )}
+        </p>
+      </div>
+    );
+  };
 
   // Inline chat input (no expand button)
   const inlineChatInput = (
