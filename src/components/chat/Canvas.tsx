@@ -33,7 +33,7 @@ import screenShareImg from "@/assets/screen-share-preview.png";
 // Props
 // ---------------------------------------------------------------------------
 
-interface UnifiedPanelLayoutProps {
+interface CanvasProps {
   RiveComponent: React.ComponentType<{ className?: string }>;
   imageSearchOn: boolean;
   skillMapOn: boolean;
