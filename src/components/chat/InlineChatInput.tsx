@@ -16,7 +16,7 @@
  * vertical space between the panel grid and the bottom toolbar.
  */
 
-import { Send, Smile, MessageCircle } from "lucide-react";
+import { Send, Smile, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -42,30 +42,30 @@ export function InlineChatInput({
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-2">
       {/* AI response bubble with typewriter effect */}
-      <div className="flex items-center gap-2">
-        <div
-          className={`flex-1 rounded-xl border border-border/30 bg-card/40 p-3 backdrop-blur-sm transition-opacity duration-700 ${
-            responseBubbleText ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <p className="min-h-[1rem] text-center text-sm text-foreground">
-            {responseBubbleText}
-            {showCursor && (
-              <span className="ml-0.5 inline-block h-[0.85em] w-[2px] animate-pulse bg-foreground align-text-bottom" />
-            )}
-          </p>
-        </div>
+      <div
+        className={`relative rounded-xl border border-border/30 bg-card/40 p-3 backdrop-blur-sm transition-opacity duration-700 ${
+          responseBubbleText ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <p className="min-h-[1rem] text-center text-sm text-foreground pr-7">
+          {responseBubbleText}
+          {showCursor && (
+            <span className="ml-0.5 inline-block h-[0.85em] w-[2px] animate-pulse bg-foreground align-text-bottom" />
+          )}
+        </p>
         {onToggleChat && (
           <Button
             variant="ghost"
             size="icon"
-            className={`h-8 w-8 flex-shrink-0 rounded-full ${
-              isChatOpen ? "text-foreground" : "text-muted-foreground"
-            }`}
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground"
             onClick={onToggleChat}
-            title={isChatOpen ? "Close chat" : "Open chat"}
+            title={isChatOpen ? "Collapse chat" : "Expand chat"}
           >
-            <MessageCircle className="h-4 w-4" />
+            {isChatOpen ? (
+              <Minimize2 className="h-3.5 w-3.5" />
+            ) : (
+              <Maximize2 className="h-3.5 w-3.5" />
+            )}
           </Button>
         )}
       </div>
