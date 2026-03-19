@@ -43,7 +43,7 @@ const ChatPage = () => {
   const [skillMapOn, setSkillMapOn] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [expandedPanel, setExpandedPanel] = useState<"rive" | "image" | "skill">("rive");
-  const [viewMode, setViewMode] = useState<"speaker" | "gallery">("speaker");
+  const [viewMode, setViewMode] = useState<"speaker" | "gallery">("gallery");
 
   const greetingText = `Hi${firstName ? `, ${firstName}` : ""}! I'm A! It's nice to meet you!`;
   const hasSidePanels = imageSearchOn || skillMapOn;
