@@ -26,6 +26,7 @@ const ChatPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { firstName } = (location.state as { firstName?: string }) || {};
+  const [message, setMessage] = useState("");
 
   // Loading state
   const [isLoading, setIsLoading] = useState(true);
