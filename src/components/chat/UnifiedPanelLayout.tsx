@@ -20,7 +20,7 @@
  * with no DOM re-ordering or remounting.
  */
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImageSearchPanel } from "@/components/chat/ImageSearchPanel";
