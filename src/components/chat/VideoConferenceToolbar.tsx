@@ -47,7 +47,7 @@ export function VideoConferenceToolbar({
           </span>
         </div>
 
-        <div className="flex flex-col items-center gap-0.5">
+        <div className="flex flex-col items-center gap-1.5">
           <Button
             variant="outline"
             size="icon"
