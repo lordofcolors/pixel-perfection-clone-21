@@ -163,10 +163,7 @@ function SkillMapInner({ hideTitle }: { hideTitle?: boolean }) {
     if (!el) return;
 
     const observer = new ResizeObserver(() => {
-      // Small delay lets React Flow update its internal dimensions first
-      requestAnimationFrame(() => {
-        fitView({ padding: 0.3, duration: 300 });
-      });
+      fitView({ padding: 0.3, duration: 0 });
     });
 
     observer.observe(el);
