@@ -448,7 +448,7 @@ const ChatPage = () => {
                     <RiveComponent className="w-full h-full" />
                   </div>
                 </div>
-                <div className="px-4 pb-2 w-full">
+                <div className="flex items-center justify-center px-4 py-3 w-full">
                   {inlineChatWithResponse}
                 </div>
               </div>
