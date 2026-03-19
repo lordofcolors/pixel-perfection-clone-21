@@ -276,19 +276,13 @@ const ChatPage = () => {
 
   const renderExpandedContent = (key: "rive" | "image" | "skill") => {
     if (key === "rive") {
-      return (
-        <div className="flex h-full items-center justify-center p-4">
-          <div className="h-full w-full max-h-[380px] max-w-[380px]">
-            <RiveComponent className="h-full w-full" />
-          </div>
-        </div>
-      );
+      return null; // Rive is rendered persistently outside
     }
 
     if (key === "image") {
       return (
         <div className="h-full overflow-auto p-4">
-          <div className="mx-auto w-full max-w-3xl overflow-hidden rounded-md">
+          <div className="mx-auto w-full max-w-2xl max-h-full overflow-hidden rounded-md">
             <ImageSearchPanel className="w-full" variant="expanded" />
           </div>
         </div>
