@@ -291,18 +291,27 @@ export function Canvas({
       <div className="relative flex-1 px-4 pt-4">
         <div className="relative mx-auto h-full w-full max-w-5xl">
           {allActivePanels.map((key) => {
+            const isExiting = exitingPanels.has(key);
+            const isEntering = enteringPanels.has(key);
             const style = getPanelStyle(key);
             const isExpanded = expandedPanel === key;
             const isThumbnail = expandedPanel !== null && !isExpanded;
             const isGalleryWithSides = !expandedPanel && hasSidePanels;
 
+            // Slide transform for enter/exit
+            const slideTransform = isExiting
+              ? "translateX(120%)"
+              : isEntering
+                ? "translateX(120%)"
+                : "translateX(0)";
+
             return (
               <div
                 key={key}
                 className={`absolute overflow-hidden rounded-lg transition-colors ${
-                  key !== "rive" && !isTransitioning ? "border border-border/50 bg-card/20" : ""
+                  key !== "rive" && !isTransitioning && !isExiting ? "border border-border/50 bg-card/20" : ""
                 } ${
-                  key !== "rive" && isTransitioning ? "border border-transparent bg-card/20" : ""
+                  key !== "rive" && (isTransitioning || isExiting) ? "border border-transparent bg-card/20" : ""
                 } ${
                   isThumbnail
                     ? `cursor-pointer`
@@ -310,8 +319,14 @@ export function Canvas({
                 } ${
                   isGalleryWithSides ? "cursor-pointer" : ""
                 }`}
-                style={{ ...style, transition: TRANSITION }}
+                style={{
+                  ...style,
+                  transform: key !== "rive" ? slideTransform : undefined,
+                  opacity: isExiting ? 0 : 1,
+                  transition: `${TRANSITION}, transform 0.5s ease-in-out`,
+                }}
                 onClick={() => {
+                  if (isExiting) return;
                   if (isThumbnail) onExpandPanel(key);
                   else if (isGalleryWithSides) onExpandPanel(key);
                 }}
