@@ -128,19 +128,17 @@ function buildStackedChart(href: string, title: string, subtitle: string, days: 
 }
 
 /**
- * ── AI Insights Card ──
- * Displays the AI-generated weekly summary for a learner.
- * Prefixed with a ✨ emoji. Links to the AI insights section.
+ * ── Weekly Insights CTA ──
+ * Centered call-to-action linking to the learner's weekly insights page.
  */
-function buildAIInsights(href: string, text: string) {
-  return `<a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-top: 10px;">
-    <tr><td style="padding: 14px 16px; background-color: #0E1225; border: 1px solid rgba(185,198,254,0.15); border-radius: 10px;">
-      <p style="margin: 0 0 6px; font-size: 11px; font-weight: 600; color: #B9C6FE; font-family: ${FONT};">\u2728 AI Insights</p>
-      <p style="margin: 0; font-size: 13px; color: #CBD5E1; line-height: 1.5; font-family: ${FONT};">${text}</p>
+function buildInsightsCTA(href: string, learnerName: string) {
+  return `<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-top: 10px;">
+    <tr><td align="center" style="padding: 14px 16px; background-color: #0E1225; border: 1px solid rgba(185,198,254,0.15); border-radius: 10px;">
+      <a href="${href}" target="_blank" style="display: inline-block; padding: 10px 28px; background: linear-gradient(135deg, #EED4F0 0%, #94DFE9 50%, #B9C6FE 100%); background-color: #B9C6FE; color: #0F172A; font-family: ${FONT}; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 9999px;">
+        View ${learnerName}\u2019s Weekly Insights \u2192
+      </a>
     </td></tr>
-  </table>
-  </a>`;
+  </table>`;
 }
 
 /**
@@ -242,7 +240,7 @@ function buildLearnerCard(data: LearnerData, dateRange: string, dayLabels: strin
         ${buildChart(urlTrends, 'Sessions per Day', 'Number of sessions', DAYS, data.sessionsPerDay, '#B9C6FE', 4)}
       </tr>
     </table>
-    ${buildAIInsights(urlInsights, data.aiInsight)}`;
+    ${buildInsightsCTA(urlInsights, data.name)}`;
 
   return `
   <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom: 14px;">
@@ -283,14 +281,14 @@ function buildLearnerCard(data: LearnerData, dateRange: string, dayLabels: strin
             <td width="50%" style="padding: 0 4px 6px 0;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid rgba(238,212,240,0.15); text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; color: #EED4F0; font-family: ${FONT};">${data.sessions} Sessions This Week</p>
+                  <p style="margin: 0; font-size: 14px; color: #EED4F0; font-family: ${FONT};"><span style="font-weight: 700;">${data.sessions} Sessions</span> This Week</p>
                 </td>
               </tr></table>
             </td>
             <td width="50%" style="padding: 0 0 6px 4px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid rgba(148,223,233,0.15); text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; color: #94DFE9; font-family: ${FONT};">Total Time: ${data.time}</p>
+                  <p style="margin: 0; font-size: 14px; color: #94DFE9; font-family: ${FONT};"><span style="font-weight: 700;">Total Time:</span> ${data.time}</p>
                 </td>
               </tr></table>
             </td>
@@ -299,14 +297,14 @@ function buildLearnerCard(data: LearnerData, dateRange: string, dayLabels: strin
             <td width="50%" style="padding: 0 4px 0 0;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid rgba(185,198,254,0.15); text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; color: #B9C6FE; font-family: ${FONT};">${data.lessons} Lessons Explored</p>
+                  <p style="margin: 0; font-size: 14px; color: #B9C6FE; font-family: ${FONT};"><span style="font-weight: 700;">${data.lessons} Lessons</span> Explored</p>
                 </td>
               </tr></table>
             </td>
             <td width="50%" style="padding: 0 0 0 4px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; color: #E2E8F0; font-family: ${FONT};">${data.chats} Conversations Had</p>
+                  <p style="margin: 0; font-size: 14px; color: #E2E8F0; font-family: ${FONT};"><span style="font-weight: 700;">${data.chats} Conversations</span> Had</p>
                 </td>
               </tr></table>
             </td>
