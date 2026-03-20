@@ -62,6 +62,10 @@ export function PanelContent({
 
     const maxW = isThumbnail ? THUMB_W : maxSize;
 
+    // Scale the mute button based on layout state
+    const btnSize = isThumbnail ? 'h-6 w-6' : hasSidePanels ? 'h-8 w-8' : 'h-10 w-10';
+    const iconSize = isThumbnail ? 'h-3 w-3' : hasSidePanels ? 'h-4 w-4' : 'h-5 w-5';
+
     return (
       <div className="relative flex h-full w-full items-center justify-center">
         <div
@@ -70,12 +74,12 @@ export function PanelContent({
         >
           <RiveComponent className="h-full w-full" />
 
-          {/* Mute agent icon — top-right, hugging the Rive animation */}
+          {/* Mute agent icon — near top-right of Rive character */}
           {!isThumbnail && onToggleAgentMute && (
             <Button
               variant="ghost"
               size="icon"
-              className={`absolute right-0 top-[10%] z-10 h-8 w-8 rounded-full border ${
+              className={`absolute right-[8%] top-[15%] z-10 rounded-full border transition-all duration-700 ${btnSize} ${
                 isAgentMuted
                   ? "border-destructive/30 bg-destructive/10"
                   : "border-border/50 bg-background/30 backdrop-blur-sm"
@@ -84,9 +88,9 @@ export function PanelContent({
               title={isAgentMuted ? "Unmute Agent" : "Mute Agent"}
             >
               {isAgentMuted ? (
-                <VolumeX className="h-4 w-4 text-destructive" />
+                <VolumeX className={`${iconSize} text-destructive`} />
               ) : (
-                <Volume2 className="h-4 w-4 text-muted-foreground" />
+                <Volume2 className={`${iconSize} text-muted-foreground`} />
               )}
             </Button>
           )}
