@@ -65,7 +65,7 @@ function buildChart(href: string, title: string, subtitle: string, days: string[
   return `<td class="chart-cell" style="padding: 6px; width: 50%; vertical-align: top;">
     <a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
-      <tr><td style="padding: 14px; height: 120px; background-color: ${BG_CARD}; border: 1px solid ${BORDER}; border-radius: 10px; vertical-align: top;">
+      <tr><td style="padding: 14px; height: 140px; background-color: ${BG_CARD}; border: 1px solid ${BORDER}; border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${title}</p>
         <p style="margin: 0 0 10px; font-size: 9px; color: ${TEXT_MUTED}; font-family: ${FONT};">${subtitle}</p>
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${bars}</tr></table>
@@ -92,7 +92,7 @@ function buildStackedChart(href: string, title: string, subtitle: string, days: 
   return `<td class="chart-cell" style="padding: 6px; width: 50%; vertical-align: top;">
     <a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
-      <tr><td style="padding: 14px; height: 120px; background-color: ${BG_CARD}; border: 1px solid ${BORDER}; border-radius: 10px; vertical-align: top;">
+      <tr><td style="padding: 14px; height: 140px; background-color: ${BG_CARD}; border: 1px solid ${BORDER}; border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: ${TEXT_PRIMARY}; font-family: ${FONT};">${title}</p>
         <p style="margin: 0 0 10px; font-size: 9px; color: ${TEXT_MUTED}; font-family: ${FONT};">${subtitle}</p>
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${bars}</tr></table>
@@ -108,8 +108,8 @@ function buildStackedChart(href: string, title: string, subtitle: string, days: 
 
 function buildInsightsCTA(href: string, learnerName: string) {
   return `<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-top: 10px;">
-    <tr><td align="center" style="padding: 14px 16px; background-color: #EEF2FF; border: 1px solid ${BLUE_LIGHT}; border-radius: 10px;">
-      <a href="${href}" target="_blank" style="display: inline-block; padding: 10px 28px; background: linear-gradient(135deg, ${MAGENTA_LIGHT} 0%, ${TEAL} 50%, ${BLUE} 100%); background-color: ${BLUE}; color: #ffffff; font-family: ${FONT}; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 9999px;">
+    <tr><td align="center" style="padding: 14px 16px;">
+      <a href="${href}" target="_blank" style="display: inline-block; padding: 10px 28px; background: linear-gradient(135deg, ${MAGENTA} 0%, ${TEAL} 60%, ${BLUE} 100%); background-color: ${MAGENTA}; color: #0F172A; font-family: ${FONT}; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 9999px;">
         View ${learnerName}\u2019s Weekly Insights \u2192
       </a>
     </td></tr>
@@ -226,14 +226,14 @@ function buildLearnerCard(data: LearnerData, dateRange: string, dayLabels: strin
             <td width="50%" style="padding: 0 4px 6px 0;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; font-family: ${FONT};"><span style="font-weight: 700; color: ${MAGENTA};">${data.sessions} Sessions</span> <span style="color: ${TEXT_PRIMARY};">This Week</span></p>
+                  <p style="margin: 0; font-size: 14px; color: ${MAGENTA}; font-family: ${FONT};"><span style="font-weight: 700;">${data.sessions} Sessions</span> This Week</p>
                 </td>
               </tr></table>
             </td>
             <td width="50%" style="padding: 0 0 6px 4px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; font-family: ${FONT};"><span style="font-weight: 700; color: ${TEAL};">Total Time:</span> <span style="color: ${TEXT_PRIMARY};">${data.time}</span></p>
+                  <p style="margin: 0; font-size: 14px; color: ${TEAL}; font-family: ${FONT};"><span style="font-weight: 700;">Total Time:</span> ${data.time}</p>
                 </td>
               </tr></table>
             </td>
@@ -242,14 +242,14 @@ function buildLearnerCard(data: LearnerData, dateRange: string, dayLabels: strin
             <td width="50%" style="padding: 0 4px 0 0;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; font-family: ${FONT};"><span style="font-weight: 700; color: ${BLUE};">${data.lessons} Lessons</span> <span style="color: ${TEXT_PRIMARY};">Explored</span></p>
+                  <p style="margin: 0; font-size: 14px; color: ${BLUE}; font-family: ${FONT};"><span style="font-weight: 700;">${data.lessons} Lessons</span> Explored</p>
                 </td>
               </tr></table>
             </td>
             <td width="50%" style="padding: 0 0 0 4px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid ${BORDER}; text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; font-family: ${FONT};"><span style="font-weight: 700; color: ${MAGENTA};">${data.chats} Conversations</span> <span style="color: ${TEXT_PRIMARY};">Had</span></p>
+                  <p style="margin: 0; font-size: 14px; color: ${MAGENTA}; font-family: ${FONT};"><span style="font-weight: 700;">${data.chats} Conversations</span> Had</p>
                 </td>
               </tr></table>
             </td>

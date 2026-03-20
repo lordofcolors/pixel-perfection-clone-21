@@ -81,7 +81,7 @@ function buildChart(href: string, title: string, subtitle: string, days: string[
   return `<td class="chart-cell" style="padding: 6px; width: 50%; vertical-align: top;">
     <a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
-      <tr><td style="padding: 12px; height: 120px; background-color: #111827; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; vertical-align: top;">
+      <tr><td style="padding: 12px; height: 140px; background-color: #111827; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: #E2E8F0; font-family: ${FONT};">${title}</p>
         <p style="margin: 0 0 10px; font-size: 9px; color: #94A3B8; font-family: ${FONT};">${subtitle}</p>
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${bars}</tr></table>
@@ -113,7 +113,7 @@ function buildStackedChart(href: string, title: string, subtitle: string, days: 
   return `<td class="chart-cell" style="padding: 6px; width: 50%; vertical-align: top;">
     <a href="${href}" target="_blank" style="text-decoration: none; color: inherit;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
-      <tr><td style="padding: 12px; height: 120px; background-color: #111827; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; vertical-align: top;">
+      <tr><td style="padding: 12px; height: 140px; background-color: #111827; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; vertical-align: top;">
         <p style="margin: 0 0 2px; font-size: 12px; font-weight: 600; color: #E2E8F0; font-family: ${FONT};">${title}</p>
         <p style="margin: 0 0 10px; font-size: 9px; color: #94A3B8; font-family: ${FONT};">${subtitle}</p>
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${bars}</tr></table>
@@ -133,7 +133,7 @@ function buildStackedChart(href: string, title: string, subtitle: string, days: 
  */
 function buildInsightsCTA(href: string, learnerName: string) {
   return `<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-top: 10px;">
-    <tr><td align="center" style="padding: 14px 16px; background-color: #0E1225; border: 1px solid rgba(185,198,254,0.15); border-radius: 10px;">
+    <tr><td align="center" style="padding: 14px 16px;">
       <a href="${href}" target="_blank" style="display: inline-block; padding: 10px 28px; background: linear-gradient(135deg, #EED4F0 0%, #94DFE9 50%, #B9C6FE 100%); background-color: #B9C6FE; color: #0F172A; font-family: ${FONT}; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 9999px;">
         View ${learnerName}\u2019s Weekly Insights \u2192
       </a>
