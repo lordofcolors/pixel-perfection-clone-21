@@ -362,7 +362,7 @@ export function buildLightEmailHTML(data: WeeklyDigestData = SAMPLE_DIGEST): str
                 <tr>
                   <td align="center">
                     <p style="margin: 0 0 14px; font-size: 14px; color: ${TEXT_MUTED}; font-family: ${FONT};">View the full dashboard for detailed analytics and session transcripts.</p>
-                    <a href="${dashboardUrl}" target="_blank" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, ${MAGENTA_LIGHT} 0%, ${MAGENTA} 100%); background-color: ${MAGENTA}; color: ${CTA_COLOR}; font-family: ${FONT}; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(202,127,205,0.3);">
+                    <a href="${dashboardUrl}" target="_blank" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, ${MAGENTA_LIGHT} 0%, ${MAGENTA} 100%); background-color: ${MAGENTA}; color: ${CTA_COLOR}; font-family: ${FONT}; font-size: 16px; font-weight: 400; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(202,127,205,0.3);">
                         View Full Dashboard
                     </a>
                   </td>
