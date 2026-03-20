@@ -3,32 +3,8 @@
  * Canvas
  * =============================================================================
  *
- * The main layout component for the /chat page. Renders all panels (Rive
- * assistant, image search, skill map, screen share) in a single container
- * using absolute positioning and CSS transitions — no remounting.
- *
- * ## Architecture
- *
- * ```
- * Canvas
- *  ├── usePanelTransitions()   → enter/exit/border-hide state
- *  ├── useCanvasLayout()       → CSS positions for each panel
- *  ├── PanelContent            → renders inner content per panel type
- *  └── InlineChatInput         → subtitle bubble + text input
- * ```
- *
- * ## Layout modes
- *
- * 1. **Gallery** (default) — panels sit in a responsive grid.
- * 2. **Expanded / Speaker** — one panel fills the stage, others become
- *    thumbnails. Click a thumbnail to swap, or click minimize to return.
- *
- * ## Animations
- *
- * - **Resize transitions** — `top / left / width / height` animate at 0.7s
- * - **Slide enter/exit** — side panels slide in/out from the right at 0.5s
- * - **Border hiding** — borders go transparent during transitions to avoid
- *   visual overlap, then reappear after 0.75s
+ * Main layout component for /chat. Renders all panels using absolute
+ * positioning and CSS transitions.
  */
 
 import React from "react";
@@ -42,46 +18,31 @@ import { usePanelTransitions } from "./usePanelTransitions";
 import { useCanvasLayout } from "./useCanvasLayout";
 import { PanelContent } from "./PanelContent";
 
-// ---------------------------------------------------------------------------
-// Props
-// ---------------------------------------------------------------------------
-
 interface CanvasProps {
-  /** The Rive animation component (from useRiveAssistant hook). */
   RiveComponent: React.ComponentType<{ className?: string }>;
-
-  /** Toggle states for each side panel (controlled by ChatPage). */
   imageSearchOn: boolean;
   skillMapOn: boolean;
   screenShareOn: boolean;
-
-  /** Which panel is currently expanded (null = gallery mode). */
+  webcamOn: boolean;
   expandedPanel: PanelKey | null;
   onExpandPanel: (key: PanelKey | null) => void;
-
-  /** Whether the chat transcript flyout is open. */
   chatOpen: boolean;
-
-  /** Inline chat input / subtitle state. */
   responseBubbleText: string;
   showResponseCursor: boolean;
   inputValue: string;
   onInputChange: (val: string) => void;
   onSend: () => void;
-
-  /** Toggles the chat transcript flyout via the expand/collapse icon. */
   onToggleChat: () => void;
+  isAgentMuted: boolean;
+  onToggleAgentMute: () => void;
 }
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
 
 export function Canvas({
   RiveComponent,
   imageSearchOn,
   skillMapOn,
   screenShareOn,
+  webcamOn,
   expandedPanel,
   onExpandPanel,
   chatOpen,
@@ -91,13 +52,16 @@ export function Canvas({
   onInputChange,
   onSend,
   onToggleChat,
+  isAgentMuted,
+  onToggleAgentMute,
 }: CanvasProps) {
   // ── Derive active side panels ──────────────────────────────────────────
 
-  const activeSidePanels: Array<"image" | "skill" | "screen"> = [];
+  const activeSidePanels: Array<"image" | "skill" | "screen" | "webcam"> = [];
   if (imageSearchOn) activeSidePanels.push("image");
   if (skillMapOn) activeSidePanels.push("skill");
   if (screenShareOn) activeSidePanels.push("screen");
+  if (webcamOn) activeSidePanels.push("webcam");
 
   const hasSidePanels = activeSidePanels.length > 0;
 
@@ -121,44 +85,28 @@ export function Canvas({
 
   const isGalleryWithSides = !expandedPanel && hasSidePanels;
 
-  /**
-   * Build the CSS class string for a panel container.
-   * - Non-rive panels get a border (hidden during transitions).
-   * - Thumbnails and gallery-with-sides panels are clickable.
-   */
   const getPanelClassName = (
     key: PanelKey,
     isThumbnail: boolean,
     isExiting: boolean,
   ): string => {
     const base = "absolute overflow-hidden rounded-lg transition-colors";
-
-    // Border visibility (only for non-rive panels)
     const border =
       key !== "rive"
         ? isTransitioning || isExiting
           ? "border border-transparent bg-card/20"
           : "border border-border/50 bg-card/20"
         : "";
-
-    // Pointer cursor for clickable states
     const cursor = isThumbnail || isGalleryWithSides ? "cursor-pointer" : "";
-
     return `${base} ${border} ${cursor}`;
   };
 
-  /**
-   * Build the inline style for a panel container.
-   * Handles slide-in/out transforms and transition suppression.
-   */
   const getPanelInlineStyle = (
     key: PanelKey,
     isExiting: boolean,
     isEntering: boolean,
   ): React.CSSProperties => {
     const positionStyle = getPanelStyle(key);
-
-    // Side panels slide in from / out to the right
     const transform =
       key !== "rive"
         ? isExiting || isEntering
@@ -170,8 +118,6 @@ export function Canvas({
       ...positionStyle,
       transform,
       opacity: isExiting ? 0 : 1,
-      // Suppress transitions while entering so the panel appears off-screen
-      // instantly, then the slide-in plays on the next frame
       transition: isEntering
         ? "none"
         : `${PANEL_TRANSITION}, transform 0.5s ease-in-out`,
@@ -182,8 +128,6 @@ export function Canvas({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
-
-      {/* ── Panel container ─────────────────────────────────────────── */}
       <div
         className="relative w-full px-4 pt-4"
         style={{ height: canvasHeight, transition: "height 0.7s ease-in-out" }}
@@ -206,7 +150,6 @@ export function Canvas({
                   else if (isGalleryWithSides) onExpandPanel(key);
                 }}
               >
-                {/* Expand icon — visible in gallery mode on side panels */}
                 {key !== "rive" && !expandedPanel && isGalleryWithSides && (
                   <Button
                     variant="ghost"
@@ -221,7 +164,6 @@ export function Canvas({
                   </Button>
                 )}
 
-                {/* Minimize icon — visible when a side panel is expanded */}
                 {key !== "rive" && isExpanded && (
                   <Button
                     variant="ghost"
@@ -236,20 +178,20 @@ export function Canvas({
                   </Button>
                 )}
 
-                {/* Panel content */}
                 <div className="h-full w-full">
                   <PanelContent
                     panelKey={key}
                     expandedPanel={expandedPanel}
                     hasSidePanels={hasSidePanels}
                     RiveComponent={RiveComponent}
+                    isAgentMuted={isAgentMuted}
+                    onToggleAgentMute={onToggleAgentMute}
                   />
                 </div>
               </div>
             );
           })}
 
-          {/* Minimize button for Rive in expanded view (floating at bottom) */}
           {expandedPanel === "rive" && (
             <div
               className="absolute left-1/2 z-20 -translate-x-1/2 transition-all duration-700 ease-in-out"
@@ -269,7 +211,6 @@ export function Canvas({
         </div>
       </div>
 
-      {/* ── Inline chat input (hidden when chat flyout is open) ──────── */}
       {!chatOpen && (
         <div className="flex w-full flex-shrink-0 items-center justify-center px-4 pb-4 pt-2">
           <InlineChatInput
