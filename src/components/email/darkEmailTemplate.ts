@@ -240,7 +240,7 @@ function buildLearnerCard(data: LearnerData, dateRange: string, dayLabels: strin
         ${buildChart(urlTrends, 'Sessions per Day', 'Number of sessions', DAYS, data.sessionsPerDay, '#B9C6FE', 4)}
       </tr>
     </table>
-    ${buildAIInsights(urlInsights, data.aiInsight)}`;
+    ${buildInsightsCTA(urlInsights, data.name)}`;
 
   return `
   <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-bottom: 14px;">
