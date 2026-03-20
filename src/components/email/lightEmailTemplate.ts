@@ -108,8 +108,8 @@ function buildStackedChart(href: string, title: string, subtitle: string, days: 
 
 function buildInsightsCTA(href: string, learnerName: string) {
   return `<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin-top: 10px;">
-    <tr><td align="center" style="padding: 14px 16px; background-color: #EEF2FF; border: 1px solid ${BLUE_LIGHT}; border-radius: 10px;">
-      <a href="${href}" target="_blank" style="display: inline-block; padding: 10px 28px; background: linear-gradient(135deg, ${MAGENTA_LIGHT} 0%, ${TEAL} 50%, ${BLUE} 100%); background-color: ${BLUE}; color: #ffffff; font-family: ${FONT}; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 9999px;">
+    <tr><td align="center" style="padding: 14px 16px;">
+      <a href="${href}" target="_blank" style="display: inline-block; padding: 10px 28px; background: linear-gradient(135deg, ${MAGENTA} 0%, ${TEAL} 60%, ${BLUE} 100%); background-color: ${MAGENTA}; color: #0F172A; font-family: ${FONT}; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 9999px;">
         View ${learnerName}\u2019s Weekly Insights \u2192
       </a>
     </td></tr>
