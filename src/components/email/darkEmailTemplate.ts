@@ -281,7 +281,7 @@ function buildLearnerCard(data: LearnerData, dateRange: string, dayLabels: strin
             <td width="50%" style="padding: 0 4px 6px 0;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
                 <td height="52" style="padding: 8px 12px; height: 52px; border-radius: 10px; border: 1px solid rgba(238,212,240,0.15); text-align: center; vertical-align: middle;">
-                  <p style="margin: 0; font-size: 14px; color: #EED4F0; font-family: ${FONT};">${data.sessions} Sessions This Week</p>
+                  <p style="margin: 0; font-size: 14px; color: #EED4F0; font-family: ${FONT};"><span style="font-weight: 700;">${data.sessions} Sessions</span> This Week</p>
                 </td>
               </tr></table>
             </td>
