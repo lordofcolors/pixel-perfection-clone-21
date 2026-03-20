@@ -65,32 +65,32 @@ export function PanelContent({
     return (
       <div className="relative flex h-full w-full items-center justify-center">
         <div
-          className="h-full w-full transition-[max-width,max-height] duration-700 ease-in-out"
+          className="relative h-full w-full transition-[max-width,max-height] duration-700 ease-in-out"
           style={{ maxHeight: maxSize, maxWidth: maxW }}
         >
           <RiveComponent className="h-full w-full" />
-        </div>
 
-        {/* Mute agent icon — top-right of Rive panel */}
-        {!isThumbnail && onToggleAgentMute && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`absolute right-3 top-3 z-10 h-8 w-8 rounded-full border ${
-              isAgentMuted
-                ? "border-destructive/30 bg-destructive/10"
-                : "border-border/50 bg-background/30 backdrop-blur-sm"
-            }`}
-            onClick={onToggleAgentMute}
-            title={isAgentMuted ? "Unmute Agent" : "Mute Agent"}
-          >
-            {isAgentMuted ? (
-              <VolumeX className="h-4 w-4 text-destructive" />
-            ) : (
-              <Volume2 className="h-4 w-4 text-muted-foreground" />
-            )}
-          </Button>
-        )}
+          {/* Mute agent icon — top-right, hugging the Rive animation */}
+          {!isThumbnail && onToggleAgentMute && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`absolute right-0 top-[10%] z-10 h-8 w-8 rounded-full border ${
+                isAgentMuted
+                  ? "border-destructive/30 bg-destructive/10"
+                  : "border-border/50 bg-background/30 backdrop-blur-sm"
+              }`}
+              onClick={onToggleAgentMute}
+              title={isAgentMuted ? "Unmute Agent" : "Mute Agent"}
+            >
+              {isAgentMuted ? (
+                <VolumeX className="h-4 w-4 text-destructive" />
+              ) : (
+                <Volume2 className="h-4 w-4 text-muted-foreground" />
+              )}
+            </Button>
+          )}
+        </div>
       </div>
     );
   }
