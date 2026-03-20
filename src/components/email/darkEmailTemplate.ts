@@ -192,8 +192,10 @@ function buildMemoriesList(href: string, memories: string[], maxShow = 3) {
   const rows = shown.map((m, i) => {
     const colors = ['#B9C6FE', '#94DFE9', '#EED4F0'];
     const c = colors[i % 3];
-    return `<tr><td style="padding: 10px 14px; background-color: #111827; border: 1px solid rgba(255,255,255,0.1); border-left: 3px solid ${c}; border-radius: 0 6px 6px 0;">
-      <p style="margin: 0; font-size: 13px; color: #CBD5E1; line-height: 1.5; font-family: ${FONT};">${m}</p>
+    return `<tr><td>
+      <a href="${href}" target="_blank" style="text-decoration: none; color: inherit; display: block; padding: 10px 14px; background-color: #111827; border: 1px solid rgba(255,255,255,0.1); border-left: 3px solid ${c}; border-radius: 0 6px 6px 0;">
+        <p style="margin: 0; font-size: 13px; color: #CBD5E1; line-height: 1.5; font-family: ${FONT};">${m}</p>
+      </a>
     </td></tr><tr><td style="height: 6px;"></td></tr>`;
   }).join('');
 
