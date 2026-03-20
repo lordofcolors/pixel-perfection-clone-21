@@ -3,8 +3,7 @@
  * ChatPage (/chat)
  * =============================================================================
  *
- * The main "Quick Start" learning session page. Uses a unified panel layout
- * where all panels resize in-place — no overlay switching, no Rive duplication.
+ * The main "Quick Start" learning session page.
  */
 
 import { useState, useEffect } from "react";
@@ -34,11 +33,13 @@ const ChatPage = () => {
   const [imageSearchOn, setImageSearchOn] = useState(false);
   const [skillMapOn, setSkillMapOn] = useState(false);
   const [screenShareOn, setScreenShareOn] = useState(false);
+  const [webcamOn, setWebcamOn] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [expandedPanel, setExpandedPanel] = useState<PanelKey | null>(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [isAgentMuted, setIsAgentMuted] = useState(false);
 
-  const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn;
+  const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn || webcamOn;
 
   // Auto-reset to gallery when all side panels are turned off
   useEffect(() => {
@@ -98,6 +99,7 @@ const ChatPage = () => {
               imageSearchOn={imageSearchOn}
               skillMapOn={skillMapOn}
               screenShareOn={screenShareOn}
+              webcamOn={webcamOn}
               expandedPanel={expandedPanel}
               onExpandPanel={setExpandedPanel}
               chatOpen={chatOpen}
@@ -107,6 +109,8 @@ const ChatPage = () => {
               onInputChange={session.setInputValue}
               onSend={session.handleInlineSend}
               onToggleChat={() => setChatOpen((v) => !v)}
+              isAgentMuted={isAgentMuted}
+              onToggleAgentMute={() => setIsAgentMuted((v) => !v)}
             />
           </div>
 
@@ -114,9 +118,11 @@ const ChatPage = () => {
             onDisconnect={session.handleDisconnect}
             onToggleChat={() => setChatOpen((v) => !v)}
             onToggleScreenShare={() => setScreenShareOn((v) => !v)}
+            onToggleWebcam={() => setWebcamOn((v) => !v)}
             onToggleMute={() => setIsMuted((v) => !v)}
             isChatOpen={chatOpen}
             isScreenSharing={screenShareOn}
+            isWebcamOn={webcamOn}
             isMuted={isMuted}
           />
         </div>

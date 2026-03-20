@@ -29,7 +29,7 @@ import {
   BORDER_HIDE_MS,
 } from "./constants";
 
-type SidePanelKey = "image" | "skill" | "screen";
+type SidePanelKey = "image" | "skill" | "screen" | "webcam";
 
 interface PanelTransitionState {
   /** Panels currently animating out (still mounted but sliding off-screen). */

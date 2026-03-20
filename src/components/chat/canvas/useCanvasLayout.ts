@@ -3,30 +3,22 @@
  * useCanvasLayout
  * =============================================================================
  *
- * Pure layout calculator — no side effects. Given the current panel state,
- * returns CSS styles for each panel and the overall canvas height.
+ * Pure layout calculator. Given the current panel state, returns CSS styles
+ * for each panel and the overall canvas height.
  *
  * ## Layout modes
  *
  * ### Gallery mode (no expanded panel)
  *
- *   ┌────────────┬────────────┐
- *   │    Rive    │  Side #1   │  ← row 1 (50/50 split)
- *   └────────────┴────────────┘
- *   │     Side #2 (centred)   │  ← row 2 (only if 2+ side panels)
- *   └────────────────────────-┘
+ *   0 sides  → Rive fills 100% width
+ *   1 side   → 50/50 split, taller rows
+ *   2 sides  → 50/50 top row + centred second row
+ *   3 sides  → Rive + side1 + side2 as 33/33/33 top row, side3 centred below
+ *   4 sides  → Rive + side1 + side2 as 33/33/33 top row, side3 + side4 below
  *
- *   • 0 side panels → Rive fills 100 % width
- *   • 1 side panel  → 50/50 split, taller rows
- *   • 2+ side panels → 50/50 top row (shorter), second row below
+ * ### Expanded / Speaker mode
  *
- * ### Expanded / Speaker mode (one panel expanded)
- *
- *   ┌──────┐ ┌──────┐          ← thumbnail strip (centred)
- *   └──────┘ └──────┘
- *   ┌──────────────────────────┐
- *   │     expanded panel       │  ← fills remaining height
- *   └──────────────────────────┘
+ *   Thumbnail strip at top, expanded panel fills remaining height.
  */
 
 import type React from "react";
@@ -48,7 +40,7 @@ import {
   SECOND_ROW_GAP_PCT,
 } from "./constants";
 
-type SidePanelKey = "image" | "skill" | "screen";
+type SidePanelKey = "image" | "skill" | "screen" | "webcam";
 
 interface CanvasLayoutInput {
   expandedPanel: PanelKey | null;
@@ -58,9 +50,7 @@ interface CanvasLayoutInput {
 }
 
 interface CanvasLayoutOutput {
-  /** Returns absolute-position CSS for the given panel key. */
   getPanelStyle: (key: PanelKey) => React.CSSProperties;
-  /** The animated height of the canvas container (px). */
   canvasHeight: number;
 }
 
@@ -72,8 +62,9 @@ export function useCanvasLayout({
 }: CanvasLayoutInput): CanvasLayoutOutput {
   const hasSidePanels = activeSidePanels.length > 0;
   const multiSide = activeSidePanels.length >= 2;
+  // 3+ side panels → use 3-column top row (rive + 2 sides)
+  const manyPanels = activeSidePanels.length >= 3;
 
-  // Extra height added when the chat flyout is open (pushes panels taller)
   const extraH = chatOpen ? 100 : 0;
 
   // ── Position calculator ────────────────────────────────────────────────
@@ -81,7 +72,6 @@ export function useCanvasLayout({
   const getPanelStyle = (key: PanelKey): React.CSSProperties => {
     // ── EXPANDED / SPEAKER MODE ──────────────────────────────────────────
     if (expandedPanel) {
-      // The expanded panel fills below the thumbnail strip
       if (key === expandedPanel) {
         return {
           top: THUMB_STRIP_HEIGHT,
@@ -91,7 +81,6 @@ export function useCanvasLayout({
         };
       }
 
-      // All other panels become thumbnails centred at the top
       const nonExpanded = allActivePanels.filter((k) => k !== expandedPanel);
       const idx = nonExpanded.indexOf(key);
       const totalW =
@@ -108,26 +97,71 @@ export function useCanvasLayout({
 
     // ── GALLERY MODE ─────────────────────────────────────────────────────
 
-    // Rive (always row 1, left side — or full width if alone)
-    if (key === "rive") {
-      const h = hasSidePanels
-        ? multiSide
-          ? MULTI_PANEL_ROW_HEIGHT + extraH
-          : ONE_SIDE_PANEL_HEIGHT + extraH
-        : RIVE_SOLO_HEIGHT + extraH;
+    const rowH = hasSidePanels
+      ? multiSide
+        ? MULTI_PANEL_ROW_HEIGHT + extraH
+        : ONE_SIDE_PANEL_HEIGHT + extraH
+      : RIVE_SOLO_HEIGHT + extraH;
 
+    // ── 3+ side panels: 3-column top row ─────────────────────────────────
+    if (manyPanels) {
+      // Top row: rive, side[0], side[1] — each ~33%
+      const colW = `calc(${100 / 3}% - ${(GAP * 2) / 3}px)`;
+
+      if (key === "rive") {
+        return { top: 0, left: 0, width: colW, height: rowH };
+      }
+
+      const sideIdx = activeSidePanels.indexOf(key as SidePanelKey);
+
+      // First two side panels → top row columns 2 & 3
+      if (sideIdx === 0) {
+        return {
+          top: 0,
+          left: `calc(${100 / 3}% + ${GAP / 3}px)`,
+          width: colW,
+          height: rowH,
+        };
+      }
+      if (sideIdx === 1) {
+        return {
+          top: 0,
+          left: `calc(${200 / 3}% + ${(GAP * 2) / 3}px)`,
+          width: colW,
+          height: rowH,
+        };
+      }
+
+      // Additional side panels → row 2 (centred horizontally)
+      const firstRowH = rowH;
+      const secondRowPanels = activeSidePanels.slice(2);
+      const idxInRow = secondRowPanels.indexOf(key as SidePanelKey);
+      const panelWidthPct = secondRowPanels.length === 1 ? SECOND_ROW_WIDTH_PCT : 48;
+      const gapPct = secondRowPanels.length === 1 ? 0 : SECOND_ROW_GAP_PCT;
+      const totalPctWidth = secondRowPanels.length * panelWidthPct + (secondRowPanels.length - 1) * gapPct;
+      const startPct = (100 - totalPctWidth) / 2;
+
+      return {
+        top: firstRowH + GAP,
+        left: `${startPct + idxInRow * (panelWidthPct + gapPct)}%`,
+        width: `${panelWidthPct}%`,
+        height: MULTI_PANEL_ROW_HEIGHT + extraH,
+      };
+    }
+
+    // ── 0–2 side panels: original 2-column layout ────────────────────────
+
+    if (key === "rive") {
       return {
         top: 0,
         left: 0,
         width: hasSidePanels ? `calc(50% - ${GAP / 2}px)` : "100%",
-        height: h,
+        height: rowH,
       };
     }
 
-    // Side panels
     const sideIdx = activeSidePanels.indexOf(key as SidePanelKey);
 
-    // First side panel → row 1, right half
     if (sideIdx === 0) {
       const h = multiSide
         ? MULTI_PANEL_ROW_HEIGHT + extraH
@@ -141,16 +175,13 @@ export function useCanvasLayout({
       };
     }
 
-    // Additional side panels → row 2 (centred horizontally)
+    // Second row (for exactly 2 side panels)
     const firstRowH = MULTI_PANEL_ROW_HEIGHT + extraH;
     const secondRowPanels = activeSidePanels.slice(1);
     const idxInRow = secondRowPanels.indexOf(key as SidePanelKey);
     const totalPctWidth = secondRowPanels.length * SECOND_ROW_WIDTH_PCT;
     const startPct =
-      (100 -
-        totalPctWidth -
-        (secondRowPanels.length - 1) * SECOND_ROW_GAP_PCT) /
-      2;
+      (100 - totalPctWidth - (secondRowPanels.length - 1) * SECOND_ROW_GAP_PCT) / 2;
 
     return {
       top: firstRowH + GAP,
@@ -168,13 +199,22 @@ export function useCanvasLayout({
       : CLEARANCE_SINGLE
     : CLEARANCE_NONE;
 
-  const canvasHeight = expandedPanel
-    ? EXPANDED_HEIGHT + extraH + clearance
-    : hasSidePanels
-      ? multiSide
-        ? (MULTI_PANEL_ROW_HEIGHT + extraH) * 2 + GAP + clearance
-        : ONE_SIDE_PANEL_HEIGHT + extraH + clearance
-      : RIVE_SOLO_HEIGHT + extraH + clearance;
+  let canvasHeight: number;
+
+  if (expandedPanel) {
+    canvasHeight = EXPANDED_HEIGHT + extraH + clearance;
+  } else if (manyPanels) {
+    // 3+ side panels: always 2 rows
+    const topRowH = MULTI_PANEL_ROW_HEIGHT + extraH;
+    const bottomRowH = MULTI_PANEL_ROW_HEIGHT + extraH;
+    canvasHeight = topRowH + GAP + bottomRowH + clearance;
+  } else if (multiSide) {
+    canvasHeight = (MULTI_PANEL_ROW_HEIGHT + extraH) * 2 + GAP + clearance;
+  } else if (hasSidePanels) {
+    canvasHeight = ONE_SIDE_PANEL_HEIGHT + extraH + clearance;
+  } else {
+    canvasHeight = RIVE_SOLO_HEIGHT + extraH + clearance;
+  }
 
   return { getPanelStyle, canvasHeight };
 }
