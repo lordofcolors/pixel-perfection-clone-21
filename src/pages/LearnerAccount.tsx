@@ -23,7 +23,7 @@ export default function LearnerAccount() {
   const learnerName = getOnboardingName() || "Learner";
 
   const [nudgeEnabled, setNudgeEnabled] = useState(true);
-  const [nudgeFrequency, setNudgeFrequency] = useState("Biweekly");
+  const [nudgeFrequency, setNudgeFrequency] = useState("2 weeks");
   const [nudgeOpen, setNudgeOpen] = useState(true);
 
   useEffect(() => {

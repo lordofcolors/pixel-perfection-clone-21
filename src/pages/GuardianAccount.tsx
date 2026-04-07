@@ -35,7 +35,7 @@ export default function GuardianAccount() {
     () => Object.fromEntries(learners.map((_, i) => [i, true]))
   );
   const [nudgeFrequency, setNudgeFrequency] = useState<Record<number, string>>(
-    () => Object.fromEntries(learners.map((_, i) => [i, "Biweekly"]))
+    () => Object.fromEntries(learners.map((_, i) => [i, "2 weeks"]))
   );
   const [nudgeOpen, setNudgeOpen] = useState(true);
 
@@ -206,7 +206,7 @@ export default function GuardianAccount() {
                           <div className="flex items-center justify-between mt-4 rounded-lg border border-border bg-background/50 p-3">
                             <span className="text-sm">Remind after</span>
                             <Select
-                              value={nudgeFrequency[selectedLearner] ?? "Biweekly"}
+                              value={nudgeFrequency[selectedLearner] ?? "2 weeks"}
                               onValueChange={(val) => setNudgeFrequency(prev => ({ ...prev, [selectedLearner]: val }))}
                             >
                               <SelectTrigger className="w-[160px]">
