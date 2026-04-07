@@ -225,6 +225,8 @@ export function Canvas({
                     <Maximize className="h-3.5 w-3.5" />
                   </Button>
                 )}
+
+                <div className="h-full w-full">
                   <PanelContent
                     panelKey={key}
                     expandedPanel={expandedPanel}
@@ -239,6 +241,32 @@ export function Canvas({
               </div>
             );
           })}
+
+          {/* Fullscreen overlay */}
+          {fullscreenPanel && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-4 top-4 z-50 h-10 w-10 bg-muted/50 text-foreground hover:bg-muted"
+                onClick={() => setFullscreenPanel(null)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+              <div className="h-full w-full overflow-auto p-6">
+                <PanelContent
+                  panelKey={fullscreenPanel}
+                  expandedPanel={fullscreenPanel}
+                  hasSidePanels={false}
+                  RiveComponent={RiveComponent}
+                  isAgentMuted={isAgentMuted}
+                  onToggleAgentMute={onToggleAgentMute}
+                  imageIndex={imageIndex}
+                  quizIndex={quizIndex}
+                />
+              </div>
+            </div>
+          )}
 
           {expandedPanel === "rive" && (
             <div
