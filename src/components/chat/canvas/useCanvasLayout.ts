@@ -40,7 +40,7 @@ import {
   SECOND_ROW_GAP_PCT,
 } from "./constants";
 
-type SidePanelKey = "image" | "skill" | "screen" | "webcam";
+type SidePanelKey = "image" | "skill" | "screen" | "webcam" | "quiz";
 
 interface CanvasLayoutInput {
   expandedPanel: PanelKey | null;
