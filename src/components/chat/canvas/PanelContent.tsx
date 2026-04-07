@@ -38,6 +38,8 @@ interface PanelContentProps {
   RiveComponent: React.ComponentType<{ className?: string }>;
   isAgentMuted?: boolean;
   onToggleAgentMute?: () => void;
+  quizIndex?: number;
+  imageIndex?: number;
 }
 
 export function PanelContent({
