@@ -33,10 +33,10 @@ const EMOJI_SET = ["😊", "👍", "❤️", "🚀", "👎"] as const;
 
 type ActionKey = "findImage" | "breakDown" | "quizMe";
 
-const ACTION_BUTTONS: { key: ActionKey; label: string; icon: typeof Search }[] = [
-  { key: "findImage", label: "Find Image", icon: Search },
-  { key: "breakDown", label: "Break It Down", icon: Map },
-  { key: "quizMe", label: "Quiz Me", icon: HelpCircle },
+const ACTION_BUTTONS: { key: ActionKey; label: string; emoji: string }[] = [
+  { key: "findImage", label: "Find Image", emoji: "🔍" },
+  { key: "breakDown", label: "Break It Down", emoji: "🗺️" },
+  { key: "quizMe", label: "Quiz Me", emoji: "❓" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -88,8 +88,9 @@ export function ChatTranscriptPanel({
     onInputChange("");
   };
 
-  const handleAction = (key: ActionKey) => {
+  const handleAction = (key: ActionKey, emoji: string, label: string) => {
     if (loadingAction) return;
+    onSendEmoji?.(`${emoji} ${label}`);
     setLoadingAction(key);
     setTimeout(() => {
       if (key === "findImage") onToggleImageSearch?.();
@@ -195,12 +196,12 @@ export function ChatTranscriptPanel({
           <div className="mx-0.5 h-5 w-px bg-border/30" />
 
           {/* Action chips */}
-          {ACTION_BUTTONS.map(({ key, label, icon: Icon }) => {
+          {ACTION_BUTTONS.map(({ key, label, emoji }) => {
             const loading = loadingAction === key;
             return (
               <button
                 key={key}
-                onClick={() => handleAction(key)}
+                onClick={() => handleAction(key, emoji, label)}
                 disabled={loading}
                 className={`flex items-center gap-1 rounded-full border px-2 py-1 text-[10px] font-medium transition-all ${
                   loading
@@ -212,7 +213,7 @@ export function ChatTranscriptPanel({
                 {loading ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
                 ) : (
-                  <Icon className="h-3 w-3" />
+                  <span>{emoji}</span>
                 )}
                 <span>{label}</span>
               </button>
