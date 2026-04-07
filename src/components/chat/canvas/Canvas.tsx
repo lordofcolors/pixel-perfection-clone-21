@@ -43,6 +43,7 @@ interface CanvasProps {
   onClosePanel?: (key: PanelKey) => void;
   imageIndex?: number;
   quizIndex?: number;
+  mapIndex?: number;
 }
 
 export function Canvas({
@@ -70,6 +71,7 @@ export function Canvas({
   onClosePanel,
   imageIndex = 0,
   quizIndex = 0,
+  mapIndex = 0,
 }: CanvasProps) {
   // ── Fullscreen state ────────────────────────────────────────────────────
   const [fullscreenPanel, setFullscreenPanel] = useState<PanelKey | null>(null);
