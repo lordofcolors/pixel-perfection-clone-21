@@ -69,6 +69,9 @@ export function Canvas({
   imageIndex = 0,
   quizIndex = 0,
 }: CanvasProps) {
+  // ── Fullscreen state ────────────────────────────────────────────────────
+  const [fullscreenPanel, setFullscreenPanel] = useState<PanelKey | null>(null);
+
   // ── Derive active side panels ──────────────────────────────────────────
 
   const activeSidePanels: Array<"image" | "skill" | "screen" | "webcam" | "quiz"> = [];
