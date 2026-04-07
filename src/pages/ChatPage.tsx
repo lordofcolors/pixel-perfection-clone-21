@@ -125,6 +125,7 @@ const ChatPage = () => {
               }}
               onToggleSkillMap={() => {
                 if (!skillMapOn) setSkillMapOn(true);
+                setMapIndex((v) => v + 1);
               }}
               onQuizMe={() => {
                 if (!quizOn) setQuizOn(true);
