@@ -204,31 +204,33 @@ export function Canvas({
                 )}
 
                 {key !== "rive" && isExpanded && (
-                  <div className="absolute right-2 top-2 z-10 flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setFullscreenPanel(key);
-                      }}
-                      title="Full screen"
-                    >
-                      <Maximize className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onExpandPanel(null);
-                      }}
-                    >
-                      <Minimize2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-2 z-10 h-8 w-8 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onExpandPanel(null);
+                    }}
+                  >
+                    <Minimize2 className="h-4 w-4" />
+                  </Button>
+                )}
+
+                {/* Fullscreen button — bottom-right when expanded */}
+                {key !== "rive" && isExpanded && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute bottom-2 right-2 z-10 h-8 w-8 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setFullscreenPanel(key);
+                    }}
+                    title="Full screen"
+                  >
+                    <Maximize className="h-4 w-4" />
+                  </Button>
                 )}
 
                 {/* Fullscreen button in gallery (non-expanded) view */}
