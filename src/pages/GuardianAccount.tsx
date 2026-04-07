@@ -133,7 +133,7 @@ export default function GuardianAccount() {
                   <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-4">
                     <div>
                       <p className="text-sm font-semibold">Parent Weekly Digest</p>
-                      <p className="text-xs text-muted-foreground">Receive a weekly email summarizing your children's learning activity.</p>
+                      <p className="text-xs text-muted-foreground">Receive a weekly email summarizing your learners' learning activity.</p>
                     </div>
                     <Switch checked={weeklyDigest} onCheckedChange={setWeeklyDigest} />
                   </div>
@@ -147,14 +147,14 @@ export default function GuardianAccount() {
                 </CardContent>
               </Card>
 
-              {/* Children's Notifications */}
+              {/* Learner Notifications */}
               <Card>
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <Users className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <CardTitle className="text-base">Children's Notifications</CardTitle>
-                      <p className="text-sm text-muted-foreground">Manage notification preferences for each child.</p>
+                      <CardTitle className="text-base">Learner Notifications</CardTitle>
+                      <p className="text-sm text-muted-foreground">Manage notification preferences for each learner.</p>
                     </div>
                   </div>
                 </CardHeader>
@@ -164,15 +164,15 @@ export default function GuardianAccount() {
                     {learners.map((learner, i) => (
                       <button
                         key={i}
-                        onClick={() => setSelectedChild(i)}
+                        onClick={() => setSelectedLearner(i)}
                         className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
-                          selectedChild === i
+                          selectedLearner === i
                             ? "bg-background text-foreground shadow-sm"
                             : "text-muted-foreground hover:text-foreground"
                         }`}
                       >
                         <span className={`inline-flex items-center justify-center h-5 w-5 rounded-full text-[10px] font-bold ${
-                          selectedChild === i
+                          selectedLearner === i
                             ? "bg-muted text-foreground"
                             : "bg-muted-foreground/20 text-muted-foreground"
                         }`}>
@@ -196,18 +196,18 @@ export default function GuardianAccount() {
                           </CollapsibleTrigger>
                         </div>
                         <Switch
-                          checked={nudgeEnabled[selectedChild] ?? true}
-                          onCheckedChange={(val) => setNudgeEnabled(prev => ({ ...prev, [selectedChild]: val }))}
+                          checked={nudgeEnabled[selectedLearner] ?? true}
+                          onCheckedChange={(val) => setNudgeEnabled(prev => ({ ...prev, [selectedLearner]: val }))}
                         />
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">Email reminders sent after periods of inactivity.</p>
                       <CollapsibleContent>
-                        {nudgeEnabled[selectedChild] && (
+                        {nudgeEnabled[selectedLearner] && (
                           <div className="flex items-center justify-between mt-4 rounded-lg border border-border bg-background/50 p-3">
                             <span className="text-sm">Remind</span>
                             <Select
-                              value={nudgeFrequency[selectedChild] ?? "Biweekly"}
-                              onValueChange={(val) => setNudgeFrequency(prev => ({ ...prev, [selectedChild]: val }))}
+                              value={nudgeFrequency[selectedLearner] ?? "Biweekly"}
+                              onValueChange={(val) => setNudgeFrequency(prev => ({ ...prev, [selectedLearner]: val }))}
                             >
                               <SelectTrigger className="w-[160px]">
                                 <SelectValue />
