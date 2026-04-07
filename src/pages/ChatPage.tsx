@@ -129,6 +129,13 @@ const ChatPage = () => {
                 if (!quizOn) setQuizOn(true);
                 setQuizIndex((v) => v + 1);
               }}
+              onClosePanel={(key) => {
+                if (key === "image") setImageSearchOn(false);
+                if (key === "skill") setSkillMapOn(false);
+                if (key === "screen") setScreenShareOn(false);
+                if (key === "webcam") setWebcamOn(false);
+                if (key === "quiz") setQuizOn(false);
+              }}
               imageIndex={imageIndex}
               quizIndex={quizIndex}
             />
