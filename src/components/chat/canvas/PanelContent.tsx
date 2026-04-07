@@ -110,11 +110,11 @@ export function PanelContent({
     return isExpanded ? (
       <div className="h-full overflow-auto p-4">
         <div className="mx-auto w-full max-w-2xl overflow-hidden rounded-md">
-          <ImageSearchPanel className="w-full" variant="expanded" />
+          <ImageSearchPanel className="w-full" variant="expanded" imageIndex={imageIndex} />
         </div>
       </div>
     ) : (
-      <ImageSearchPanel />
+      <ImageSearchPanel imageIndex={imageIndex} />
     );
   }
 
@@ -122,6 +122,11 @@ export function PanelContent({
   if (panelKey === "skill") {
     const hideTitle = expandedPanel !== null && expandedPanel !== "skill";
     return <SkillMapPanel hideTitle={hideTitle} />;
+  }
+
+  // ── Quiz panel ─────────────────────────────────────────────────────────
+  if (panelKey === "quiz") {
+    return <QuizPanel questionIndex={quizIndex} />;
   }
 
   // ── Webcam panel ───────────────────────────────────────────────────────
