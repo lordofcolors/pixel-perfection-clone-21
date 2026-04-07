@@ -85,34 +85,16 @@ export function InlineChatInput({
   const [actionBarOpen, setActionBarOpen] = useState(true);
   const [loadingAction, setLoadingAction] = useState<ActionKey | null>(null);
 
-  // Clear loading state when panel actually toggles on
-  useEffect(() => {
-    if (loadingAction === "findImage" && imageSearchOn) setLoadingAction(null);
-    if (loadingAction === "breakDown" && skillMapOn) setLoadingAction(null);
-  }, [imageSearchOn, skillMapOn, loadingAction]);
-
   const handleAction = (key: ActionKey) => {
     if (loadingAction) return;
-
-    if (key === "quizMe") {
-      setLoadingAction("quizMe");
-      onQuizMe?.();
-      setTimeout(() => setLoadingAction(null), 1500);
-      return;
-    }
 
     setLoadingAction(key);
     setTimeout(() => {
       if (key === "findImage") onToggleImageSearch?.();
       if (key === "breakDown") onToggleSkillMap?.();
+      if (key === "quizMe") onQuizMe?.();
       setLoadingAction(null);
     }, 1200);
-  };
-
-  const isActive = (key: ActionKey) => {
-    if (key === "findImage") return imageSearchOn;
-    if (key === "breakDown") return skillMapOn;
-    return false;
   };
 
   return (
