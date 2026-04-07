@@ -188,7 +188,7 @@ export default function GuardianAccount() {
                     <div className="rounded-lg border border-border bg-muted/30 p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-semibold">Re-engagement Nudge</p>
+                          <p className="text-sm font-semibold">Learning Reminders</p>
                           <CollapsibleTrigger asChild>
                             <button className="text-muted-foreground hover:text-foreground">
                               <ChevronUp className={`h-4 w-4 transition-transform ${nudgeOpen ? "" : "rotate-180"}`} />
@@ -200,11 +200,11 @@ export default function GuardianAccount() {
                           onCheckedChange={(val) => setNudgeEnabled(prev => ({ ...prev, [selectedLearner]: val }))}
                         />
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">Email reminders sent after periods of inactivity.</p>
+                      <p className="text-xs text-muted-foreground mt-1">Send a friendly email reminder if they haven't practiced in a while.</p>
                       <CollapsibleContent>
                         {nudgeEnabled[selectedLearner] && (
                           <div className="flex items-center justify-between mt-4 rounded-lg border border-border bg-background/50 p-3">
-                            <span className="text-sm">Remind</span>
+                            <span className="text-sm">Remind after</span>
                             <Select
                               value={nudgeFrequency[selectedLearner] ?? "Biweekly"}
                               onValueChange={(val) => setNudgeFrequency(prev => ({ ...prev, [selectedLearner]: val }))}
