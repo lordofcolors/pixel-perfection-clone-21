@@ -140,6 +140,7 @@ const ChatPage = () => {
               }}
               imageIndex={imageIndex}
               quizIndex={quizIndex}
+              mapIndex={mapIndex}
             />
           </div>
 
