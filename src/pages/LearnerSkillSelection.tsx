@@ -1,49 +1,101 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/learner/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Sparkles, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Sparkles, Image as ImageIcon, BookOpen } from "lucide-react";
 import { getOnboardingName } from "@/lib/store";
 import { categories, type SkillTile } from "@/data/skillCatalog";
 import { SkillPreviewPanel } from "@/components/learner/SkillPreviewPanel";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export default function LearnerSkillSelection() {
   const navigate = useNavigate();
   const location = useLocation();
   const learnerName = ((location.state as any)?.firstName as string | undefined) || getOnboardingName();
+
   const [customPrompt, setCustomPrompt] = useState("");
   const [selectedTile, setSelectedTile] = useState<SkillTile | null>(null);
   const [previewPrompt, setPreviewPrompt] = useState("");
+  const [previewLessons, setPreviewLessons] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.title = "Select a Skill - Learner Dashboard";
   }, []);
 
+  const generateCurriculum = useCallback(async (prompt: string) => {
+    setIsGenerating(true);
+    setShowPreview(true);
+    setPreviewLessons([]);
+
+    setTimeout(() => previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-lessons", {
+        body: { skillDescription: prompt },
+      });
+
+      if (error) throw error;
+
+      const lessons: string[] = (data?.lessons || []).map((l: any) => {
+        // Strip the "0: " prefix if present
+        const title = l.title || l;
+        return typeof title === "string" ? title.replace(/^\d+:\s*/, "") : String(title);
+      });
+
+      if (lessons.length === 0) throw new Error("No lessons generated");
+
+      setPreviewLessons(lessons);
+    } catch (err: any) {
+      console.error("Generation error:", err);
+      toast.error(err.message || "Failed to generate curriculum. Please try again.");
+      // Fallback to preset lessons if we have a tile selected
+      if (selectedTile) {
+        setPreviewLessons([...selectedTile.lessons]);
+      }
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [selectedTile]);
+
   const handleSelectTile = (tile: SkillTile) => {
     setSelectedTile(tile);
     setPreviewPrompt(tile.prompt);
     setCustomPrompt(tile.prompt);
-    // Scroll to preview after a tick
+    // Show preset lessons immediately as preview
+    setPreviewLessons([...tile.lessons]);
+    setShowPreview(true);
     setTimeout(() => previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   };
 
+  const handleGenerateCurriculum = () => {
+    const prompt = customPrompt.trim();
+    if (!prompt) return;
+    setPreviewPrompt(prompt);
+    generateCurriculum(prompt);
+  };
+
+  const handleLessonChange = (idx: number, value: string) => {
+    setPreviewLessons((prev) => prev.map((l, i) => (i === idx ? value : l)));
+  };
+
   const handleConfirm = () => {
-    console.log("Begin learning:", previewPrompt);
-    // TODO: wire up to skill creation
+    console.log("Begin learning:", previewPrompt, "Lessons:", previewLessons);
+    // TODO: wire up to skill + lesson creation in DB
+    toast.success("Skill created! Starting your learning journey.");
   };
 
   const handleClosePreview = () => {
     setSelectedTile(null);
     setPreviewPrompt("");
-  };
-
-  const handleCustomSubmit = () => {
-    if (!customPrompt.trim()) return;
-    console.log("Custom skill:", customPrompt);
-    // TODO: wire up to skill creation
+    setPreviewLessons([]);
+    setShowPreview(false);
   };
 
   return (
@@ -81,7 +133,7 @@ export default function LearnerSkillSelection() {
                     value={customPrompt}
                     onChange={(e) => setCustomPrompt(e.target.value)}
                     placeholder="e.g. I want to learn how to introduce myself to new people, practice ordering food at a restaurant, learn basic Python coding…"
-                    className="min-h-[120px] pr-24 text-base resize-none bg-card border-border"
+                    className="min-h-[120px] pr-4 pb-14 text-base resize-none bg-card border-border"
                   />
                   <div className="absolute bottom-3 right-3 flex items-center gap-2">
                     <Button size="icon" variant="ghost" className="h-9 w-9 text-muted-foreground hover:text-foreground">
@@ -89,27 +141,41 @@ export default function LearnerSkillSelection() {
                     </Button>
                     <Button
                       size="sm"
-                      disabled={!customPrompt.trim()}
-                      onClick={handleCustomSubmit}
+                      variant="outline"
+                      disabled={!customPrompt.trim() || isGenerating}
+                      onClick={handleGenerateCurriculum}
+                      className="gap-1.5"
+                    >
+                      <BookOpen className="h-4 w-4" />
+                      Generate Curriculum
+                    </Button>
+                    <Button
+                      size="sm"
+                      disabled={!customPrompt.trim() || previewLessons.length === 0}
+                      onClick={handleConfirm}
                       className="gap-1.5"
                     >
                       <Sparkles className="h-4 w-4" />
-                      Create Skill
+                      Begin Learning
                     </Button>
                   </div>
                 </div>
               </section>
 
-              {/* Preview panel (shown when a tile is selected) */}
-              {selectedTile && (
+              {/* Preview panel */}
+              {showPreview && (
                 <div ref={previewRef}>
                   <SkillPreviewPanel
                     tile={selectedTile}
                     prompt={previewPrompt}
+                    lessons={previewLessons}
+                    isGenerating={isGenerating}
                     onPromptChange={(v) => {
                       setPreviewPrompt(v);
                       setCustomPrompt(v);
                     }}
+                    onLessonChange={handleLessonChange}
+                    onRegenerate={() => generateCurriculum(previewPrompt)}
                     onConfirm={handleConfirm}
                     onClose={handleClosePreview}
                   />
