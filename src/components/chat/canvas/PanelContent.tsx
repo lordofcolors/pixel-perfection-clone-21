@@ -116,7 +116,6 @@ export function PanelContent({
     ) : (
       <ImageSearchPanel imageIndex={imageIndex} />
     );
-    );
   }
 
   // ── Skill map panel ────────────────────────────────────────────────────
