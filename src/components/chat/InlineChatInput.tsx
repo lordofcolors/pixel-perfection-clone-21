@@ -85,34 +85,16 @@ export function InlineChatInput({
   const [actionBarOpen, setActionBarOpen] = useState(true);
   const [loadingAction, setLoadingAction] = useState<ActionKey | null>(null);
 
-  // Clear loading state when panel actually toggles on
-  useEffect(() => {
-    if (loadingAction === "findImage" && imageSearchOn) setLoadingAction(null);
-    if (loadingAction === "breakDown" && skillMapOn) setLoadingAction(null);
-  }, [imageSearchOn, skillMapOn, loadingAction]);
-
   const handleAction = (key: ActionKey) => {
     if (loadingAction) return;
-
-    if (key === "quizMe") {
-      setLoadingAction("quizMe");
-      onQuizMe?.();
-      setTimeout(() => setLoadingAction(null), 1500);
-      return;
-    }
 
     setLoadingAction(key);
     setTimeout(() => {
       if (key === "findImage") onToggleImageSearch?.();
       if (key === "breakDown") onToggleSkillMap?.();
+      if (key === "quizMe") onQuizMe?.();
       setLoadingAction(null);
     }, 1200);
-  };
-
-  const isActive = (key: ActionKey) => {
-    if (key === "findImage") return imageSearchOn;
-    if (key === "breakDown") return skillMapOn;
-    return false;
   };
 
   return (
@@ -208,7 +190,6 @@ export function InlineChatInput({
           {/* Action chips */}
           <div className="flex items-center gap-1.5">
             {ACTION_BUTTONS.map(({ key, label, icon: Icon }) => {
-              const active = isActive(key);
               const loading = loadingAction === key;
 
               return (
@@ -217,10 +198,10 @@ export function InlineChatInput({
                   onClick={() => handleAction(key)}
                   disabled={loading}
                   className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
-                    active
-                      ? "border-primary/50 bg-primary/20 text-primary"
-                      : "border-border/40 bg-background/30 text-muted-foreground hover:border-primary/40 hover:bg-primary/10 hover:text-foreground"
-                  } ${loading ? "cursor-wait" : "cursor-pointer"}`}
+                    loading
+                      ? "cursor-wait border-border/20 bg-background/10 text-muted-foreground/50"
+                      : "cursor-pointer border-border/40 bg-background/30 text-muted-foreground hover:border-primary/40 hover:bg-primary/10 hover:text-foreground"
+                  }`}
                   title={label}
                 >
                   {loading ? (
