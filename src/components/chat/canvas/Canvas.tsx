@@ -7,8 +7,8 @@
  * positioning and CSS transitions.
  */
 
-import React from "react";
-import { Maximize2, Minimize2 } from "lucide-react";
+import React, { useState } from "react";
+import { Maximize2, Minimize2, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InlineChatInput } from "@/components/chat/InlineChatInput";
 import type { PanelKey } from "@/components/chat/types";
