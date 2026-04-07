@@ -1,20 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/learner/AppSidebar";
 import { EmptyLearnerDashboard } from "@/components/learner/EmptyLearnerDashboard";
-import { LearnerAssignments } from "@/components/learner/LearnerAssignments";
 import { AssignmentNotifications } from "@/components/learner/AssignmentNotifications";
-import { LearnerWelcomeModal } from "@/components/learner/LearnerWelcomeModal";
 import { useLocation } from "react-router-dom";
-import { getOnboardingName, getAssignmentsForLearner } from "@/lib/store";
+import { getOnboardingName } from "@/lib/store";
 
 export default function LearnerDashboard() {
   const location = useLocation();
   const learnerName = ((location.state as any)?.firstName as string | undefined) || getOnboardingName();
-  const hasAssignments = getAssignmentsForLearner(learnerName || "").length > 0;
-  
-  // Show welcome modal on every visit to learner dashboard
-  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
 
   useEffect(() => {
     document.title = "Learner Dashboard - Curriculum";
@@ -45,7 +39,7 @@ export default function LearnerDashboard() {
           <header className="h-16 flex items-center justify-between border-b px-3">
             <div className="flex items-center gap-2">
               <SidebarTrigger className="mr-2" />
-              <h1 className="text-lg font-semibold">Chat with A</h1>
+              <h1 className="text-lg font-semibold">Choose Your Mode</h1>
             </div>
             <div className="flex items-center">
               <AssignmentNotifications learnerName={learnerName || "Learner"} />
@@ -57,12 +51,6 @@ export default function LearnerDashboard() {
           </main>
         </SidebarInset>
       </div>
-
-      <LearnerWelcomeModal 
-        open={showWelcomeModal} 
-        onClose={() => setShowWelcomeModal(false)}
-        learnerName={learnerName || "Learner"}
-      />
     </SidebarProvider>
   );
 }
