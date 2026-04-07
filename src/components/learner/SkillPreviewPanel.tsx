@@ -94,7 +94,7 @@ export function SkillPreviewPanel({
             {lessons.map((lesson, idx) => (
               <li
                 key={idx}
-                className="group flex items-center gap-3 rounded-lg border border-border bg-muted/30 px-3 py-2 hover:border-primary/40 hover:bg-muted/50 transition-colors cursor-text"
+                className="group flex items-center gap-3 rounded-lg border border-border bg-muted/30 px-3 py-2 hover:border-primary/40 hover:bg-muted/50 transition-colors cursor-text focus-within:border-primary focus-within:bg-muted/50 focus-within:ring-1 focus-within:ring-primary/30"
               >
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                   {idx + 1}
@@ -103,10 +103,10 @@ export function SkillPreviewPanel({
                   type="text"
                   value={lesson}
                   onChange={(e) => onLessonChange(idx, e.target.value)}
-                  className="flex-1 bg-transparent text-sm text-foreground outline-none focus:underline focus:decoration-primary/40 focus:underline-offset-4 placeholder:text-muted-foreground"
+                  className="flex-1 bg-transparent text-sm text-foreground outline-none caret-primary placeholder:text-muted-foreground"
                   placeholder="Enter lesson title…"
                 />
-                <Pencil className="h-3.5 w-3.5 shrink-0 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
+                <Pencil className="h-3.5 w-3.5 shrink-0 text-muted-foreground/40 group-hover:text-muted-foreground group-focus-within:text-primary transition-colors" />
               </li>
             ))}
           </ol>
