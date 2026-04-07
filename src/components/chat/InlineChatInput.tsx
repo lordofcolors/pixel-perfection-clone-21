@@ -151,7 +151,7 @@ export function InlineChatInput({
             onClick={onToggleImageSearch}
             title="Search Image"
           >
-            <ImageSearch className="h-4 w-4" />
+            <Search className="h-4 w-4" />
           </Button>
 
           <Button
