@@ -35,6 +35,10 @@ interface CanvasProps {
   onToggleChat: () => void;
   isAgentMuted: boolean;
   onToggleAgentMute: () => void;
+  onSendEmoji?: (emoji: string) => void;
+  onToggleImageSearch?: () => void;
+  onToggleSkillMap?: () => void;
+  onQuizMe?: () => void;
 }
 
 export function Canvas({
@@ -54,6 +58,10 @@ export function Canvas({
   onToggleChat,
   isAgentMuted,
   onToggleAgentMute,
+  onSendEmoji,
+  onToggleImageSearch,
+  onToggleSkillMap,
+  onQuizMe,
 }: CanvasProps) {
   // ── Derive active side panels ──────────────────────────────────────────
 
@@ -221,6 +229,12 @@ export function Canvas({
             onSend={onSend}
             onToggleChat={onToggleChat}
             isChatOpen={chatOpen}
+            onSendEmoji={onSendEmoji}
+            onToggleImageSearch={onToggleImageSearch}
+            imageSearchOn={imageSearchOn}
+            onToggleSkillMap={onToggleSkillMap}
+            skillMapOn={skillMapOn}
+            onQuizMe={onQuizMe}
           />
         </div>
       )}
