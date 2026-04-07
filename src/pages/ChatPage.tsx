@@ -34,12 +34,15 @@ const ChatPage = () => {
   const [skillMapOn, setSkillMapOn] = useState(false);
   const [screenShareOn, setScreenShareOn] = useState(false);
   const [webcamOn, setWebcamOn] = useState(false);
+  const [quizOn, setQuizOn] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [expandedPanel, setExpandedPanel] = useState<PanelKey | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [isAgentMuted, setIsAgentMuted] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+  const [quizIndex, setQuizIndex] = useState(0);
 
-  const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn || webcamOn;
+  const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn || webcamOn || quizOn;
 
   // Auto-reset to gallery when all side panels are turned off
   useEffect(() => {
