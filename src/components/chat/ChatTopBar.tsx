@@ -57,22 +57,7 @@ export function ChatTopBar({
         <span className="text-sm text-muted-foreground">Quick Start</span>
       </div>
 
-      {/* Right: panel toggle switches */}
-      <div className="flex items-center gap-6">
-        {/* Image Search toggle */}
-        <div className="flex items-center gap-2">
-          <Image className="h-4 w-4 text-muted-foreground" />
-          <span className="text-xs text-muted-foreground">Image Search</span>
-          <Switch checked={imageSearchOn} onCheckedChange={onImageSearchChange} />
-        </div>
-
-        {/* Skill Map toggle */}
-        <div className="flex items-center gap-2">
-          <Map className="h-4 w-4 text-muted-foreground" />
-          <span className="text-xs text-muted-foreground">Skill Map</span>
-          <Switch checked={skillMapOn} onCheckedChange={onSkillMapChange} />
-        </div>
-      </div>
+      {/* Toggle switches hidden for now */}
     </div>
   );
 }
