@@ -3,7 +3,7 @@ import {
   Coffee, ShowerHead, Shirt, Footprints, UtensilsCrossed, Brush,
   Monitor, FileSpreadsheet, FileText, Palette, Code,
   Calculator, BookOpen, Languages, GraduationCap, PenTool, Brain,
-  Heart, Lightbulb, Shield, Clock, Star, Puzzle,
+  Heart, Lightbulb, Shield, Clock, Star, Puzzle, Sparkles,
   Music, Camera, Scissors, Wrench, DollarSign, MapPin
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
