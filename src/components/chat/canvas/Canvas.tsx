@@ -24,6 +24,7 @@ interface CanvasProps {
   skillMapOn: boolean;
   screenShareOn: boolean;
   webcamOn: boolean;
+  quizOn: boolean;
   expandedPanel: PanelKey | null;
   onExpandPanel: (key: PanelKey | null) => void;
   chatOpen: boolean;
@@ -39,6 +40,8 @@ interface CanvasProps {
   onToggleImageSearch?: () => void;
   onToggleSkillMap?: () => void;
   onQuizMe?: () => void;
+  imageIndex?: number;
+  quizIndex?: number;
 }
 
 export function Canvas({
@@ -47,6 +50,7 @@ export function Canvas({
   skillMapOn,
   screenShareOn,
   webcamOn,
+  quizOn,
   expandedPanel,
   onExpandPanel,
   chatOpen,
@@ -62,14 +66,17 @@ export function Canvas({
   onToggleImageSearch,
   onToggleSkillMap,
   onQuizMe,
+  imageIndex = 0,
+  quizIndex = 0,
 }: CanvasProps) {
   // ── Derive active side panels ──────────────────────────────────────────
 
-  const activeSidePanels: Array<"image" | "skill" | "screen" | "webcam"> = [];
+  const activeSidePanels: Array<"image" | "skill" | "screen" | "webcam" | "quiz"> = [];
   if (imageSearchOn) activeSidePanels.push("image");
   if (skillMapOn) activeSidePanels.push("skill");
   if (screenShareOn) activeSidePanels.push("screen");
   if (webcamOn) activeSidePanels.push("webcam");
+  if (quizOn) activeSidePanels.push("quiz");
 
   const hasSidePanels = activeSidePanels.length > 0;
 
