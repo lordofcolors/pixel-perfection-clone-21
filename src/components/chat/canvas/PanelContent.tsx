@@ -40,6 +40,7 @@ interface PanelContentProps {
   onToggleAgentMute?: () => void;
   quizIndex?: number;
   imageIndex?: number;
+  mapIndex?: number;
 }
 
 export function PanelContent({
@@ -51,6 +52,7 @@ export function PanelContent({
   onToggleAgentMute,
   quizIndex = 0,
   imageIndex = 0,
+  mapIndex = 0,
 }: PanelContentProps) {
   // ── Rive assistant ─────────────────────────────────────────────────────
   if (panelKey === "rive") {
@@ -121,7 +123,7 @@ export function PanelContent({
   // ── Skill map panel ────────────────────────────────────────────────────
   if (panelKey === "skill") {
     const hideTitle = expandedPanel !== null && expandedPanel !== "skill";
-    return <SkillMapPanel hideTitle={hideTitle} />;
+    return <SkillMapPanel hideTitle={hideTitle} mapIndex={mapIndex} />;
   }
 
   // ── Quiz panel ─────────────────────────────────────────────────────────

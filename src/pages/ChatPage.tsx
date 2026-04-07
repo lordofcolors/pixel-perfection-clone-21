@@ -41,6 +41,7 @@ const ChatPage = () => {
   const [isAgentMuted, setIsAgentMuted] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [quizIndex, setQuizIndex] = useState(0);
+  const [mapIndex, setMapIndex] = useState(0);
 
   const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn || webcamOn || quizOn;
 
@@ -124,6 +125,7 @@ const ChatPage = () => {
               }}
               onToggleSkillMap={() => {
                 if (!skillMapOn) setSkillMapOn(true);
+                setMapIndex((v) => v + 1);
               }}
               onQuizMe={() => {
                 if (!quizOn) setQuizOn(true);
@@ -138,6 +140,7 @@ const ChatPage = () => {
               }}
               imageIndex={imageIndex}
               quizIndex={quizIndex}
+              mapIndex={mapIndex}
             />
           </div>
 
@@ -174,6 +177,7 @@ const ChatPage = () => {
               }}
               onToggleSkillMap={() => {
                 if (!skillMapOn) setSkillMapOn(true);
+                setMapIndex((v) => v + 1);
               }}
               onQuizMe={() => {
                 if (!quizOn) setQuizOn(true);
