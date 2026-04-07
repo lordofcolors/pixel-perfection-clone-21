@@ -35,6 +35,10 @@ interface CanvasProps {
   onToggleChat: () => void;
   isAgentMuted: boolean;
   onToggleAgentMute: () => void;
+  onSendEmoji?: (emoji: string) => void;
+  onToggleImageSearch?: () => void;
+  onToggleSkillMap?: () => void;
+  onQuizMe?: () => void;
 }
 
 export function Canvas({
