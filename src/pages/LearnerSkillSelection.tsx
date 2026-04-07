@@ -1,182 +1,43 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/learner/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import {
-  ArrowLeft, Sparkles, Image as ImageIcon,
-  MessageSquare, Users, Hand, Mic, Presentation, BriefcaseBusiness,
-  Coffee, ShowerHead, Shirt, Footprints, UtensilsCrossed, Brush,
-  Monitor, Figma, FileSpreadsheet, FileText, Palette, Code,
-  Calculator, BookOpen, Languages, GraduationCap, PenTool, Brain,
-  Heart, Lightbulb, Shield, Clock, Star, Puzzle,
-  Music, Camera, Scissors, Wrench, DollarSign, MapPin
-} from "lucide-react";
+import { ArrowLeft, Sparkles, Image as ImageIcon } from "lucide-react";
 import { getOnboardingName } from "@/lib/store";
-
-interface SkillTile {
-  label: string;
-  icon: React.ElementType;
-}
-
-interface SkillCategory {
-  title: string;
-  emoji: string;
-  tiles: SkillTile[];
-}
-
-const categories: SkillCategory[] = [
-  {
-    title: "Social Skills",
-    emoji: "💬",
-    tiles: [
-      { label: "Greeting people", icon: Hand },
-      { label: "Making friends", icon: Users },
-      { label: "Starting conversations", icon: MessageSquare },
-      { label: "Public speaking", icon: Mic },
-      { label: "Presenting in class", icon: Presentation },
-      { label: "Interview prep", icon: BriefcaseBusiness },
-      { label: "Active listening", icon: Heart },
-      { label: "Resolving conflicts", icon: Shield },
-      { label: "Asking for help", icon: Lightbulb },
-      { label: "Giving compliments", icon: Star },
-      { label: "Working in teams", icon: Users },
-      { label: "Phone & video calls", icon: Monitor },
-    ],
-  },
-  {
-    title: "Life Skills & Hygiene",
-    emoji: "🧼",
-    tiles: [
-      { label: "Brushing teeth", icon: Brush },
-      { label: "Tying shoes", icon: Footprints },
-      { label: "Doing laundry", icon: Shirt },
-      { label: "Cooking basics", icon: UtensilsCrossed },
-      { label: "Personal hygiene", icon: ShowerHead },
-      { label: "Table manners", icon: Coffee },
-      { label: "Organizing your space", icon: Puzzle },
-      { label: "Getting dressed", icon: Shirt },
-      { label: "Time management", icon: Clock },
-      { label: "Money basics", icon: DollarSign },
-      { label: "Using public transit", icon: MapPin },
-      { label: "Grocery shopping", icon: Wrench },
-    ],
-  },
-  {
-    title: "Software & Tech",
-    emoji: "💻",
-    tiles: [
-      { label: "Learning Figma", icon: Figma },
-      { label: "Microsoft Excel", icon: FileSpreadsheet },
-      { label: "Microsoft Word", icon: FileText },
-      { label: "Google Docs", icon: FileText },
-      { label: "Adobe Photoshop", icon: Palette },
-      { label: "Canva design", icon: Palette },
-      { label: "PowerPoint slides", icon: Presentation },
-      { label: "Typing skills", icon: PenTool },
-      { label: "Internet safety", icon: Shield },
-      { label: "Using email", icon: MessageSquare },
-      { label: "File management", icon: Monitor },
-      { label: "Basic coding", icon: Code },
-    ],
-  },
-  {
-    title: "Education & Academics",
-    emoji: "📚",
-    tiles: [
-      { label: "Math fundamentals", icon: Calculator },
-      { label: "Reading comprehension", icon: BookOpen },
-      { label: "Creative writing", icon: PenTool },
-      { label: "Science projects", icon: Lightbulb },
-      { label: "History & geography", icon: MapPin },
-      { label: "Study techniques", icon: Brain },
-      { label: "Homework help", icon: GraduationCap },
-      { label: "Test preparation", icon: Star },
-      { label: "Note-taking", icon: FileText },
-      { label: "Research skills", icon: BookOpen },
-      { label: "Problem solving", icon: Puzzle },
-      { label: "Critical thinking", icon: Brain },
-    ],
-  },
-  {
-    title: "Languages",
-    emoji: "🌍",
-    tiles: [
-      { label: "Learn Spanish", icon: Languages },
-      { label: "Learn French", icon: Languages },
-      { label: "Learn Mandarin", icon: Languages },
-      { label: "Learn Japanese", icon: Languages },
-      { label: "Learn Arabic", icon: Languages },
-      { label: "Learn Portuguese", icon: Languages },
-      { label: "Learn German", icon: Languages },
-      { label: "Learn Italian", icon: Languages },
-      { label: "Learn Korean", icon: Languages },
-      { label: "Learn Sign Language", icon: Hand },
-      { label: "Pronunciation practice", icon: Mic },
-      { label: "Vocabulary building", icon: BookOpen },
-    ],
-  },
-  {
-    title: "Soft Skills & Independence",
-    emoji: "🌱",
-    tiles: [
-      { label: "Building confidence", icon: Star },
-      { label: "Being curious", icon: Lightbulb },
-      { label: "Emotional regulation", icon: Heart },
-      { label: "Setting goals", icon: Sparkles },
-      { label: "Making decisions", icon: Brain },
-      { label: "Self-advocacy", icon: Mic },
-      { label: "Patience & focus", icon: Clock },
-      { label: "Following routines", icon: Shield },
-      { label: "Handling frustration", icon: Heart },
-      { label: "Being responsible", icon: Star },
-      { label: "Showing empathy", icon: Heart },
-      { label: "Staying motivated", icon: Lightbulb },
-    ],
-  },
-  {
-    title: "Creative & Fun",
-    emoji: "🎨",
-    tiles: [
-      { label: "Drawing & sketching", icon: PenTool },
-      { label: "Playing music", icon: Music },
-      { label: "Photography basics", icon: Camera },
-      { label: "Arts & crafts", icon: Scissors },
-      { label: "Storytelling", icon: BookOpen },
-      { label: "Dance moves", icon: Sparkles },
-      { label: "DIY projects", icon: Wrench },
-      { label: "Digital art", icon: Palette },
-      { label: "Video editing", icon: Camera },
-      { label: "Journaling", icon: PenTool },
-      { label: "Board games strategy", icon: Puzzle },
-      { label: "Cooking recipes", icon: UtensilsCrossed },
-    ],
-  },
-];
+import { categories, type SkillTile } from "@/data/skillCatalog";
+import { SkillPreviewPanel } from "@/components/learner/SkillPreviewPanel";
 
 export default function LearnerSkillSelection() {
   const navigate = useNavigate();
   const location = useLocation();
   const learnerName = ((location.state as any)?.firstName as string | undefined) || getOnboardingName();
   const [customPrompt, setCustomPrompt] = useState("");
+  const [selectedTile, setSelectedTile] = useState<SkillTile | null>(null);
+  const [previewPrompt, setPreviewPrompt] = useState("");
+  const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.title = "Select a Skill - Learner Dashboard";
-    const desc = "Choose from preset skills or describe your own to add to your learning journey.";
-    let meta = document.querySelector('meta[name="description"]');
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.setAttribute("name", "description");
-      document.head.appendChild(meta);
-    }
-    meta.setAttribute("content", desc);
   }, []);
 
-  const handleSelectTile = (label: string) => {
-    console.log("Selected skill:", label);
+  const handleSelectTile = (tile: SkillTile) => {
+    setSelectedTile(tile);
+    setPreviewPrompt(tile.prompt);
+    setCustomPrompt(tile.prompt);
+    // Scroll to preview after a tick
+    setTimeout(() => previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  };
+
+  const handleConfirm = () => {
+    console.log("Begin learning:", previewPrompt);
     // TODO: wire up to skill creation
+  };
+
+  const handleClosePreview = () => {
+    setSelectedTile(null);
+    setPreviewPrompt("");
   };
 
   const handleCustomSubmit = () => {
@@ -239,6 +100,22 @@ export default function LearnerSkillSelection() {
                 </div>
               </section>
 
+              {/* Preview panel (shown when a tile is selected) */}
+              {selectedTile && (
+                <div ref={previewRef}>
+                  <SkillPreviewPanel
+                    tile={selectedTile}
+                    prompt={previewPrompt}
+                    onPromptChange={(v) => {
+                      setPreviewPrompt(v);
+                      setCustomPrompt(v);
+                    }}
+                    onConfirm={handleConfirm}
+                    onClose={handleClosePreview}
+                  />
+                </div>
+              )}
+
               {/* Divider */}
               <div className="flex items-center gap-4">
                 <div className="h-px flex-1 bg-border" />
@@ -256,11 +133,16 @@ export default function LearnerSkillSelection() {
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
                     {cat.tiles.map((tile) => {
                       const Icon = tile.icon;
+                      const isActive = selectedTile?.label === tile.label;
                       return (
                         <button
                           key={tile.label}
-                          onClick={() => handleSelectTile(tile.label)}
-                          className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-3 text-left text-sm font-medium transition-all hover:border-primary/50 hover:bg-muted hover:shadow-sm active:scale-[0.98]"
+                          onClick={() => handleSelectTile(tile)}
+                          className={`flex items-center gap-2.5 rounded-xl border px-3.5 py-3 text-left text-sm font-medium transition-all hover:border-primary/50 hover:bg-muted hover:shadow-sm active:scale-[0.98] ${
+                            isActive
+                              ? "border-primary bg-primary/5 shadow-sm"
+                              : "border-border bg-card"
+                          }`}
                         >
                           <Icon className="h-4 w-4 shrink-0 text-primary" />
                           <span className="truncate">{tile.label}</span>
