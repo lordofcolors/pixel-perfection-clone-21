@@ -30,7 +30,7 @@ export default function GuardianAccount() {
 
   const [weeklyDigest, setWeeklyDigest] = useState(true);
   const [safetyAlerts, setSafetyAlerts] = useState(true);
-  const [selectedChild, setSelectedChild] = useState(0);
+  const [selectedLearner, setSelectedLearner] = useState(0);
   const [nudgeEnabled, setNudgeEnabled] = useState<Record<number, boolean>>(
     () => Object.fromEntries(learners.map((_, i) => [i, true]))
   );
