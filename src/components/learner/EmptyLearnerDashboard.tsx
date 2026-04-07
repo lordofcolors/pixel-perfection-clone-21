@@ -1,127 +1,135 @@
- import { useState } from "react";
-import acircleLogo from "@/assets/acircle-logo.png";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Send, MonitorUp, X, Volume2, Smile } from "lucide-react";
+/**
+ * =============================================================================
+ * EmptyLearnerDashboard → Mode Selection Home
+ * =============================================================================
+ *
+ * The default learner landing page. Presents four learning modes as
+ * selectable tiles:
+ *
+ * 1. **Daily Chat** — Quick warm-up conversation with A, then transitions
+ *    into skill building on the next assigned lesson.
+ * 2. **Companion Mode** — Open-ended chat with A about anything.
+ * 3. **Study Mode** — Focused homework/activity breakdown.
+ * 4. **Skill Building** — Jump straight to any lesson in the sidebar.
+ */
+
+import { useNavigate } from "react-router-dom";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
- import { LessonEndedView } from "./LessonEndedView";
+  MessageCircle,
+  GraduationCap,
+  BookOpen,
+  Sparkles,
+} from "lucide-react";
 
 interface EmptyLearnerDashboardProps {
   learnerName: string;
 }
 
-export function EmptyLearnerDashboard({ learnerName }: EmptyLearnerDashboardProps) {
-  const [message, setMessage] = useState("");
-  const [showEmojiHint, setShowEmojiHint] = useState(true);
-   const [isDisconnected, setIsDisconnected] = useState(false);
- 
-   if (isDisconnected) {
-     return (
-       <LessonEndedView 
-         learnerName={learnerName} 
-        errorCode={1011}
-         onStartNewSession={() => setIsDisconnected(false)} 
-       />
-     );
-   }
+const MODES = [
+  {
+    id: "daily-chat",
+    title: "Daily Chat",
+    description:
+      "Start with a quick chat with A, then move into your next assigned lesson.",
+    icon: MessageCircle,
+    recommended: true,
+    color: "from-xolv-teal-300/20 to-xolv-teal-300/5",
+    borderColor: "border-xolv-teal-300/40",
+    iconColor: "text-xolv-teal-300",
+  },
+  {
+    id: "companion",
+    title: "Companion Mode",
+    description:
+      "Have an open conversation with A about anything on your mind — no lessons, just vibes.",
+    icon: Sparkles,
+    recommended: false,
+    color: "from-xolv-magenta-300/20 to-xolv-magenta-300/5",
+    borderColor: "border-xolv-magenta-300/40",
+    iconColor: "text-xolv-magenta-300",
+  },
+  {
+    id: "study",
+    title: "Study Mode",
+    description:
+      "Focus on your school homework or activities. A will help you break it down step by step.",
+    icon: BookOpen,
+    recommended: false,
+    color: "from-xolv-blue-300/20 to-xolv-blue-300/5",
+    borderColor: "border-xolv-blue-300/40",
+    iconColor: "text-xolv-blue-300",
+  },
+  {
+    id: "skill-building",
+    title: "Skill Building",
+    description:
+      "Jump straight into any skill or lesson from your curriculum — learn at your own pace.",
+    icon: GraduationCap,
+    recommended: false,
+    color: "from-amber-400/20 to-amber-400/5",
+    borderColor: "border-amber-400/40",
+    iconColor: "text-amber-400",
+  },
+] as const;
+
+export function EmptyLearnerDashboard({
+  learnerName,
+}: EmptyLearnerDashboardProps) {
+  const navigate = useNavigate();
+
+  const handleSelect = (modeId: string) => {
+    // For now all modes navigate to /chat with a mode flag
+    navigate("/chat", {
+      state: { firstName: learnerName, mode: modeId },
+    });
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] w-full max-w-3xl mx-auto">
-      {/* A Circle Logo with Audio Indicator - Outside the window */}
-      <div className="relative mb-4">
-        <img 
-          src={acircleLogo} 
-          alt="A Assistant" 
-          className="w-20 h-20 object-contain"
-        />
-        {/* Audio indicator */}
-        <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-xolv-teal-300 flex items-center justify-center">
-          <Volume2 className="w-3.5 h-3.5 text-background" />
-        </div>
-      </div>
-
-      {/* Video/Avatar Area */}
-      <div className="relative w-full flex-1 bg-card/50 rounded-xl mb-4">
-        {/* Menu dots in top right */}
-        <button className="absolute top-4 right-4 w-10 h-10 rounded-full bg-muted/80 flex items-center justify-center hover:bg-muted transition-colors">
-          <span className="text-muted-foreground">•••</span>
-        </button>
-      </div>
-
-      {/* AI Message Bubble */}
-      <div className="w-full bg-card/80 backdrop-blur rounded-xl p-4 mb-4 text-center">
-        <p className="text-foreground">
-          Hi {learnerName}! I'm A. How are you today?
+    <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] w-full max-w-3xl mx-auto px-4">
+      {/* Heading */}
+      <div className="mb-10 text-center">
+        <h2 className="text-2xl font-semibold text-foreground mb-2">
+          What would you like to do today?
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Pick a mode to get started, {learnerName}.
         </p>
       </div>
 
-      {/* Input Area */}
-      <div className="w-full flex items-center gap-2 mb-6">
-        {/* Emoji Button with Tooltip/Hint */}
-        <TooltipProvider>
-          <Tooltip open={showEmojiHint}>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="shrink-0 relative"
-                onClick={() => setShowEmojiHint(false)}
-              >
-                <Smile className="h-5 w-5 text-amber-400" />
-                {showEmojiHint && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-xolv-teal-300 rounded-full animate-pulse" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="bg-card border text-foreground">
-              <p>You can also use emojis 😊</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      {/* Mode tiles */}
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+        {MODES.map((mode) => (
+          <button
+            key={mode.id}
+            onClick={() => handleSelect(mode.id)}
+            className={`group relative flex flex-col items-start gap-3 rounded-2xl border bg-gradient-to-br p-5 text-left transition-all duration-200 hover:scale-[1.02] hover:shadow-lg ${mode.color} ${mode.borderColor}`}
+          >
+            {/* Recommended badge */}
+            {mode.recommended && (
+              <span className="absolute right-3 top-3 rounded-full bg-xolv-teal-300/20 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-xolv-teal-300">
+                Recommended
+              </span>
+            )}
 
-        <Input 
-          placeholder="Type something here..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="flex-1 bg-muted/50 border-muted"
-        />
-        <Button 
-          size="icon" 
-          className="shrink-0 bg-xolv-blue-300 hover:bg-xolv-blue-400"
-        >
-          <Send className="h-4 w-4" />
-        </Button>
+            {/* Icon */}
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-xl bg-background/50 ${mode.iconColor}`}
+            >
+              <mode.icon className="h-5 w-5" />
+            </div>
+
+            {/* Text */}
+            <div>
+              <h3 className="text-base font-semibold text-foreground">
+                {mode.title}
+              </h3>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                {mode.description}
+              </p>
+            </div>
+          </button>
+        ))}
       </div>
-
-      {/* Action Buttons */}
-      <div className="flex items-center justify-center gap-8 mb-6">
-        <button className="flex flex-col items-center gap-2 group">
-          <div className="w-14 h-14 rounded-full bg-muted/80 flex items-center justify-center group-hover:bg-muted transition-colors">
-            <MonitorUp className="w-6 h-6 text-foreground" />
-          </div>
-          <span className="text-xs text-muted-foreground uppercase tracking-wide">Share Screen</span>
-        </button>
-
-         <button 
-           className="flex flex-col items-center gap-2 group"
-           onClick={() => setIsDisconnected(true)}
-         >
-          <div className="w-14 h-14 rounded-full bg-destructive/20 flex items-center justify-center group-hover:bg-destructive/30 transition-colors">
-            <X className="w-6 h-6 text-destructive" />
-          </div>
-          <span className="text-xs text-muted-foreground uppercase tracking-wide">Disconnect</span>
-        </button>
-      </div>
-
-      {/* Privacy Disclaimer */}
-      <p className="text-xs text-muted-foreground text-center">
-        Your video and audio data will <span className="font-semibold">NOT</span> be saved
-      </p>
     </div>
   );
 }
