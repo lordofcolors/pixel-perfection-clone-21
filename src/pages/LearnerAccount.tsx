@@ -10,20 +10,20 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Bell, ChevronUp } from "lucide-react";
 import { getOnboardingName } from "@/lib/store";
 
-const NUDGE_OPTIONS = [
-  "Daily",
-  "Every other day",
-  "Every 3 days",
-  "Weekly",
-  "Biweekly",
-  "Monthly",
+const REMINDER_OPTIONS = [
+  "1 day",
+  "2 days",
+  "3 days",
+  "1 week",
+  "2 weeks",
+  "1 month",
 ];
 
 export default function LearnerAccount() {
   const learnerName = getOnboardingName() || "Learner";
 
   const [nudgeEnabled, setNudgeEnabled] = useState(true);
-  const [nudgeFrequency, setNudgeFrequency] = useState("Biweekly");
+  const [nudgeFrequency, setNudgeFrequency] = useState("2 weeks");
   const [nudgeOpen, setNudgeOpen] = useState(true);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export default function LearnerAccount() {
                     <div className="rounded-lg border border-border bg-muted/30 p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-semibold">Re-engagement Nudge</p>
+                          <p className="text-sm font-semibold">Learning Reminders</p>
                           <CollapsibleTrigger asChild>
                             <button className="text-muted-foreground hover:text-foreground">
                               <ChevronUp className={`h-4 w-4 transition-transform ${nudgeOpen ? "" : "rotate-180"}`} />
@@ -98,17 +98,17 @@ export default function LearnerAccount() {
                         </div>
                         <Switch checked={nudgeEnabled} onCheckedChange={setNudgeEnabled} />
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">Email reminders sent after periods of inactivity.</p>
+                      <p className="text-xs text-muted-foreground mt-1">Get a friendly email reminder if you haven't practiced in a while.</p>
                       <CollapsibleContent>
                         {nudgeEnabled && (
                           <div className="flex items-center justify-between mt-4 rounded-lg border border-border bg-background/50 p-3">
-                            <span className="text-sm">Remind</span>
+                            <span className="text-sm">Remind me after</span>
                             <Select value={nudgeFrequency} onValueChange={setNudgeFrequency}>
                               <SelectTrigger className="w-[160px]">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                {NUDGE_OPTIONS.map(opt => (
+                                {REMINDER_OPTIONS.map(opt => (
                                   <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                                 ))}
                               </SelectContent>
