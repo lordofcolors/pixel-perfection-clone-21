@@ -103,6 +103,7 @@ const ChatPage = () => {
               skillMapOn={skillMapOn}
               screenShareOn={screenShareOn}
               webcamOn={webcamOn}
+              quizOn={quizOn}
               expandedPanel={expandedPanel}
               onExpandPanel={setExpandedPanel}
               chatOpen={chatOpen}
@@ -117,11 +118,19 @@ const ChatPage = () => {
               onSendEmoji={(emoji) => {
                 session.sendMessage(emoji);
               }}
-              onToggleImageSearch={() => setImageSearchOn((v) => !v)}
-              onToggleSkillMap={() => setSkillMapOn((v) => !v)}
-              onQuizMe={() => {
-                session.sendMessage("Quiz me! 🧠");
+              onToggleImageSearch={() => {
+                if (!imageSearchOn) setImageSearchOn(true);
+                setImageIndex((v) => v + 1);
               }}
+              onToggleSkillMap={() => {
+                if (!skillMapOn) setSkillMapOn(true);
+              }}
+              onQuizMe={() => {
+                if (!quizOn) setQuizOn(true);
+                setQuizIndex((v) => v + 1);
+              }}
+              imageIndex={imageIndex}
+              quizIndex={quizIndex}
             />
           </div>
 
