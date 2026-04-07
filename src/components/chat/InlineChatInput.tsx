@@ -18,7 +18,7 @@ import {
   Keyboard,
   Maximize2,
   Minimize2,
-  ImageSearch,
+  Search,
   Map,
   HelpCircle,
 } from "lucide-react";
