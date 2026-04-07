@@ -110,13 +110,12 @@ export function PanelContent({
   if (panelKey === "image") {
     const isExpanded = expandedPanel === "image";
     return isExpanded ? (
-      <div className="h-full overflow-auto p-4">
-        <div className="mx-auto w-full max-w-2xl overflow-hidden rounded-md">
-          <ImageSearchPanel className="w-full" variant="expanded" imageIndex={imageIndex} />
-        </div>
+      <div className="h-full p-4">
+        <ImageSearchPanel className="h-full w-full" variant="expanded" imageIndex={imageIndex} />
       </div>
     ) : (
       <ImageSearchPanel imageIndex={imageIndex} />
+    );
     );
   }
 
