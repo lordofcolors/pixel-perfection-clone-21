@@ -17,9 +17,6 @@ import {
   Minimize2,
   Plus,
   Minus,
-  Search,
-  Map,
-  HelpCircle,
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
