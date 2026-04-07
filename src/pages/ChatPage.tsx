@@ -34,12 +34,15 @@ const ChatPage = () => {
   const [skillMapOn, setSkillMapOn] = useState(false);
   const [screenShareOn, setScreenShareOn] = useState(false);
   const [webcamOn, setWebcamOn] = useState(false);
+  const [quizOn, setQuizOn] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [expandedPanel, setExpandedPanel] = useState<PanelKey | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [isAgentMuted, setIsAgentMuted] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+  const [quizIndex, setQuizIndex] = useState(0);
 
-  const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn || webcamOn;
+  const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn || webcamOn || quizOn;
 
   // Auto-reset to gallery when all side panels are turned off
   useEffect(() => {
@@ -100,6 +103,7 @@ const ChatPage = () => {
               skillMapOn={skillMapOn}
               screenShareOn={screenShareOn}
               webcamOn={webcamOn}
+              quizOn={quizOn}
               expandedPanel={expandedPanel}
               onExpandPanel={setExpandedPanel}
               chatOpen={chatOpen}
@@ -114,11 +118,19 @@ const ChatPage = () => {
               onSendEmoji={(emoji) => {
                 session.sendMessage(emoji);
               }}
-              onToggleImageSearch={() => setImageSearchOn((v) => !v)}
-              onToggleSkillMap={() => setSkillMapOn((v) => !v)}
-              onQuizMe={() => {
-                session.sendMessage("Quiz me! 🧠");
+              onToggleImageSearch={() => {
+                if (!imageSearchOn) setImageSearchOn(true);
+                setImageIndex((v) => v + 1);
               }}
+              onToggleSkillMap={() => {
+                if (!skillMapOn) setSkillMapOn(true);
+              }}
+              onQuizMe={() => {
+                if (!quizOn) setQuizOn(true);
+                setQuizIndex((v) => v + 1);
+              }}
+              imageIndex={imageIndex}
+              quizIndex={quizIndex}
             />
           </div>
 

@@ -19,6 +19,7 @@ import { Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImageSearchPanel } from "@/components/chat/ImageSearchPanel";
 import { SkillMapPanel } from "@/components/chat/SkillMapPanel";
+import { QuizPanel } from "@/components/chat/QuizPanel";
 import type { PanelKey } from "@/components/chat/types";
 import screenShareImg from "@/assets/screen-share-preview.png";
 import webcamPlaceholder from "@/assets/webcam-placeholder.png";
@@ -37,6 +38,8 @@ interface PanelContentProps {
   RiveComponent: React.ComponentType<{ className?: string }>;
   isAgentMuted?: boolean;
   onToggleAgentMute?: () => void;
+  quizIndex?: number;
+  imageIndex?: number;
 }
 
 export function PanelContent({
@@ -46,6 +49,8 @@ export function PanelContent({
   RiveComponent,
   isAgentMuted = false,
   onToggleAgentMute,
+  quizIndex = 0,
+  imageIndex = 0,
 }: PanelContentProps) {
   // ── Rive assistant ─────────────────────────────────────────────────────
   if (panelKey === "rive") {
@@ -105,11 +110,11 @@ export function PanelContent({
     return isExpanded ? (
       <div className="h-full overflow-auto p-4">
         <div className="mx-auto w-full max-w-2xl overflow-hidden rounded-md">
-          <ImageSearchPanel className="w-full" variant="expanded" />
+          <ImageSearchPanel className="w-full" variant="expanded" imageIndex={imageIndex} />
         </div>
       </div>
     ) : (
-      <ImageSearchPanel />
+      <ImageSearchPanel imageIndex={imageIndex} />
     );
   }
 
@@ -117,6 +122,11 @@ export function PanelContent({
   if (panelKey === "skill") {
     const hideTitle = expandedPanel !== null && expandedPanel !== "skill";
     return <SkillMapPanel hideTitle={hideTitle} />;
+  }
+
+  // ── Quiz panel ─────────────────────────────────────────────────────────
+  if (panelKey === "quiz") {
+    return <QuizPanel questionIndex={quizIndex} />;
   }
 
   // ── Webcam panel ───────────────────────────────────────────────────────
