@@ -121,10 +121,10 @@ export default function GuardianAccount() {
               {/* Notifications */}
               <Card>
                 <CardHeader>
-                  <div className="flex items-center gap-2">
+                   <div className="flex items-center gap-2">
                     <Bell className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <CardTitle className="text-base">Notifications</CardTitle>
+                      <CardTitle className="text-base">My Notifications</CardTitle>
                       <p className="text-sm text-muted-foreground">Manage how and when you receive updates.</p>
                     </div>
                   </div>
