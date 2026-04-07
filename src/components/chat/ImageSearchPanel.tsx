@@ -17,7 +17,6 @@ const BATCH_SIZE = 3;
 interface ImageSearchPanelProps {
   className?: string;
   variant?: "preview" | "expanded";
-  /** Incremented each time "Find Image" is triggered — loads a new batch. */
   imageIndex?: number;
 }
 
@@ -27,10 +26,10 @@ export function ImageSearchPanel({
   imageIndex = 0,
 }: ImageSearchPanelProps) {
   const getBatch = (trigger: number) => {
-    const start = ((trigger - 1) * BATCH_SIZE) % IMAGES.length;
+    const start = ((trigger <= 0 ? 0 : trigger - 1) * BATCH_SIZE) % IMAGES.length;
     const batch = [];
     for (let i = 0; i < BATCH_SIZE; i++) {
-      batch.push(IMAGES[((start < 0 ? 0 : start) + i) % IMAGES.length]);
+      batch.push(IMAGES[(start + i) % IMAGES.length]);
     }
     return batch;
   };
@@ -47,28 +46,30 @@ export function ImageSearchPanel({
   const goLeft = () => setActiveIdx((i) => Math.max(0, i - 1));
   const goRight = () => setActiveIdx((i) => Math.min(BATCH_SIZE - 1, i + 1));
 
+  // Expanded mode — image fits to height, no scrollbar
   if (variant === "expanded") {
     return (
-      <div className={`relative flex h-full ${className || ""}`}>
-        {/* Left arrow — vertically centered on left edge */}
+      <div className={`relative h-full w-full flex items-center justify-center ${className || ""}`}>
+        {/* Left arrow — pinned to left edge of panel */}
         <button
           onClick={goLeft}
           disabled={activeIdx === 0}
-          className="absolute left-2 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-30 transition-all"
+          className="absolute left-3 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-20 transition-all"
         >
           <ChevronLeft className="h-6 w-6" />
         </button>
 
-        {/* Image */}
-        <div className="flex-1 flex flex-col items-center justify-center overflow-auto px-14">
-          <img
-            src={img.src}
-            alt={img.alt}
-            className="block w-full h-auto max-h-full object-contain"
-            draggable={false}
-          />
-          {/* Dots */}
-          <div className="flex items-center justify-center gap-2 py-3">
+        {/* Image + dots */}
+        <div className="flex flex-col items-center h-full w-full px-16">
+          <div className="flex-1 min-h-0 flex items-center justify-center w-full">
+            <img
+              src={img.src}
+              alt={img.alt}
+              className="max-h-full max-w-full object-contain"
+              draggable={false}
+            />
+          </div>
+          <div className="flex items-center justify-center gap-2 py-3 flex-shrink-0">
             {Array.from({ length: BATCH_SIZE }).map((_, i) => (
               <button
                 key={i}
@@ -83,11 +84,11 @@ export function ImageSearchPanel({
           </div>
         </div>
 
-        {/* Right arrow — vertically centered on right edge */}
+        {/* Right arrow — pinned to right edge of panel */}
         <button
           onClick={goRight}
           disabled={activeIdx === BATCH_SIZE - 1}
-          className="absolute right-2 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-30 transition-all"
+          className="absolute right-3 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-20 transition-all"
         >
           <ChevronRight className="h-6 w-6" />
         </button>
@@ -97,45 +98,45 @@ export function ImageSearchPanel({
 
   // Preview (thumbnail / gallery) mode
   return (
-    <div className={`relative flex flex-col h-full w-full ${className || ""}`}>
-      {/* Left arrow */}
+    <div className={`relative h-full w-full flex items-center justify-center ${className || ""}`}>
+      {/* Left arrow — pinned to left edge */}
       <button
         onClick={goLeft}
         disabled={activeIdx === 0}
-        className="absolute left-1 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-8 w-8 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-30 transition-all"
+        className="absolute left-2 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-8 w-8 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-20 transition-all"
       >
         <ChevronLeft className="h-5 w-5" />
       </button>
 
-      <div className="flex-1 flex items-center justify-center overflow-hidden px-10">
-        <img
-          src={img.src}
-          alt={img.alt}
-          className="w-full h-full object-contain"
-          draggable={false}
-        />
-      </div>
-
-      {/* Dots */}
-      <div className="flex items-center justify-center gap-2 py-2">
-        {Array.from({ length: BATCH_SIZE }).map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setActiveIdx(i)}
-            className={`h-2 w-2 rounded-full transition-all ${
-              i === activeIdx
-                ? "bg-primary scale-125"
-                : "bg-muted-foreground/40 hover:bg-muted-foreground/60"
-            }`}
+      <div className="flex flex-col items-center h-full w-full px-10">
+        <div className="flex-1 min-h-0 flex items-center justify-center w-full overflow-hidden">
+          <img
+            src={img.src}
+            alt={img.alt}
+            className="max-h-full max-w-full object-contain"
+            draggable={false}
           />
-        ))}
+        </div>
+        <div className="flex items-center justify-center gap-2 py-2 flex-shrink-0">
+          {Array.from({ length: BATCH_SIZE }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveIdx(i)}
+              className={`h-2 w-2 rounded-full transition-all ${
+                i === activeIdx
+                  ? "bg-primary scale-125"
+                  : "bg-muted-foreground/40 hover:bg-muted-foreground/60"
+              }`}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Right arrow */}
+      {/* Right arrow — pinned to right edge */}
       <button
         onClick={goRight}
         disabled={activeIdx === BATCH_SIZE - 1}
-        className="absolute right-1 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-8 w-8 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-30 transition-all"
+        className="absolute right-2 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-8 w-8 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-20 transition-all"
       >
         <ChevronRight className="h-5 w-5" />
       </button>
