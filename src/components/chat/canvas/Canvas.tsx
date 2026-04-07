@@ -261,6 +261,7 @@ export function Canvas({
                     onToggleAgentMute={onToggleAgentMute}
                     imageIndex={imageIndex}
                     quizIndex={quizIndex}
+                    mapIndex={mapIndex}
                   />
                 </div>
               </div>
@@ -288,6 +289,7 @@ export function Canvas({
                   onToggleAgentMute={onToggleAgentMute}
                   imageIndex={imageIndex}
                   quizIndex={quizIndex}
+                    mapIndex={mapIndex}
                 />
               </div>
             </div>
