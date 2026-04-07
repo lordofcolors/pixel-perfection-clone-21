@@ -40,6 +40,7 @@ interface CanvasProps {
   onToggleImageSearch?: () => void;
   onToggleSkillMap?: () => void;
   onQuizMe?: () => void;
+  onClosePanel?: (key: PanelKey) => void;
   imageIndex?: number;
   quizIndex?: number;
 }
@@ -66,6 +67,7 @@ export function Canvas({
   onToggleImageSearch,
   onToggleSkillMap,
   onQuizMe,
+  onClosePanel,
   imageIndex = 0,
   quizIndex = 0,
 }: CanvasProps) {
