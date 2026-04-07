@@ -229,6 +229,12 @@ export function Canvas({
             onSend={onSend}
             onToggleChat={onToggleChat}
             isChatOpen={chatOpen}
+            onSendEmoji={onSendEmoji}
+            onToggleImageSearch={onToggleImageSearch}
+            imageSearchOn={imageSearchOn}
+            onToggleSkillMap={onToggleSkillMap}
+            skillMapOn={skillMapOn}
+            onQuizMe={onQuizMe}
           />
         </div>
       )}
