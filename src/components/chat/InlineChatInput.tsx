@@ -36,11 +36,11 @@ type ActionKey = "findImage" | "breakDown" | "quizMe";
 const ACTION_BUTTONS: {
   key: ActionKey;
   label: string;
-  icon: typeof Search;
+  emoji: string;
 }[] = [
-  { key: "findImage", label: "Find Image", icon: Search },
-  { key: "breakDown", label: "Break It Down", icon: Map },
-  { key: "quizMe", label: "Quiz Me", icon: HelpCircle },
+  { key: "findImage", label: "Find Image", emoji: "🔍" },
+  { key: "breakDown", label: "Break It Down", emoji: "🗺️" },
+  { key: "quizMe", label: "Quiz Me", emoji: "❓" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -85,8 +85,11 @@ export function InlineChatInput({
   const [actionBarOpen, setActionBarOpen] = useState(true);
   const [loadingAction, setLoadingAction] = useState<ActionKey | null>(null);
 
-  const handleAction = (key: ActionKey) => {
+  const handleAction = (key: ActionKey, emoji: string, label: string) => {
     if (loadingAction) return;
+
+    // Send the action as a chat message
+    onSendEmoji?.(`${emoji} ${label}`);
 
     setLoadingAction(key);
     setTimeout(() => {
@@ -189,13 +192,13 @@ export function InlineChatInput({
 
           {/* Action chips */}
           <div className="flex items-center gap-1.5">
-            {ACTION_BUTTONS.map(({ key, label, icon: Icon }) => {
+            {ACTION_BUTTONS.map(({ key, label, emoji }) => {
               const loading = loadingAction === key;
 
               return (
                 <button
                   key={key}
-                  onClick={() => handleAction(key)}
+                  onClick={() => handleAction(key, emoji, label)}
                   disabled={loading}
                   className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
                     loading
@@ -207,7 +210,7 @@ export function InlineChatInput({
                   {loading ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
-                    <Icon className="h-3.5 w-3.5" />
+                    <span>{emoji}</span>
                   )}
                   <span>{label}</span>
                 </button>
