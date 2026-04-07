@@ -3,12 +3,14 @@
  * QuizPanel
  * =============================================================================
  *
- * "Who Wants to Be a Millionaire" style quiz panel. Shows a question with
- * four answer options (A/B/C/D). Cycles through questions when `questionIndex`
- * changes.
+ * "Who Wants to Be a Millionaire" style quiz carousel. Each trigger of
+ * "Quiz Me" loads a batch of 3 questions the user can flip through with
+ * left/right arrows and dot indicators.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // ---------------------------------------------------------------------------
 // Mock question bank
@@ -65,14 +67,21 @@ const QUESTIONS = [
     ],
     correct: 2,
   },
+  {
+    question: "What planet is known as the Red Planet?",
+    options: ["A. Venus", "B. Mars", "C. Jupiter", "D. Mercury"],
+    correct: 1,
+  },
 ] as const;
+
+const BATCH_SIZE = 3;
 
 // ---------------------------------------------------------------------------
 // Props
 // ---------------------------------------------------------------------------
 
 interface QuizPanelProps {
-  /** Index that cycles through questions. Changes trigger a new question. */
+  /** Incremented each time "Quiz Me" is triggered — loads a new batch. */
   questionIndex: number;
   className?: string;
 }
@@ -82,24 +91,67 @@ interface QuizPanelProps {
 // ---------------------------------------------------------------------------
 
 export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
-  const q = QUESTIONS[questionIndex % QUESTIONS.length];
-  const [selected, setSelected] = useState<number | null>(null);
-  const [revealed, setRevealed] = useState(false);
+  // Derive a batch of 3 questions from the question bank
+  const getBatch = useCallback(
+    (batchTrigger: number) => {
+      const start = (batchTrigger * BATCH_SIZE) % QUESTIONS.length;
+      const batch = [];
+      for (let i = 0; i < BATCH_SIZE; i++) {
+        batch.push(QUESTIONS[(start + i) % QUESTIONS.length]);
+      }
+      return batch;
+    },
+    [],
+  );
 
-  // Reset when question changes
+  const [batch, setBatch] = useState(() => getBatch(questionIndex));
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [selected, setSelected] = useState<(number | null)[]>([null, null, null]);
+  const [revealed, setRevealed] = useState<boolean[]>([false, false, false]);
+
+  // Reset when a new batch is triggered
   useEffect(() => {
-    setSelected(null);
-    setRevealed(false);
-  }, [questionIndex]);
+    setBatch(getBatch(questionIndex));
+    setActiveIdx(0);
+    setSelected([null, null, null]);
+    setRevealed([false, false, false]);
+  }, [questionIndex, getBatch]);
 
-  const handleSelect = (idx: number) => {
-    if (revealed) return;
-    setSelected(idx);
-    setTimeout(() => setRevealed(true), 600);
+  const q = batch[activeIdx];
+
+  const handleSelect = (optIdx: number) => {
+    if (revealed[activeIdx]) return;
+    const newSelected = [...selected];
+    newSelected[activeIdx] = optIdx;
+    setSelected(newSelected);
+
+    setTimeout(() => {
+      setRevealed((prev) => {
+        const next = [...prev];
+        next[activeIdx] = true;
+        return next;
+      });
+    }, 600);
   };
 
-  const optionColors = ["bg-blue-500/20", "bg-amber-500/20", "bg-emerald-500/20", "bg-rose-500/20"];
-  const optionBorders = ["border-blue-500/40", "border-amber-500/40", "border-emerald-500/40", "border-rose-500/40"];
+  const goLeft = () => setActiveIdx((i) => Math.max(0, i - 1));
+  const goRight = () => setActiveIdx((i) => Math.min(BATCH_SIZE - 1, i + 1));
+
+  const optionColors = [
+    "bg-blue-500/20",
+    "bg-amber-500/20",
+    "bg-emerald-500/20",
+    "bg-rose-500/20",
+  ];
+  const optionBorders = [
+    "border-blue-500/40",
+    "border-amber-500/40",
+    "border-emerald-500/40",
+    "border-rose-500/40",
+  ];
+
+  const isRevealed = revealed[activeIdx];
+  const currentSelected = selected[activeIdx];
 
   return (
     <div
@@ -107,7 +159,7 @@ export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
     >
       {/* Question number */}
       <div className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        Question {(questionIndex % QUESTIONS.length) + 1} of {QUESTIONS.length}
+        Question {activeIdx + 1} of {BATCH_SIZE}
       </div>
 
       {/* Question */}
@@ -119,12 +171,12 @@ export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
       <div className="grid w-full max-w-md grid-cols-2 gap-3">
         {q.options.map((opt, idx) => {
           const isCorrect = idx === q.correct;
-          const isSelected = selected === idx;
+          const isSelected = currentSelected === idx;
 
           let borderClass = optionBorders[idx];
           let bgClass = optionColors[idx];
 
-          if (revealed) {
+          if (isRevealed) {
             if (isCorrect) {
               borderClass = "border-emerald-400";
               bgClass = "bg-emerald-500/30";
@@ -142,7 +194,7 @@ export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
               key={idx}
               onClick={() => handleSelect(idx)}
               className={`rounded-xl border ${borderClass} ${bgClass} px-4 py-3 text-left text-sm font-medium text-foreground transition-all hover:scale-[1.02] ${
-                revealed ? "cursor-default" : "cursor-pointer"
+                isRevealed ? "cursor-default" : "cursor-pointer"
               }`}
             >
               {opt}
@@ -152,9 +204,9 @@ export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
       </div>
 
       {/* Result feedback */}
-      {revealed && (
+      {isRevealed && (
         <div className="mt-4 text-sm font-medium animate-in fade-in">
-          {selected === q.correct ? (
+          {currentSelected === q.correct ? (
             <span className="text-emerald-400">🎉 Correct! Great job!</span>
           ) : (
             <span className="text-rose-400">
@@ -163,6 +215,43 @@ export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
           )}
         </div>
       )}
+
+      {/* Navigation: arrows + dots */}
+      <div className="mt-6 flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground hover:text-foreground"
+          onClick={goLeft}
+          disabled={activeIdx === 0}
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+
+        <div className="flex items-center gap-2">
+          {Array.from({ length: BATCH_SIZE }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveIdx(i)}
+              className={`h-2 w-2 rounded-full transition-all ${
+                i === activeIdx
+                  ? "bg-primary scale-125"
+                  : "bg-muted-foreground/40 hover:bg-muted-foreground/60"
+              }`}
+            />
+          ))}
+        </div>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground hover:text-foreground"
+          onClick={goRight}
+          disabled={activeIdx === BATCH_SIZE - 1}
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+      </div>
     </div>
   );
 }
