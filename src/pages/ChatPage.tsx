@@ -160,6 +160,18 @@ const ChatPage = () => {
               onSendMessage={session.sendMessage}
               inputValue={session.inputValue}
               onInputChange={session.setInputValue}
+              onSendEmoji={(emoji) => session.sendMessage(emoji)}
+              onToggleImageSearch={() => {
+                if (!imageSearchOn) setImageSearchOn(true);
+                setImageIndex((v) => v + 1);
+              }}
+              onToggleSkillMap={() => {
+                if (!skillMapOn) setSkillMapOn(true);
+              }}
+              onQuizMe={() => {
+                if (!quizOn) setQuizOn(true);
+                setQuizIndex((v) => v + 1);
+              }}
             />
           )}
         </div>
