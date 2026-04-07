@@ -213,7 +213,7 @@ export default function GuardianAccount() {
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                {NUDGE_OPTIONS.map(opt => (
+                                {REMINDER_OPTIONS.map(opt => (
                                   <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                                 ))}
                               </SelectContent>
