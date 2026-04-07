@@ -41,7 +41,7 @@ const MODES = [
     id: "companion",
     title: "Companion Mode",
     description:
-      "Have an open conversation with A about anything on your mind — no lessons, just vibes.",
+      "Have an open conversation with A about anything on your mind. No lessons, just quality time.",
     icon: Sparkles,
     recommended: false,
     color: "from-xolv-magenta-300/20 to-xolv-magenta-300/5",
@@ -63,7 +63,7 @@ const MODES = [
     id: "skill-building",
     title: "Skill Building",
     description:
-      "Jump straight into any skill or lesson from your curriculum — learn at your own pace.",
+      "Jump straight into any skill or lesson from your curriculum. Learn at your own pace.",
     icon: GraduationCap,
     recommended: false,
     color: "from-amber-400/20 to-amber-400/5",
