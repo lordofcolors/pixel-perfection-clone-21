@@ -40,6 +40,7 @@ interface CanvasProps {
   onToggleImageSearch?: () => void;
   onToggleSkillMap?: () => void;
   onQuizMe?: () => void;
+  onClosePanel?: (key: PanelKey) => void;
   imageIndex?: number;
   quizIndex?: number;
 }
@@ -66,6 +67,7 @@ export function Canvas({
   onToggleImageSearch,
   onToggleSkillMap,
   onQuizMe,
+  onClosePanel,
   imageIndex = 0,
   quizIndex = 0,
 }: CanvasProps) {
@@ -167,7 +169,26 @@ export function Canvas({
                   if (isThumbnail) onExpandPanel(key);
                   else if (isGalleryWithSides) onExpandPanel(key);
                 }}
-              >
+               >
+                {/* Close panel button — top-left on all non-rive panels */}
+                {key !== "rive" && !isThumbnail && onClosePanel && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`absolute left-2 top-2 z-10 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground ${
+                      isExpanded ? "h-8 w-8" : "h-7 w-7"
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onExpandPanel(null);
+                      onClosePanel(key);
+                    }}
+                    title="Close panel"
+                  >
+                    <X className={isExpanded ? "h-4 w-4" : "h-3.5 w-3.5"} />
+                  </Button>
+                )}
+
                 {key !== "rive" && !expandedPanel && isGalleryWithSides && (
                   <Button
                     variant="ghost"
