@@ -49,6 +49,8 @@ export function PanelContent({
   RiveComponent,
   isAgentMuted = false,
   onToggleAgentMute,
+  quizIndex = 0,
+  imageIndex = 0,
 }: PanelContentProps) {
   // ── Rive assistant ─────────────────────────────────────────────────────
   if (panelKey === "rive") {
