@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   ReactFlow,
   Background,
@@ -11,8 +11,6 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 // ---------------------------------------------------------------------------
 // Shared node/edge style helpers
@@ -56,7 +54,7 @@ function makeEdge(source: string, target: string): Edge {
 }
 
 // ---------------------------------------------------------------------------
-// 3 pre-built skill maps
+// Pre-built skill maps
 // ---------------------------------------------------------------------------
 
 const SKILL_MAPS: Array<{ nodes: Node[]; edges: Edge[] }> = [
@@ -93,8 +91,6 @@ const SKILL_MAPS: Array<{ nodes: Node[]; edges: Edge[] }> = [
   },
 ];
 
-const BATCH_SIZE = 3;
-
 // ---------------------------------------------------------------------------
 // Props
 // ---------------------------------------------------------------------------
@@ -102,7 +98,7 @@ const BATCH_SIZE = 3;
 interface SkillMapPanelProps {
   className?: string;
   hideTitle?: boolean;
-  /** Incremented each time "Break It Down" is triggered — loads a new batch. */
+  /** Incremented each time "Break It Down" is triggered — cycles to next map. */
   mapIndex?: number;
 }
 
@@ -134,7 +130,6 @@ function SkillMapInner({
     return () => observer.disconnect();
   }, [fitView]);
 
-  // Re-fit when nodes change
   useEffect(() => {
     setTimeout(() => fitView({ padding: 0.3, duration: 300 }), 50);
   }, [initialNodes, fitView]);
@@ -160,23 +155,14 @@ function SkillMapInner({
 }
 
 // ---------------------------------------------------------------------------
-// Main component with carousel
+// Main component — single view, cycles on each trigger
 // ---------------------------------------------------------------------------
 
 export function SkillMapPanel({ className, hideTitle, mapIndex = 0 }: SkillMapPanelProps) {
-  const [activeIdx, setActiveIdx] = useState(0);
-
-  // Reset to first map when mapIndex (trigger) changes
-  useEffect(() => {
-    setActiveIdx(0);
-  }, [mapIndex]);
-
-  const currentMap = SKILL_MAPS[activeIdx % SKILL_MAPS.length];
-  const goLeft = () => setActiveIdx((i) => Math.max(0, i - 1));
-  const goRight = () => setActiveIdx((i) => Math.min(BATCH_SIZE - 1, i + 1));
+  const currentMap = SKILL_MAPS[mapIndex % SKILL_MAPS.length];
 
   return (
-    <div className={`${className || ""} skill-map-panel flex flex-col`} style={{ width: "100%", height: "100%" }}>
+    <div className={`${className || ""} skill-map-panel`} style={{ width: "100%", height: "100%" }}>
       <style>{`
         .skill-map-panel .react-flow__controls {
           background: hsl(222 47% 11% / 0.9);
@@ -200,47 +186,9 @@ export function SkillMapPanel({ className, hideTitle, mapIndex = 0 }: SkillMapPa
           fill: hsl(210 40% 80%);
         }
       `}</style>
-
-      <div className="flex-1 min-h-0">
-        <ReactFlowProvider key={activeIdx}>
-          <SkillMapInner hideTitle={hideTitle} nodes={currentMap.nodes} edges={currentMap.edges} />
-        </ReactFlowProvider>
-      </div>
-
-      {/* Carousel navigation */}
-      <div className="flex items-center justify-center gap-4 py-2 flex-shrink-0">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7 text-muted-foreground hover:text-foreground"
-          onClick={goLeft}
-          disabled={activeIdx === 0}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <div className="flex items-center gap-2">
-          {Array.from({ length: BATCH_SIZE }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveIdx(i)}
-              className={`h-2 w-2 rounded-full transition-all ${
-                i === activeIdx
-                  ? "bg-primary scale-125"
-                  : "bg-muted-foreground/40 hover:bg-muted-foreground/60"
-              }`}
-            />
-          ))}
-        </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7 text-muted-foreground hover:text-foreground"
-          onClick={goRight}
-          disabled={activeIdx === BATCH_SIZE - 1}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
+      <ReactFlowProvider key={mapIndex}>
+        <SkillMapInner hideTitle={hideTitle} nodes={currentMap.nodes} edges={currentMap.edges} />
+      </ReactFlowProvider>
     </div>
   );
 }
