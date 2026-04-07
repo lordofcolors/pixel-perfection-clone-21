@@ -19,6 +19,7 @@ import { Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImageSearchPanel } from "@/components/chat/ImageSearchPanel";
 import { SkillMapPanel } from "@/components/chat/SkillMapPanel";
+import { QuizPanel } from "@/components/chat/QuizPanel";
 import type { PanelKey } from "@/components/chat/types";
 import screenShareImg from "@/assets/screen-share-preview.png";
 import webcamPlaceholder from "@/assets/webcam-placeholder.png";
