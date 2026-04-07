@@ -58,6 +58,10 @@ export function Canvas({
   onToggleChat,
   isAgentMuted,
   onToggleAgentMute,
+  onSendEmoji,
+  onToggleImageSearch,
+  onToggleSkillMap,
+  onQuizMe,
 }: CanvasProps) {
   // ── Derive active side panels ──────────────────────────────────────────
 
