@@ -12,13 +12,13 @@ import { Bell, ChevronUp, Home, Settings, Users } from "lucide-react";
 import { getGuardianSetup } from "@/lib/store";
 import { useNavigate } from "react-router-dom";
 
-const NUDGE_OPTIONS = [
-  "Daily",
-  "Every other day",
-  "Every 3 days",
-  "Weekly",
-  "Biweekly",
-  "Monthly",
+const REMINDER_OPTIONS = [
+  "1 day",
+  "2 days",
+  "3 days",
+  "1 week",
+  "2 weeks",
+  "1 month",
 ];
 
 export default function GuardianAccount() {
