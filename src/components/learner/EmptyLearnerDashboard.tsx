@@ -19,6 +19,7 @@ import {
   GraduationCap,
   BookOpen,
   Sparkles,
+  Users,
 } from "lucide-react";
 
 interface EmptyLearnerDashboardProps {
@@ -38,10 +39,10 @@ const MODES = [
     iconColor: "text-xolv-teal-300",
   },
   {
-    id: "companion",
-    title: "Companion Mode",
+    id: "learning",
+    title: "Learning Mode",
     description:
-      "Chat freely with A about anything on your mind. No lessons, just quality time.",
+      "Jump straight into learning any skill or lesson in your curriculum.",
     icon: Sparkles,
     recommended: false,
     color: "from-xolv-magenta-300/20 to-xolv-magenta-300/5",
@@ -60,11 +61,11 @@ const MODES = [
     iconColor: "text-xolv-blue-300",
   },
   {
-    id: "skill-building",
-    title: "Skill Building",
+    id: "companion",
+    title: "Companion Mode",
     description:
-      "Jump straight into any skill or lesson from your curriculum. Learn at your own pace.",
-    icon: GraduationCap,
+      "Chat freely with A about anything on your mind. No lessons, just quality time.",
+    icon: Users,
     recommended: false,
     color: "from-amber-400/20 to-amber-400/5",
     borderColor: "border-amber-400/40",
