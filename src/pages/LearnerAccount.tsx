@@ -2,15 +2,13 @@ import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/learner/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Bell, ChevronUp, Home, Settings, Users } from "lucide-react";
-import { getOnboardingName, getGuardianSetup } from "@/lib/store";
-import { useNavigate } from "react-router-dom";
+import { Bell, ChevronUp } from "lucide-react";
+import { getOnboardingName } from "@/lib/store";
 
 const NUDGE_OPTIONS = [
   "Daily",
@@ -23,26 +21,14 @@ const NUDGE_OPTIONS = [
 
 export default function LearnerAccount() {
   const learnerName = getOnboardingName() || "Learner";
-  const setup = getGuardianSetup();
-  const guardianName = setup?.guardianName || "Guardian";
-  const learners = setup?.learners || [{ name: "Jake" }, { name: "Mia" }];
-  const familyName = `${guardianName.split(" ")[0]} Family`;
-  const navigate = useNavigate();
 
-  const [weeklyDigest, setWeeklyDigest] = useState(true);
-  const [safetyAlerts, setSafetyAlerts] = useState(true);
-  const [selectedChild, setSelectedChild] = useState(0);
-  const [nudgeEnabled, setNudgeEnabled] = useState<Record<number, boolean>>(
-    () => Object.fromEntries(learners.map((_, i) => [i, true]))
-  );
-  const [nudgeFrequency, setNudgeFrequency] = useState<Record<number, string>>(
-    () => Object.fromEntries(learners.map((_, i) => [i, "Biweekly"]))
-  );
+  const [nudgeEnabled, setNudgeEnabled] = useState(true);
+  const [nudgeFrequency, setNudgeFrequency] = useState("Biweekly");
   const [nudgeOpen, setNudgeOpen] = useState(true);
 
   useEffect(() => {
-    document.title = "Account Settings";
-    const desc = "Manage your family information and account settings.";
+    document.title = "Learner - Account";
+    const desc = "Manage your notification preferences.";
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) {
       meta = document.createElement("meta");
@@ -65,7 +51,7 @@ export default function LearnerAccount() {
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">
             <SidebarTrigger className="mr-2" />
-            <h1 className="text-base font-semibold">Account Settings</h1>
+            <h1 className="text-base font-semibold">Account</h1>
           </header>
           <main className="p-6 space-y-6">
             <section className="container max-w-3xl space-y-6">
@@ -75,45 +61,13 @@ export default function LearnerAccount() {
                 <CardContent className="flex items-center gap-4 pt-6">
                   <Avatar className="h-16 w-16">
                     <AvatarFallback className="bg-muted text-lg font-semibold">
-                      {getInitials(guardianName)}
+                      {getInitials(learnerName)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h2 className="text-xl font-semibold">{guardianName}</h2>
+                    <h2 className="text-xl font-semibold">{learnerName}</h2>
                     <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="secondary" className="text-xs">Parent</Badge>
-                      <span className="text-sm text-muted-foreground">parent@example.com</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Family Overview */}
-              <Card>
-                <CardHeader className="flex flex-row items-start justify-between pb-4">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <CardTitle className="text-base">Family Overview</CardTitle>
-                      <p className="text-sm text-muted-foreground">Manage your family information and account settings</p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm" onClick={() => navigate("/guardian/account")}>
-                    <Settings className="h-4 w-4 mr-1" />
-                    Manage
-                  </Button>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-muted/30 p-6">
-                      <Home className="h-6 w-6 text-muted-foreground mb-2" />
-                      <span className="text-xs text-muted-foreground">Family</span>
-                      <span className="text-sm font-semibold">{familyName}</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-muted/30 p-6">
-                      <Users className="h-6 w-6 text-muted-foreground mb-2" />
-                      <span className="text-xs text-muted-foreground">Members</span>
-                      <span className="text-sm font-semibold">{learners.length} members</span>
+                      <Badge variant="secondary" className="text-xs">Learner</Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -130,61 +84,7 @@ export default function LearnerAccount() {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-4">
-                    <div>
-                      <p className="text-sm font-semibold">Parent Weekly Digest</p>
-                      <p className="text-xs text-muted-foreground">Receive a weekly email summarizing your children's learning activity.</p>
-                    </div>
-                    <Switch checked={weeklyDigest} onCheckedChange={setWeeklyDigest} />
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-4">
-                    <div>
-                      <p className="text-sm font-semibold">Safety Flagging Alerts</p>
-                      <p className="text-xs text-muted-foreground">Get an email alert when a conversation raises a safety flag.</p>
-                    </div>
-                    <Switch checked={safetyAlerts} onCheckedChange={setSafetyAlerts} />
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Children's Notifications */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <CardTitle className="text-base">Children's Notifications</CardTitle>
-                      <p className="text-sm text-muted-foreground">Manage notification preferences for each child.</p>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Segmented control */}
-                  <div className="flex flex-wrap gap-2 rounded-lg bg-muted/50 p-1.5">
-                    {learners.map((learner, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setSelectedChild(i)}
-                        className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                          selectedChild === i
-                            ? "bg-primary text-primary-foreground shadow-sm"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                        }`}
-                      >
-                        <span className={`inline-flex items-center justify-center h-5 w-5 rounded-full text-[10px] font-bold ${
-                          selectedChild === i
-                            ? "bg-primary-foreground/20 text-primary-foreground"
-                            : "bg-muted-foreground/20 text-muted-foreground"
-                        }`}>
-                          {getInitials(learner.name)}
-                        </span>
-                        {learner.name}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Nudge settings for selected child */}
+                <CardContent>
                   <Collapsible open={nudgeOpen} onOpenChange={setNudgeOpen}>
                     <div className="rounded-lg border border-border bg-muted/30 p-4">
                       <div className="flex items-center justify-between">
@@ -196,20 +96,14 @@ export default function LearnerAccount() {
                             </button>
                           </CollapsibleTrigger>
                         </div>
-                        <Switch
-                          checked={nudgeEnabled[selectedChild] ?? true}
-                          onCheckedChange={(val) => setNudgeEnabled(prev => ({ ...prev, [selectedChild]: val }))}
-                        />
+                        <Switch checked={nudgeEnabled} onCheckedChange={setNudgeEnabled} />
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">Email reminders sent after periods of inactivity.</p>
                       <CollapsibleContent>
-                        {nudgeEnabled[selectedChild] && (
+                        {nudgeEnabled && (
                           <div className="flex items-center justify-between mt-4 rounded-lg border border-border bg-background/50 p-3">
                             <span className="text-sm">Remind</span>
-                            <Select
-                              value={nudgeFrequency[selectedChild] ?? "Biweekly"}
-                              onValueChange={(val) => setNudgeFrequency(prev => ({ ...prev, [selectedChild]: val }))}
-                            >
+                            <Select value={nudgeFrequency} onValueChange={setNudgeFrequency}>
                               <SelectTrigger className="w-[160px]">
                                 <SelectValue />
                               </SelectTrigger>

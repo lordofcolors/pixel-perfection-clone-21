@@ -1,133 +1,231 @@
-import { useEffect, useRef, useState } from "react";
-import { saveGuardianSetup } from "@/lib/store";
-import { useForm, useFieldArray } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AnalyticsSidebar } from "@/components/guardian/AnalyticsSidebar";
-import LearnerRow from "@/components/onboarding/LearnerRow";
-import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Bell, ChevronUp, Home, Settings, Users } from "lucide-react";
 import { getGuardianSetup } from "@/lib/store";
+import { useNavigate } from "react-router-dom";
 
-interface Learner { fullName: string; email: string }
-interface GuardianForm {
-  fullName: string;
-  learnersCount: number;
-  accountMode: "inhouse" | "separate";
-  learners: Learner[];
-}
+const NUDGE_OPTIONS = [
+  "Daily",
+  "Every other day",
+  "Every 3 days",
+  "Weekly",
+  "Biweekly",
+  "Monthly",
+];
 
 export default function GuardianAccount() {
   const setup = getGuardianSetup();
-  const { register, handleSubmit, control, watch, setValue } = useForm<GuardianForm>({
-    defaultValues: {
-      fullName: setup?.guardianName || "Tree Guardian",
-      learnersCount: setup?.learners?.length || 2,
-      accountMode: setup?.accountMode || "separate",
-      learners: (setup?.learners || [ { name: "Jake" }, { name: "Mia" }]).map(l => ({ fullName: l.name, email: "" })),
-    },
-  });
+  const guardianName = setup?.guardianName || "Tree Guardian";
+  const learners = setup?.learners || [{ name: "Jake" }, { name: "Mia" }];
+  const familyName = `${guardianName.split(" ")[0]} Family`;
+  const navigate = useNavigate();
 
-  const { fields, append, remove } = useFieldArray({ control, name: "learners" });
-  
-  const accountMode = watch("accountMode");
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const formRef = useRef<HTMLDivElement>(null);
-
-  // learnersCount-driven auto add/remove removed; users can add learners explicitly
+  const [weeklyDigest, setWeeklyDigest] = useState(true);
+  const [safetyAlerts, setSafetyAlerts] = useState(true);
+  const [selectedChild, setSelectedChild] = useState(0);
+  const [nudgeEnabled, setNudgeEnabled] = useState<Record<number, boolean>>(
+    () => Object.fromEntries(learners.map((_, i) => [i, true]))
+  );
+  const [nudgeFrequency, setNudgeFrequency] = useState<Record<number, string>>(
+    () => Object.fromEntries(learners.map((_, i) => [i, "Biweekly"]))
+  );
+  const [nudgeOpen, setNudgeOpen] = useState(true);
 
   useEffect(() => {
     document.title = "Guardian - Account Settings";
-    const desc = "Edit learners, account mode, and access preferences.";
+    const desc = "Manage your family information and account settings.";
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) {
-      meta = document.createElement('meta');
-      meta.setAttribute('name', 'description');
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "description");
       document.head.appendChild(meta);
     }
-    meta.setAttribute('content', desc);
-
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute('href', window.location.href);
+    meta.setAttribute("content", desc);
   }, []);
 
-  const onSubmit = (data: GuardianForm) => {
-    // persist changes
-    const learnersOut = (data.learners || []).map((l) => ({ name: l.fullName || 'Learner' }));
-    saveGuardianSetup({ guardianName: data.fullName || 'Guardian', learners: learnersOut, accountMode: data.accountMode });
-    toast.success("Account settings saved");
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(" ");
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return name.slice(0, 1).toUpperCase();
   };
 
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <AnalyticsSidebar guardianName="Tree Guardian" learners={[{ name: "Jake" }, { name: "Mia" }]} />
+        <AnalyticsSidebar guardianName={guardianName} learners={learners} />
         <SidebarInset>
           <header className="h-16 flex items-center border-b px-3">
             <SidebarTrigger className="mr-2" />
-            <h1 className="text-base font-semibold">Account settings</h1>
+            <h1 className="text-base font-semibold">Account Settings</h1>
           </header>
-          <main className="p-6">
-            <section className="container max-w-5xl">
+          <main className="p-6 space-y-6">
+            <section className="container max-w-3xl space-y-6">
+
+              {/* Profile Header */}
               <Card>
-                <CardHeader>
-              <CardTitle>Manage learners & access</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6" ref={formRef}>
-                  <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setConfirmOpen(true); }}>
-                    <div className="grid grid-cols-1 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="fullName">Your name</Label>
-                        <Input id="fullName" placeholder="Full name" {...register('fullName')} />
-                      </div>
+                <CardContent className="flex items-center gap-4 pt-6">
+                  <Avatar className="h-16 w-16">
+                    <AvatarFallback className="bg-muted text-lg font-semibold">
+                      {getInitials(guardianName)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h2 className="text-xl font-semibold">{guardianName}</h2>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge variant="secondary" className="text-xs">Parent</Badge>
+                      <span className="text-sm text-muted-foreground">parent@example.com</span>
                     </div>
-
-                    <div className="space-y-4">
-                      {fields.map((field, index) => (
-                        <LearnerRow key={field.id} index={index} register={register} setValue={setValue} showAccountFields={accountMode === 'separate'} />
-                      ))}
-                      <div className="pt-1">
-                        <Button type="button" variant="outline" onClick={() => append({ fullName: '', email: '' })}>Add learner</Button>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" type="button" onClick={() => history.back()}>Cancel</Button>
-                      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-                        <AlertDialogTrigger asChild>
-                          <Button type="submit">Save changes</Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Override existing settings?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Saving will overwrite your current learner and account settings. Do you want to continue?
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => { handleSubmit(onSubmit)(); setConfirmOpen(false); }}>Confirm & Save</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </form>
-
-                  <div className="h-px bg-border" />
-                  <div className="text-sm text-muted-foreground">
-                    Does your learner already have an account? <span className="underline">Link accounts</span>
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Family Overview */}
+              <Card>
+                <CardHeader className="flex flex-row items-start justify-between pb-4">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <CardTitle className="text-base">Family Overview</CardTitle>
+                      <p className="text-sm text-muted-foreground">Manage your family information and account settings</p>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => navigate("/guardian/account")}>
+                    <Settings className="h-4 w-4 mr-1" />
+                    Manage
+                  </Button>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-muted/30 p-6">
+                      <Home className="h-6 w-6 text-muted-foreground mb-2" />
+                      <span className="text-xs text-muted-foreground">Family</span>
+                      <span className="text-sm font-semibold">{familyName}</span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-muted/30 p-6">
+                      <Users className="h-6 w-6 text-muted-foreground mb-2" />
+                      <span className="text-xs text-muted-foreground">Members</span>
+                      <span className="text-sm font-semibold">{learners.length} members</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Notifications */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <CardTitle className="text-base">Notifications</CardTitle>
+                      <p className="text-sm text-muted-foreground">Manage how and when you receive updates.</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-4">
+                    <div>
+                      <p className="text-sm font-semibold">Parent Weekly Digest</p>
+                      <p className="text-xs text-muted-foreground">Receive a weekly email summarizing your children's learning activity.</p>
+                    </div>
+                    <Switch checked={weeklyDigest} onCheckedChange={setWeeklyDigest} />
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 p-4">
+                    <div>
+                      <p className="text-sm font-semibold">Safety Flagging Alerts</p>
+                      <p className="text-xs text-muted-foreground">Get an email alert when a conversation raises a safety flag.</p>
+                    </div>
+                    <Switch checked={safetyAlerts} onCheckedChange={setSafetyAlerts} />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Children's Notifications */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <CardTitle className="text-base">Children's Notifications</CardTitle>
+                      <p className="text-sm text-muted-foreground">Manage notification preferences for each child.</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Segmented control (button group pattern) */}
+                  <div className="inline-flex items-center rounded-lg border border-border bg-muted/50 p-1">
+                    {learners.map((learner, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setSelectedChild(i)}
+                        className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
+                          selectedChild === i
+                            ? "bg-background text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        <span className={`inline-flex items-center justify-center h-5 w-5 rounded-full text-[10px] font-bold ${
+                          selectedChild === i
+                            ? "bg-muted text-foreground"
+                            : "bg-muted-foreground/20 text-muted-foreground"
+                        }`}>
+                          {getInitials(learner.name)}
+                        </span>
+                        {learner.name}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Nudge settings for selected child */}
+                  <Collapsible open={nudgeOpen} onOpenChange={setNudgeOpen}>
+                    <div className="rounded-lg border border-border bg-muted/30 p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-semibold">Re-engagement Nudge</p>
+                          <CollapsibleTrigger asChild>
+                            <button className="text-muted-foreground hover:text-foreground">
+                              <ChevronUp className={`h-4 w-4 transition-transform ${nudgeOpen ? "" : "rotate-180"}`} />
+                            </button>
+                          </CollapsibleTrigger>
+                        </div>
+                        <Switch
+                          checked={nudgeEnabled[selectedChild] ?? true}
+                          onCheckedChange={(val) => setNudgeEnabled(prev => ({ ...prev, [selectedChild]: val }))}
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">Email reminders sent after periods of inactivity.</p>
+                      <CollapsibleContent>
+                        {nudgeEnabled[selectedChild] && (
+                          <div className="flex items-center justify-between mt-4 rounded-lg border border-border bg-background/50 p-3">
+                            <span className="text-sm">Remind</span>
+                            <Select
+                              value={nudgeFrequency[selectedChild] ?? "Biweekly"}
+                              onValueChange={(val) => setNudgeFrequency(prev => ({ ...prev, [selectedChild]: val }))}
+                            >
+                              <SelectTrigger className="w-[160px]">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {NUDGE_OPTIONS.map(opt => (
+                                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
+                </CardContent>
+              </Card>
+
             </section>
           </main>
         </SidebarInset>
