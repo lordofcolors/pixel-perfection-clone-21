@@ -111,6 +111,14 @@ const ChatPage = () => {
               onToggleChat={() => setChatOpen((v) => !v)}
               isAgentMuted={isAgentMuted}
               onToggleAgentMute={() => setIsAgentMuted((v) => !v)}
+              onSendEmoji={(emoji) => {
+                session.sendMessage(emoji);
+              }}
+              onToggleImageSearch={() => setImageSearchOn((v) => !v)}
+              onToggleSkillMap={() => setSkillMapOn((v) => !v)}
+              onQuizMe={() => {
+                session.sendMessage("Quiz me! 🧠");
+              }}
             />
           </div>
 
