@@ -7,8 +7,8 @@
  * positioning and CSS transitions.
  */
 
-import React from "react";
-import { Maximize2, Minimize2 } from "lucide-react";
+import React, { useState } from "react";
+import { Maximize2, Minimize2, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InlineChatInput } from "@/components/chat/InlineChatInput";
 import type { PanelKey } from "@/components/chat/types";
@@ -69,6 +69,9 @@ export function Canvas({
   imageIndex = 0,
   quizIndex = 0,
 }: CanvasProps) {
+  // ── Fullscreen state ────────────────────────────────────────────────────
+  const [fullscreenPanel, setFullscreenPanel] = useState<PanelKey | null>(null);
+
   // ── Derive active side panels ──────────────────────────────────────────
 
   const activeSidePanels: Array<"image" | "skill" | "screen" | "webcam" | "quiz"> = [];
@@ -180,16 +183,46 @@ export function Canvas({
                 )}
 
                 {key !== "rive" && isExpanded && (
+                  <div className="absolute right-2 top-2 z-10 flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFullscreenPanel(key);
+                      }}
+                      title="Full screen"
+                    >
+                      <Maximize className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onExpandPanel(null);
+                      }}
+                    >
+                      <Minimize2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+
+                {/* Fullscreen button in gallery (non-expanded) view */}
+                {key !== "rive" && !expandedPanel && isGalleryWithSides && (
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute right-2 top-2 z-10 h-8 w-8 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
+                    className="absolute bottom-2 right-2 z-10 h-7 w-7 bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onExpandPanel(null);
+                      setFullscreenPanel(key);
                     }}
+                    title="Full screen"
                   >
-                    <Minimize2 className="h-4 w-4" />
+                    <Maximize className="h-3.5 w-3.5" />
                   </Button>
                 )}
 
@@ -208,6 +241,32 @@ export function Canvas({
               </div>
             );
           })}
+
+          {/* Fullscreen overlay */}
+          {fullscreenPanel && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-4 top-4 z-50 h-10 w-10 bg-muted/50 text-foreground hover:bg-muted"
+                onClick={() => setFullscreenPanel(null)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+              <div className="h-full w-full overflow-auto p-6">
+                <PanelContent
+                  panelKey={fullscreenPanel}
+                  expandedPanel={fullscreenPanel}
+                  hasSidePanels={false}
+                  RiveComponent={RiveComponent}
+                  isAgentMuted={isAgentMuted}
+                  onToggleAgentMute={onToggleAgentMute}
+                  imageIndex={imageIndex}
+                  quizIndex={quizIndex}
+                />
+              </div>
+            </div>
+          )}
 
           {expandedPanel === "rive" && (
             <div
