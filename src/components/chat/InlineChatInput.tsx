@@ -190,7 +190,6 @@ export function InlineChatInput({
           {/* Action chips */}
           <div className="flex items-center gap-1.5">
             {ACTION_BUTTONS.map(({ key, label, icon: Icon }) => {
-              const active = isActive(key);
               const loading = loadingAction === key;
 
               return (
@@ -199,10 +198,10 @@ export function InlineChatInput({
                   onClick={() => handleAction(key)}
                   disabled={loading}
                   className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
-                    active
-                      ? "border-primary/50 bg-primary/20 text-primary"
-                      : "border-border/40 bg-background/30 text-muted-foreground hover:border-primary/40 hover:bg-primary/10 hover:text-foreground"
-                  } ${loading ? "cursor-wait" : "cursor-pointer"}`}
+                    loading
+                      ? "cursor-wait border-border/20 bg-background/10 text-muted-foreground/50"
+                      : "cursor-pointer border-border/40 bg-background/30 text-muted-foreground hover:border-primary/40 hover:bg-primary/10 hover:text-foreground"
+                  }`}
                   title={label}
                 >
                   {loading ? (
