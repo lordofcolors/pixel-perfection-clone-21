@@ -201,6 +201,8 @@ export function Canvas({
                     RiveComponent={RiveComponent}
                     isAgentMuted={isAgentMuted}
                     onToggleAgentMute={onToggleAgentMute}
+                    imageIndex={imageIndex}
+                    quizIndex={quizIndex}
                   />
                 </div>
               </div>
