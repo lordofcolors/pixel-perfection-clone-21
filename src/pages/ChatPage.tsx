@@ -41,6 +41,7 @@ const ChatPage = () => {
   const [isAgentMuted, setIsAgentMuted] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [quizIndex, setQuizIndex] = useState(0);
+  const [mapIndex, setMapIndex] = useState(0);
 
   const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn || webcamOn || quizOn;
 
