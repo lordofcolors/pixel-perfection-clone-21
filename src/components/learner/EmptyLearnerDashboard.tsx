@@ -41,7 +41,7 @@ const MODES = [
     id: "companion",
     title: "Companion Mode",
     description:
-      "Have an open conversation with A about anything on your mind. No lessons, just quality time.",
+      "Chat freely with A about anything on your mind. No lessons, just quality time.",
     icon: Sparkles,
     recommended: false,
     color: "from-xolv-magenta-300/20 to-xolv-magenta-300/5",
