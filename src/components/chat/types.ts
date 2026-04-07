@@ -20,7 +20,7 @@
  * - "skill"  → Skill map (React Flow graph, toggled via header switch)
  * - "screen" → Screen share preview (toggled via toolbar button)
  */
-export type PanelKey = "rive" | "image" | "skill" | "screen" | "webcam";
+export type PanelKey = "rive" | "image" | "skill" | "screen" | "webcam" | "quiz";
 
 // ---------------------------------------------------------------------------
 // Chat Message
