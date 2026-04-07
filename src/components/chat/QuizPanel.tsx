@@ -5,12 +5,11 @@
  *
  * "Who Wants to Be a Millionaire" style quiz carousel. Each trigger of
  * "Quiz Me" loads a batch of 3 questions the user can flip through with
- * left/right arrows and dot indicators.
+ * left/right arrows (center-aligned to the panel edges) and dot indicators.
  */
 
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 // ---------------------------------------------------------------------------
 // Mock question bank
@@ -91,7 +90,6 @@ interface QuizPanelProps {
 // ---------------------------------------------------------------------------
 
 export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
-  // Derive a batch of 3 questions from the question bank
   const getBatch = useCallback(
     (batchTrigger: number) => {
       const start = (batchTrigger * BATCH_SIZE) % QUESTIONS.length;
@@ -109,7 +107,6 @@ export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
   const [selected, setSelected] = useState<(number | null)[]>([null, null, null]);
   const [revealed, setRevealed] = useState<boolean[]>([false, false, false]);
 
-  // Reset when a new batch is triggered
   useEffect(() => {
     setBatch(getBatch(questionIndex));
     setActiveIdx(0);
@@ -155,85 +152,85 @@ export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
 
   return (
     <div
-      className={`flex h-full w-full flex-col items-center justify-center p-4 ${className || ""}`}
+      className={`relative flex h-full w-full items-center justify-center ${className || ""}`}
     >
-      {/* Question number */}
-      <div className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        Question {activeIdx + 1} of {BATCH_SIZE}
-      </div>
+      {/* Left arrow — vertically centered on left edge of panel */}
+      <button
+        onClick={goLeft}
+        disabled={activeIdx === 0}
+        className="absolute left-3 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-30 transition-all"
+      >
+        <ChevronLeft className="h-6 w-6" />
+      </button>
 
-      {/* Question */}
-      <div className="mb-6 max-w-md text-center text-base font-semibold text-foreground">
-        {q.question}
-      </div>
-
-      {/* Answer grid */}
-      <div className="grid w-full max-w-md grid-cols-2 gap-3">
-        {q.options.map((opt, idx) => {
-          const isCorrect = idx === q.correct;
-          const isSelected = currentSelected === idx;
-
-          let borderClass = optionBorders[idx];
-          let bgClass = optionColors[idx];
-
-          if (isRevealed) {
-            if (isCorrect) {
-              borderClass = "border-emerald-400";
-              bgClass = "bg-emerald-500/30";
-            } else if (isSelected) {
-              borderClass = "border-destructive/60";
-              bgClass = "bg-destructive/20";
-            }
-          } else if (isSelected) {
-            borderClass = "border-primary";
-            bgClass = "bg-primary/20";
-          }
-
-          return (
-            <button
-              key={idx}
-              onClick={() => handleSelect(idx)}
-              className={`rounded-xl border ${borderClass} ${bgClass} px-4 py-3 text-left text-sm font-medium text-foreground transition-all hover:scale-[1.02] ${
-                isRevealed ? "cursor-default" : "cursor-pointer"
-              }`}
-            >
-              {opt}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Result feedback */}
-      {isRevealed && (
-        <div className="mt-4 text-sm font-medium animate-in fade-in">
-          {currentSelected === q.correct ? (
-            <span className="text-emerald-400">🎉 Correct! Great job!</span>
-          ) : (
-            <span className="text-rose-400">
-              Not quite — the answer is {q.options[q.correct]}
-            </span>
-          )}
+      {/* Center content */}
+      <div className="flex flex-col items-center justify-center px-14">
+        {/* Question number */}
+        <div className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Question {activeIdx + 1} of {BATCH_SIZE}
         </div>
-      )}
 
-      {/* Navigation: arrows + dots */}
-      <div className="mt-6 flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-muted-foreground hover:text-foreground"
-          onClick={goLeft}
-          disabled={activeIdx === 0}
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </Button>
+        {/* Question */}
+        <div className="mb-6 max-w-md text-center text-base font-semibold text-foreground">
+          {q.question}
+        </div>
 
-        <div className="flex items-center gap-2">
+        {/* Answer grid */}
+        <div className="grid w-full max-w-md grid-cols-2 gap-3">
+          {q.options.map((opt, idx) => {
+            const isCorrect = idx === q.correct;
+            const isSelected = currentSelected === idx;
+
+            let borderClass = optionBorders[idx];
+            let bgClass = optionColors[idx];
+
+            if (isRevealed) {
+              if (isCorrect) {
+                borderClass = "border-emerald-400";
+                bgClass = "bg-emerald-500/30";
+              } else if (isSelected) {
+                borderClass = "border-destructive/60";
+                bgClass = "bg-destructive/20";
+              }
+            } else if (isSelected) {
+              borderClass = "border-primary";
+              bgClass = "bg-primary/20";
+            }
+
+            return (
+              <button
+                key={idx}
+                onClick={() => handleSelect(idx)}
+                className={`rounded-xl border ${borderClass} ${bgClass} px-4 py-3 text-left text-sm font-medium text-foreground transition-all hover:scale-[1.02] ${
+                  isRevealed ? "cursor-default" : "cursor-pointer"
+                }`}
+              >
+                {opt}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Result feedback */}
+        {isRevealed && (
+          <div className="mt-4 text-sm font-medium animate-in fade-in">
+            {currentSelected === q.correct ? (
+              <span className="text-emerald-400">🎉 Correct! Great job!</span>
+            ) : (
+              <span className="text-rose-400">
+                Not quite — the answer is {q.options[q.correct]}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Dots */}
+        <div className="mt-6 flex items-center justify-center gap-2">
           {Array.from({ length: BATCH_SIZE }).map((_, i) => (
             <button
               key={i}
               onClick={() => setActiveIdx(i)}
-              className={`h-2 w-2 rounded-full transition-all ${
+              className={`h-2.5 w-2.5 rounded-full transition-all ${
                 i === activeIdx
                   ? "bg-primary scale-125"
                   : "bg-muted-foreground/40 hover:bg-muted-foreground/60"
@@ -241,17 +238,16 @@ export function QuizPanel({ questionIndex, className }: QuizPanelProps) {
             />
           ))}
         </div>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-muted-foreground hover:text-foreground"
-          onClick={goRight}
-          disabled={activeIdx === BATCH_SIZE - 1}
-        >
-          <ChevronRight className="h-5 w-5" />
-        </Button>
       </div>
+
+      {/* Right arrow — vertically centered on right edge of panel */}
+      <button
+        onClick={goRight}
+        disabled={activeIdx === BATCH_SIZE - 1}
+        className="absolute right-3 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full bg-background/50 text-muted-foreground backdrop-blur-sm hover:bg-background/80 hover:text-foreground disabled:opacity-30 transition-all"
+      >
+        <ChevronRight className="h-6 w-6" />
+      </button>
     </div>
   );
 }
