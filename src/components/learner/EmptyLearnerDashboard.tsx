@@ -29,7 +29,7 @@ interface EmptyLearnerDashboardProps {
 const MODES = [
   {
     id: "daily-chat",
-    title: "Daily Chat",
+    title: "Chat & Learn",
     description:
       "Start with a quick chat with A, then move into your next assigned lesson.",
     icon: MessageCircle,
@@ -40,7 +40,7 @@ const MODES = [
   },
   {
     id: "learning",
-    title: "Learning Mode",
+    title: "Learn",
     description:
       "Jump straight into learning any skill or lesson in your curriculum.",
     icon: Sparkles,
@@ -51,7 +51,7 @@ const MODES = [
   },
   {
     id: "study",
-    title: "Study Mode",
+    title: "Study",
     description:
       "Focus on your school homework or activities. A will help you break it down step by step.",
     icon: BookOpen,
@@ -62,7 +62,7 @@ const MODES = [
   },
   {
     id: "companion",
-    title: "Companion Mode",
+    title: "Hang Out",
     description:
       "Chat freely with A about anything on your mind. No lessons, just quality time.",
     icon: Users,
@@ -90,10 +90,10 @@ export function EmptyLearnerDashboard({
       {/* Heading */}
       <div className="mb-10 text-center">
         <h2 className="text-2xl font-semibold text-foreground mb-2">
-          What would you like to do today?
+          What would you like to start with today?
         </h2>
         <p className="text-sm text-muted-foreground">
-          Pick a mode to get started, {learnerName}.
+          You can always flip between these anytime, {learnerName}.
         </p>
       </div>
 
