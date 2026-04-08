@@ -196,7 +196,7 @@ export default function LearnerSkillSelection() {
                     <span>{cat.emoji}</span>
                     {cat.title}
                   </h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {cat.tiles.map((tile) => {
                       const Icon = tile.icon;
                       const isActive = selectedTile?.label === tile.label;
@@ -204,14 +204,17 @@ export default function LearnerSkillSelection() {
                         <button
                           key={tile.label}
                           onClick={() => handleSelectTile(tile)}
-                          className={`flex items-center gap-2.5 rounded-xl border px-3.5 py-3 text-left text-sm font-medium transition-all hover:border-primary/50 hover:bg-muted hover:shadow-sm active:scale-[0.98] ${
+                          className={`flex items-start gap-3 rounded-xl border px-4 py-4 text-left transition-all hover:border-primary/50 hover:bg-muted hover:shadow-sm active:scale-[0.99] ${
                             isActive
                               ? "border-primary bg-primary/5 shadow-sm"
                               : "border-border bg-card"
                           }`}
                         >
-                          <Icon className="h-4 w-4 shrink-0 text-primary" />
-                          <span className="truncate">{tile.label}</span>
+                          <Icon className="h-5 w-5 shrink-0 text-primary mt-0.5" />
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-foreground leading-snug">{tile.label}</p>
+                            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{tile.description}</p>
+                          </div>
                         </button>
                       );
                     })}
