@@ -5,8 +5,10 @@
  *
  * Three-line layout below the canvas:
  * 1. **Response bubble** — latest AI response with typewriter cursor.
- * 2. **Text input** — always visible with a subtle left-side quick-actions handle.
+ * 2. **Text input** — always visible; full-width, no toggle clutter.
  * 3. **Action bar** — expandable row of emoji reactions + action chips.
+ *    A small ⊕ button appears in the input row only when collapsed.
+ *    When open, the toggle lives at the left edge of the action bar itself.
  */
 
 import { useState } from "react";
@@ -15,7 +17,7 @@ import {
   Maximize2,
   Minimize2,
   Plus,
-  Minus,
+  X,
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -71,9 +73,7 @@ export function InlineChatInput({
 
   const handleAction = (key: ActionKey, emoji: string, label: string) => {
     if (loadingAction) return;
-
     onSendEmoji?.(`${emoji} ${label}`);
-
     setLoadingAction(key);
     setTimeout(() => {
       if (key === "findImage") onToggleImageSearch?.();
@@ -85,6 +85,7 @@ export function InlineChatInput({
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-2">
+      {/* ── 1. Response bubble ─────────────────────────────────── */}
       <div
         className={`relative rounded-xl border border-border/30 bg-card/40 p-3 backdrop-blur-sm transition-opacity duration-700 ${
           responseBubbleText ? "opacity-100" : "opacity-0"
@@ -114,34 +115,26 @@ export function InlineChatInput({
         )}
       </div>
 
-      <div className="group relative flex items-center gap-2 rounded-xl border border-border/30 bg-card/30 p-1.5 transition-colors focus-within:border-primary/30">
-        <button
-          type="button"
-          aria-pressed={actionBarOpen}
-          onClick={() => setActionBarOpen((value) => !value)}
-          className={`absolute left-2 top-1/2 z-10 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 ${
-            actionBarOpen
-              ? "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-              : "border border-border/40 bg-background/40 text-muted-foreground hover:border-primary/40 hover:bg-primary/10 hover:text-foreground"
-          }`}
-          title={actionBarOpen ? "Hide reactions & actions" : "Show reactions & actions"}
-        >
-          {actionBarOpen ? (
-            <>
-              <span className="h-px w-3 rounded-full bg-current opacity-35 transition-all duration-200 group-hover:w-4 group-hover:opacity-0 group-focus-within:opacity-0" />
-              <Minus className="absolute h-4 w-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100" />
-            </>
-          ) : (
+      {/* ── 2. Text input ──────────────────────────────────────── */}
+      <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-card/30 p-1.5">
+        {/* Show ⊕ only when action bar is collapsed */}
+        {!actionBarOpen && (
+          <button
+            type="button"
+            onClick={() => setActionBarOpen(true)}
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-border/40 bg-background/30 text-muted-foreground transition-all hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+            title="Show reactions & actions"
+          >
             <Plus className="h-4 w-4" />
-          )}
-        </button>
+          </button>
+        )}
 
         <Input
           value={inputValue}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && onSend()}
           placeholder="Type something here..."
-          className="h-8 border-0 bg-transparent pl-10 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="h-8 border-0 bg-transparent text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
         />
 
         <Button
@@ -153,12 +146,24 @@ export function InlineChatInput({
         </Button>
       </div>
 
+      {/* ── 3. Action bar (expandable) ─────────────────────────── */}
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          actionBarOpen ? "max-h-20 translate-y-0 opacity-100" : "max-h-0 -translate-y-2 opacity-0"
+          actionBarOpen ? "max-h-20 translate-y-0 opacity-100" : "max-h-0 -translate-y-1 opacity-0"
         }`}
       >
         <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-card/30 p-1.5">
+          {/* Close button — sits to the left of emojis */}
+          <button
+            type="button"
+            onClick={() => setActionBarOpen(false)}
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-muted-foreground/50 transition-all hover:bg-muted/50 hover:text-foreground"
+            title="Hide reactions"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+
+          {/* Emoji reactions */}
           <div className="flex items-center gap-1">
             {EMOJI_SET.map((emoji) => (
               <button
@@ -174,10 +179,10 @@ export function InlineChatInput({
 
           <div className="mx-1 h-6 w-px bg-border/30" />
 
+          {/* Action chips */}
           <div className="flex items-center gap-1.5">
             {ACTION_BUTTONS.map(({ key, label, emoji }) => {
               const loading = loadingAction === key;
-
               return (
                 <button
                   key={key}
