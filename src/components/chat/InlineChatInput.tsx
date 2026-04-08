@@ -131,21 +131,6 @@ export function InlineChatInput({
 
       {/* ── 2. Text input (always visible) ────────────────────────── */}
       <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-card/30 p-1.5">
-        {/* Plus/minus toggle for action bar */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 flex-shrink-0 text-primary"
-          onClick={() => setActionBarOpen((v) => !v)}
-          title={actionBarOpen ? "Hide reactions" : "Show reactions"}
-        >
-          {actionBarOpen ? (
-            <Minus className="h-4 w-4" />
-          ) : (
-            <Plus className="h-4 w-4" />
-          )}
-        </Button>
-
         <Input
           value={inputValue}
           onChange={(e) => onInputChange(e.target.value)}
@@ -153,6 +138,19 @@ export function InlineChatInput({
           placeholder="Type something here..."
           className="h-8 border-0 bg-transparent text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
         />
+
+        {/* Expand toggle — only visible when action bar is collapsed */}
+        {!actionBarOpen && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 flex-shrink-0 text-muted-foreground hover:text-primary"
+            onClick={() => setActionBarOpen(true)}
+            title="Show reactions & actions"
+          >
+            <ChevronUp className="h-4 w-4" />
+          </Button>
+        )}
 
         <Button
           size="icon"
