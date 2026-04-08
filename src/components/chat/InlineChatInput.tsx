@@ -131,21 +131,6 @@ export function InlineChatInput({
 
       {/* ── 2. Text input (always visible) ────────────────────────── */}
       <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-card/30 p-1.5">
-        {/* Plus/minus toggle for action bar */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 flex-shrink-0 text-primary"
-          onClick={() => setActionBarOpen((v) => !v)}
-          title={actionBarOpen ? "Hide reactions" : "Show reactions"}
-        >
-          {actionBarOpen ? (
-            <Minus className="h-4 w-4" />
-          ) : (
-            <Plus className="h-4 w-4" />
-          )}
-        </Button>
-
         <Input
           value={inputValue}
           onChange={(e) => onInputChange(e.target.value)}
@@ -214,8 +199,34 @@ export function InlineChatInput({
               );
             })}
           </div>
+
+          {/* Divider */}
+          <div className="mx-1 h-6 w-px bg-border/30" />
+
+          {/* Collapse action bar button — inline with the row */}
+          <button
+            onClick={() => setActionBarOpen(false)}
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-border/40 bg-background/30 text-muted-foreground transition-all hover:border-primary/40 hover:bg-primary/10 hover:text-foreground"
+            title="Hide reactions & actions"
+          >
+            <Minus className="h-3.5 w-3.5" />
+          </button>
         </div>
       </div>
+
+      {/* ── Show actions toggle (visible when bar is collapsed) ──── */}
+      {!actionBarOpen && (
+        <div className="flex justify-center">
+          <button
+            onClick={() => setActionBarOpen(true)}
+            className="flex items-center gap-1.5 rounded-full border border-border/30 bg-card/30 px-3 py-1 text-xs text-muted-foreground transition-all hover:border-primary/40 hover:bg-primary/10 hover:text-foreground"
+            title="Show reactions & actions"
+          >
+            <Plus className="h-3 w-3" />
+            <span>Actions</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
