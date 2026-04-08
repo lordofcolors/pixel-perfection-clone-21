@@ -29,7 +29,7 @@ interface EmptyLearnerDashboardProps {
 const MODES = [
   {
     id: "daily-chat",
-    title: "Chat & Learn",
+    title: "Greet & Learn",
     description:
       "Start with a quick chat with A, then move into your next assigned lesson.",
     icon: MessageCircle,
