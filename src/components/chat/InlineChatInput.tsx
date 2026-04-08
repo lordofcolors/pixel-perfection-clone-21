@@ -15,8 +15,8 @@ import {
   Send,
   Maximize2,
   Minimize2,
-  Plus,
-  Minus,
+  ChevronUp,
+  ChevronDown,
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
