@@ -13,6 +13,7 @@
  * 4. **Skill Building** — Jump straight to any lesson in the sidebar.
  */
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MessageCircle,
@@ -21,6 +22,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import { LearnModeModal } from "./LearnModeModal";
 
 interface EmptyLearnerDashboardProps {
   learnerName: string;
