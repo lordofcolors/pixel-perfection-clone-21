@@ -230,7 +230,7 @@ export function LearnModeModal({
               {/* Next suggested lesson */}
               <button
                 onClick={() => handleStartLesson(nextLesson.skillTitle, nextLesson.lessonTitle)}
-                className="relative flex flex-col gap-2 rounded-xl p-4 text-left transition-all hover:scale-[1.02] hover:shadow-lg bg-gradient-to-br from-xolv-magenta-300/30 via-xolv-blue-300/20 to-xolv-teal-300/30 border border-xolv-magenta-300/30"
+                className="relative flex flex-col gap-2 rounded-xl p-4 text-left transition-all hover:scale-[1.02] hover:shadow-lg bg-gradient-to-br from-xolv-magenta-300/30 via-xolv-blue-300/20 to-xolv-teal-300/30 border border-xolv-magenta-300/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <div className="flex items-center gap-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-background/60">
