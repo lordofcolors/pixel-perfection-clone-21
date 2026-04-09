@@ -227,29 +227,31 @@ export function LearnModeModal({
           <div className="space-y-5">
             {/* ── Top action cards ── */}
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {/* Next suggested lesson */}
-              <button
-                type="button"
-                onClick={() => handleStartLesson(nextLesson.skillTitle, nextLesson.lessonTitle)}
-                className="relative flex appearance-none flex-col gap-2 rounded-xl border border-xolv-magenta-300/30 bg-gradient-to-br from-xolv-magenta-300/30 via-xolv-blue-300/20 to-xolv-teal-300/30 p-4 text-left outline-none transition-colors ring-0 shadow-none focus:outline-none focus:!ring-0 focus:!ring-offset-0 focus-visible:outline-none focus-visible:!ring-0"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-background/60">
-                    <ArrowRight className="h-4 w-4 text-xolv-magenta-300" />
+              {/* Next suggested lesson — rainbow gradient border */}
+              <div className="rounded-xl bg-gradient-to-br from-xolv-magenta-300 via-xolv-blue-300 to-xolv-teal-300 p-[1.5px]">
+                <button
+                  type="button"
+                  onClick={() => handleStartLesson(nextLesson.skillTitle, nextLesson.lessonTitle)}
+                  className="flex w-full appearance-none flex-col gap-2 rounded-[10px] bg-card p-4 text-left outline-none ring-0 shadow-none transition-colors focus:outline-none focus:!ring-0 focus-visible:!ring-0"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-background/60">
+                      <ArrowRight className="h-4 w-4 text-xolv-magenta-300" />
+                    </div>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-xolv-teal-300">
+                      Up Next
+                    </span>
                   </div>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-xolv-teal-300">
-                    Up Next
-                  </span>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground leading-snug">
-                    {nextLesson.lessonTitle}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {nextLesson.skillTitle}
-                  </p>
-                </div>
-              </button>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground leading-snug">
+                      {nextLesson.lessonTitle}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {nextLesson.skillTitle}
+                    </p>
+                  </div>
+                </button>
+              </div>
 
               {/* Create new skill */}
               <button
