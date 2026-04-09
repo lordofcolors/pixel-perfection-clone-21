@@ -263,7 +263,7 @@ export function LearnModeModal({
                   <Plus className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">New Skill</p>
+                  <p className="text-sm font-semibold text-foreground">New Skill to Learn</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Create a custom lesson plan.</p>
                 </div>
               </button>
