@@ -226,11 +226,12 @@ export function LearnModeModal({
         <div className="flex-1 overflow-y-auto px-8 pb-8">
           <div className="space-y-5">
             {/* ── Top action cards ── */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {/* Next suggested lesson */}
               <button
+                type="button"
                 onClick={() => handleStartLesson(nextLesson.skillTitle, nextLesson.lessonTitle)}
-                className="relative flex flex-col gap-2 rounded-xl p-4 text-left transition-all hover:scale-[1.02] hover:shadow-lg bg-gradient-to-br from-xolv-magenta-300/30 via-xolv-blue-300/20 to-xolv-teal-300/30 border border-xolv-magenta-300/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="relative flex appearance-none flex-col gap-2 rounded-xl border border-xolv-magenta-300/30 bg-gradient-to-br from-xolv-magenta-300/30 via-xolv-blue-300/20 to-xolv-teal-300/30 p-4 text-left outline-none transition-colors ring-0 shadow-none focus:outline-none focus:!ring-0 focus:!ring-offset-0 focus-visible:outline-none focus-visible:!ring-0"
               >
                 <div className="flex items-center gap-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-background/60">
@@ -252,8 +253,9 @@ export function LearnModeModal({
 
               {/* Create new skill */}
               <button
+                type="button"
                 onClick={handleAddSkill}
-                className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4 text-left transition-all hover:scale-[1.02] hover:shadow-lg hover:border-primary/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex appearance-none flex-col gap-2 rounded-xl border border-border bg-card p-4 text-left outline-none transition-colors ring-0 shadow-none focus:outline-none focus:!ring-0 focus:!ring-offset-0 focus-visible:outline-none focus-visible:!ring-0"
               >
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
                   <Plus className="h-4 w-4 text-primary" />
@@ -272,7 +274,7 @@ export function LearnModeModal({
                 Browse Lessons by Skill
               </h3>
               <Select value={selectedSkill} onValueChange={setSelectedSkill}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full appearance-none shadow-none ring-0 outline-none focus:!ring-0 focus:!ring-offset-0 focus-visible:!ring-0 data-[state=open]:border-input data-[state=open]:ring-0 data-[state=open]:ring-offset-0">
                   <SelectValue placeholder="Select a skill…" />
                 </SelectTrigger>
                 <SelectContent>
