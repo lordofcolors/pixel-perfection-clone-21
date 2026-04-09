@@ -137,6 +137,12 @@ export function EmptyLearnerDashboard({
           </button>
         ))}
       </div>
+
+      <LearnModeModal
+        open={learnModalOpen}
+        onOpenChange={setLearnModalOpen}
+        learnerName={learnerName}
+      />
     </div>
   );
 }
