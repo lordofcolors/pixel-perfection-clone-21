@@ -216,7 +216,7 @@ export function LearnModeModal({
         <DialogHeader className="px-8 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Sparkles className="h-5 w-5 text-xolv-magenta-300" />
-            Choose a Lesson
+            Choose a Lesson to Begin Learning
           </DialogTitle>
           <p className="text-sm text-muted-foreground mt-1">
             Pick up where you left off or start something new.
