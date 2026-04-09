@@ -2,11 +2,10 @@
  * LearnModeModal
  *
  * Shown when the learner clicks the "Learn" tile on the dashboard.
- * Contains:
  * 1. Suggested next lesson (rainbow gradient card)
  * 2. Create new skill button (always visible)
- * 3. Recent/previous lessons with timestamps (mock data as fallback)
- * 4. Collapsible "View All Lessons" dropdown with search
+ * 3. Previous lessons with timestamps (mock fallback)
+ * 4. Dropdown select to pick a skill → see its lessons inline
  */
 
 import { useState, useMemo } from "react";
@@ -17,24 +16,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Sparkles,
   Plus,
   Clock,
   ArrowRight,
-  Search,
   BookOpen,
   ChevronRight,
-  ChevronDown,
-  ChevronUp,
 } from "lucide-react";
 import {
   getGuardianSetup,
@@ -57,45 +53,66 @@ type FlatLesson = {
   assignedDate?: string;
 };
 
-// Mock previous lessons so the modal always has content
 const MOCK_RECENT_LESSONS: FlatLesson[] = [
   {
     skillTitle: "Public Speaking",
     lessonTitle: "Voice and Delivery Basics",
-    locked: false,
-    isDue: false,
-    assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
+    locked: false, isDue: false,
+    assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
   },
   {
     skillTitle: "Greeting People",
     lessonTitle: "Non-verbal Communication",
-    locked: false,
-    isDue: false,
-    assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // yesterday
+    locked: false, isDue: false,
+    assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
   },
   {
     skillTitle: "Interviewing Skills",
     lessonTitle: "Common Interview Questions",
-    locked: false,
-    isDue: false,
-    assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+    locked: false, isDue: false,
+    assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
   },
   {
     skillTitle: "Public Speaking",
     lessonTitle: "Overcoming Speaking Anxiety",
-    locked: false,
-    isDue: false,
-    assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(), // 5 days ago
+    locked: false, isDue: false,
+    assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
   },
 ];
 
 const MOCK_NEXT_LESSON: FlatLesson = {
   skillTitle: "Public Speaking",
   lessonTitle: "Structuring Your Message",
-  locked: false,
-  isDue: true,
+  locked: false, isDue: true,
   assignedDate: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
 };
+
+const MOCK_ALL_SKILLS: { name: string; lessons: FlatLesson[] }[] = [
+  {
+    name: "Public Speaking",
+    lessons: [
+      { skillTitle: "Public Speaking", lessonTitle: "Overcoming Speaking Anxiety", locked: false, isDue: false },
+      { skillTitle: "Public Speaking", lessonTitle: "Voice and Delivery Basics", locked: false, isDue: false },
+      { skillTitle: "Public Speaking", lessonTitle: "Structuring Your Message", locked: false, isDue: true },
+    ],
+  },
+  {
+    name: "Greeting People",
+    lessons: [
+      { skillTitle: "Greeting People", lessonTitle: "Confidence Building Basics", locked: false, isDue: false },
+      { skillTitle: "Greeting People", lessonTitle: "Non-verbal Communication", locked: false, isDue: false },
+      { skillTitle: "Greeting People", lessonTitle: "Simple Greeting Techniques", locked: false, isDue: false },
+    ],
+  },
+  {
+    name: "Interviewing Skills",
+    lessons: [
+      { skillTitle: "Interviewing Skills", lessonTitle: "Self-Assessment & Goals", locked: false, isDue: false },
+      { skillTitle: "Interviewing Skills", lessonTitle: "Research & Preparation Basics", locked: false, isDue: false },
+      { skillTitle: "Interviewing Skills", lessonTitle: "Common Interview Questions", locked: false, isDue: false },
+    ],
+  },
+];
 
 export function LearnModeModal({
   open,
@@ -103,17 +120,19 @@ export function LearnModeModal({
   learnerName,
 }: LearnModeModalProps) {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [viewAllOpen, setViewAllOpen] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState<string>("");
 
-  const { nextLesson, recentLessons, allLessons } = useMemo(() => {
+  const { nextLesson, recentLessons, skillGroups } = useMemo(() => {
     const setup = getGuardianSetup();
     const skills: Skill[] = setup?.skills?.[learnerName] || [];
     const assignments = getAssignmentsForLearner(learnerName);
 
     // Flatten all lessons
     const flat: FlatLesson[] = [];
+    const groups: { name: string; lessons: FlatLesson[] }[] = [];
+
     skills.forEach((skill) => {
+      const skillLessons: FlatLesson[] = [];
       skill.lessons.forEach((lesson) => {
         const assignment = assignments.find(
           (a) => a.skillTitle === skill.title && a.lessonTitle === lesson.title
@@ -121,29 +140,29 @@ export function LearnModeModal({
         const isDue =
           !!assignment &&
           (assignment.status === "pending" || assignment.status === "in-progress");
-        flat.push({
+        const fl: FlatLesson = {
           skillTitle: skill.title,
           lessonTitle: lesson.title,
           locked: lesson.locked,
           isDue,
           dueDate: assignment?.dueDate,
           assignedDate: assignment?.assignedDate,
-        });
+        };
+        flat.push(fl);
+        if (!lesson.locked) skillLessons.push(fl);
       });
+      if (skillLessons.length > 0) {
+        groups.push({ name: skill.title, lessons: skillLessons });
+      }
     });
 
-    // Next lesson = first due, or first unlocked, or mock
     const due = flat.find((l) => l.isDue && !l.locked);
     const firstUnlocked = flat.find((l) => !l.locked);
     const next = due || firstUnlocked || MOCK_NEXT_LESSON;
 
-    // Recent = real assignments or mock data
     const realRecent = assignments
       .filter((a) => a.status !== "completed")
-      .sort(
-        (a, b) =>
-          new Date(b.assignedDate).getTime() - new Date(a.assignedDate).getTime()
-      )
+      .sort((a, b) => new Date(b.assignedDate).getTime() - new Date(a.assignedDate).getTime())
       .slice(0, 5)
       .map((a) => ({
         skillTitle: a.skillTitle,
@@ -155,43 +174,21 @@ export function LearnModeModal({
       }));
 
     const recent = realRecent.length > 0 ? realRecent : MOCK_RECENT_LESSONS;
+    const sg = groups.length > 0 ? groups : MOCK_ALL_SKILLS;
 
-    // All lessons = real + mock fallback
-    const all = flat.length > 0 ? flat : [...MOCK_RECENT_LESSONS, MOCK_NEXT_LESSON];
-
-    return { nextLesson: next, recentLessons: recent, allLessons: all };
+    return { nextLesson: next, recentLessons: recent, skillGroups: sg };
   }, [learnerName, open]);
 
-  const filteredLessons = useMemo(() => {
-    const unlocked = allLessons.filter((l) => !l.locked);
-    if (!searchQuery.trim()) return unlocked;
-    const q = searchQuery.toLowerCase();
-    return unlocked.filter(
-      (l) =>
-        l.lessonTitle.toLowerCase().includes(q) ||
-        l.skillTitle.toLowerCase().includes(q)
-    );
-  }, [allLessons, searchQuery]);
-
-  // Group filtered lessons by skill for the dropdown
-  const groupedLessons = useMemo(() => {
-    const groups: Record<string, FlatLesson[]> = {};
-    filteredLessons.forEach((l) => {
-      if (!groups[l.skillTitle]) groups[l.skillTitle] = [];
-      groups[l.skillTitle].push(l);
-    });
-    return groups;
-  }, [filteredLessons]);
+  const selectedLessons = useMemo(() => {
+    if (!selectedSkill) return [];
+    const group = skillGroups.find((g) => g.name === selectedSkill);
+    return group?.lessons || [];
+  }, [selectedSkill, skillGroups]);
 
   const handleStartLesson = (skillTitle: string, lessonTitle: string) => {
     onOpenChange(false);
     navigate("/chat", {
-      state: {
-        firstName: learnerName,
-        mode: "learning",
-        skillTitle,
-        lessonTitle,
-      },
+      state: { firstName: learnerName, mode: "learning", skillTitle, lessonTitle },
     });
   };
 
@@ -203,8 +200,7 @@ export function LearnModeModal({
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return "";
     const d = new Date(dateStr);
-    const now = new Date();
-    const diffMs = now.getTime() - d.getTime();
+    const diffMs = Date.now() - d.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     if (diffHours < 1) return "Just now";
@@ -215,7 +211,7 @@ export function LearnModeModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) { setViewAllOpen(false); setSearchQuery(""); } }}>
+    <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) setSelectedSkill(""); }}>
       <DialogContent className="sm:max-w-xl max-h-[85vh] flex flex-col gap-0 p-0 overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-xl">
@@ -233,9 +229,7 @@ export function LearnModeModal({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* Next suggested lesson */}
               <button
-                onClick={() =>
-                  handleStartLesson(nextLesson.skillTitle, nextLesson.lessonTitle)
-                }
+                onClick={() => handleStartLesson(nextLesson.skillTitle, nextLesson.lessonTitle)}
                 className="relative flex flex-col gap-2 rounded-xl p-4 text-left transition-all hover:scale-[1.02] hover:shadow-lg bg-gradient-to-br from-xolv-magenta-300/30 via-xolv-blue-300/20 to-xolv-teal-300/30 border border-xolv-magenta-300/30"
               >
                 <div className="flex items-center gap-2">
@@ -256,7 +250,7 @@ export function LearnModeModal({
                 </div>
               </button>
 
-              {/* Create new skill — always visible */}
+              {/* Create new skill */}
               <button
                 onClick={handleAddSkill}
                 className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4 text-left transition-all hover:scale-[1.02] hover:shadow-lg hover:border-primary/40"
@@ -265,17 +259,13 @@ export function LearnModeModal({
                   <Plus className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">
-                    New Skill
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Create a custom lesson plan.
-                  </p>
+                  <p className="text-sm font-semibold text-foreground">New Skill</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Create a custom lesson plan.</p>
                 </div>
               </button>
             </div>
 
-            {/* ── Recent / Previous Lessons ── */}
+            {/* ── Previous Lessons ── */}
             <div className="space-y-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                 <Clock className="h-3 w-3" />
@@ -285,26 +275,18 @@ export function LearnModeModal({
                 {recentLessons.map((lesson, idx) => (
                   <button
                     key={`recent-${lesson.skillTitle}-${lesson.lessonTitle}-${idx}`}
-                    onClick={() =>
-                      handleStartLesson(lesson.skillTitle, lesson.lessonTitle)
-                    }
+                    onClick={() => handleStartLesson(lesson.skillTitle, lesson.lessonTitle)}
                     className="group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <BookOpen className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">
-                          {lesson.lessonTitle}
-                        </p>
-                        <p className="text-xs text-muted-foreground truncate">
-                          {lesson.skillTitle}
-                        </p>
+                        <p className="text-sm font-medium text-foreground truncate">{lesson.lessonTitle}</p>
+                        <p className="text-xs text-muted-foreground truncate">{lesson.skillTitle}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-[11px] text-muted-foreground/70">
-                        {formatDate(lesson.assignedDate)}
-                      </span>
+                      <span className="text-[11px] text-muted-foreground/70">{formatDate(lesson.assignedDate)}</span>
                       <ChevronRight className="h-4 w-4 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
                     </div>
                   </button>
@@ -312,78 +294,51 @@ export function LearnModeModal({
               </div>
             </div>
 
-            {/* ── View All Lessons (collapsible dropdown) ── */}
-            <Collapsible open={viewAllOpen} onOpenChange={setViewAllOpen}>
-              <CollapsibleTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-between gap-2"
-                >
-                  <span className="flex items-center gap-2">
-                    <Search className="h-4 w-4" />
-                    View All Lessons
-                  </span>
-                  {viewAllOpen ? (
-                    <ChevronUp className="h-4 w-4" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4" />
-                  )}
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="pt-3 space-y-3 animate-in slide-in-from-top-2 duration-200">
-                {/* Search input */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search lessons or skills…"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9"
-                  />
-                </div>
+            {/* ── Browse by Skill (dropdown select) ── */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                <BookOpen className="h-3 w-3" />
+                Browse by Skill
+              </h3>
+              <Select value={selectedSkill} onValueChange={setSelectedSkill}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a skill…" />
+                </SelectTrigger>
+                <SelectContent>
+                  {skillGroups.map((group) => (
+                    <SelectItem key={group.name} value={group.name}>
+                      {group.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-                {/* Grouped lessons by skill */}
-                <div className="space-y-3 max-h-[35vh] overflow-y-auto pr-1">
-                  {Object.keys(groupedLessons).length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-4">
-                      No lessons found.
-                    </p>
-                  ) : (
-                    Object.entries(groupedLessons).map(([skill, lessons]) => (
-                      <div key={skill} className="space-y-0.5">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70 px-3 pt-1">
-                          {skill}
-                        </p>
-                        {lessons.map((lesson, idx) => (
-                          <button
-                            key={`all-${lesson.lessonTitle}-${idx}`}
-                            onClick={() =>
-                              handleStartLesson(lesson.skillTitle, lesson.lessonTitle)
-                            }
-                            className="group flex w-full items-center justify-between rounded-lg px-3 py-2 text-left transition-colors hover:bg-muted/60"
-                          >
-                            <div className="flex items-center gap-3 min-w-0">
-                              <BookOpen className="h-3.5 w-3.5 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
-                              <p className="text-sm text-foreground truncate">
-                                {lesson.lessonTitle}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2 shrink-0">
-                              {lesson.isDue && (
-                                <span className="text-[10px] font-medium text-destructive">
-                                  Due
-                                </span>
-                              )}
-                              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
-                            </div>
-                          </button>
-                        ))}
+              {/* Lessons for selected skill */}
+              {selectedSkill && selectedLessons.length > 0 && (
+                <div className="space-y-0.5 rounded-lg border border-border bg-muted/20 p-1 animate-in fade-in slide-in-from-top-1 duration-150">
+                  {selectedLessons.map((lesson, idx) => (
+                    <button
+                      key={`browse-${lesson.lessonTitle}-${idx}`}
+                      onClick={() => handleStartLesson(lesson.skillTitle, lesson.lessonTitle)}
+                      className="group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
+                          {idx + 1}
+                        </span>
+                        <p className="text-sm text-foreground truncate">{lesson.lessonTitle}</p>
                       </div>
-                    ))
-                  )}
+                      <div className="flex items-center gap-2 shrink-0">
+                        {lesson.isDue && (
+                          <span className="text-[10px] font-medium text-destructive">Due</span>
+                        )}
+                        <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
+                      </div>
+                    </button>
+                  ))}
                 </div>
-              </CollapsibleContent>
-            </Collapsible>
+              )}
+            </div>
           </div>
         </ScrollArea>
       </DialogContent>
