@@ -223,7 +223,7 @@ export function LearnModeModal({
           </p>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-6 pb-6">
+        <ScrollArea className="flex-1 overflow-y-auto px-6 pb-6">
           <div className="space-y-5">
             {/* ── Top action cards ── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
