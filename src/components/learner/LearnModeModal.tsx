@@ -212,8 +212,8 @@ export function LearnModeModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) setSelectedSkill(""); }}>
-      <DialogContent className="sm:max-w-xl max-h-[85vh] flex flex-col gap-0 p-0 overflow-visible">
-        <DialogHeader className="px-6 pt-6 pb-4">
+      <DialogContent className="sm:max-w-2xl max-h-[85vh] flex flex-col gap-0 p-0">
+        <DialogHeader className="px-8 pt-6 pb-4">
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Sparkles className="h-5 w-5 text-xolv-magenta-300" />
             Choose a Lesson
@@ -223,7 +223,7 @@ export function LearnModeModal({
           </p>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 overflow-y-auto px-6 pb-6">
+        <div className="flex-1 overflow-y-auto px-8 pb-8">
           <div className="space-y-5">
             {/* ── Top action cards ── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
