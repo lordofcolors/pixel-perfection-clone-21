@@ -13,6 +13,7 @@
  * 4. **Skill Building** — Jump straight to any lesson in the sidebar.
  */
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MessageCircle,
@@ -21,6 +22,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import { LearnModeModal } from "./LearnModeModal";
 
 interface EmptyLearnerDashboardProps {
   learnerName: string;
@@ -77,9 +79,13 @@ export function EmptyLearnerDashboard({
   learnerName,
 }: EmptyLearnerDashboardProps) {
   const navigate = useNavigate();
+  const [learnModalOpen, setLearnModalOpen] = useState(false);
 
   const handleSelect = (modeId: string) => {
-    // For now all modes navigate to /chat with a mode flag
+    if (modeId === "learning") {
+      setLearnModalOpen(true);
+      return;
+    }
     navigate("/chat", {
       state: { firstName: learnerName, mode: modeId },
     });
@@ -131,6 +137,12 @@ export function EmptyLearnerDashboard({
           </button>
         ))}
       </div>
+
+      <LearnModeModal
+        open={learnModalOpen}
+        onOpenChange={setLearnModalOpen}
+        learnerName={learnerName}
+      />
     </div>
   );
 }
