@@ -331,7 +331,7 @@ export function LearnModeModal({
               </div>
             </div>
           </div>
-        </ScrollArea>
+        </div>
       </DialogContent>
     </Dialog>
   );
