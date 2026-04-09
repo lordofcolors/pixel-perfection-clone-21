@@ -101,8 +101,7 @@ export function LearnModeModal({
   learnerName,
 }: LearnModeModalProps) {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [viewAllOpen, setViewAllOpen] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState<string>("");
 
   const { nextLesson, recentLessons, allLessons } = useMemo(() => {
     const setup = getGuardianSetup();
