@@ -79,9 +79,13 @@ export function EmptyLearnerDashboard({
   learnerName,
 }: EmptyLearnerDashboardProps) {
   const navigate = useNavigate();
+  const [learnModalOpen, setLearnModalOpen] = useState(false);
 
   const handleSelect = (modeId: string) => {
-    // For now all modes navigate to /chat with a mode flag
+    if (modeId === "learning") {
+      setLearnModalOpen(true);
+      return;
+    }
     navigate("/chat", {
       state: { firstName: learnerName, mode: modeId },
     });
