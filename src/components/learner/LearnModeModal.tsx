@@ -265,40 +265,11 @@ export function LearnModeModal({
               </button>
             </div>
 
-            {/* ── Previous Lessons ── */}
-            <div className="space-y-2">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                <Clock className="h-3 w-3" />
-                Previous Lessons
-              </h3>
-              <div className="space-y-0.5">
-                {recentLessons.map((lesson, idx) => (
-                  <button
-                    key={`recent-${lesson.skillTitle}-${lesson.lessonTitle}-${idx}`}
-                    onClick={() => handleStartLesson(lesson.skillTitle, lesson.lessonTitle)}
-                    className="group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <BookOpen className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">{lesson.lessonTitle}</p>
-                        <p className="text-xs text-muted-foreground truncate">{lesson.skillTitle}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-[11px] text-muted-foreground/70">{formatDate(lesson.assignedDate)}</span>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* ── Browse by Skill (dropdown select) ── */}
+            {/* ── Browse Lessons by Skill (dropdown) ── */}
             <div className="space-y-3">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                 <BookOpen className="h-3 w-3" />
-                Browse by Skill
+                Browse Lessons by Skill
               </h3>
               <Select value={selectedSkill} onValueChange={setSelectedSkill}>
                 <SelectTrigger className="w-full">
@@ -313,14 +284,12 @@ export function LearnModeModal({
                 </SelectContent>
               </Select>
 
-              {/* Lessons for selected skill */}
               {selectedSkill && selectedLessons.length > 0 && (
                 <div className="space-y-0.5 rounded-lg border border-border bg-muted/20 p-1 animate-in fade-in slide-in-from-top-1 duration-150">
                   {selectedLessons.map((lesson, idx) => (
-                    <button
+                    <div
                       key={`browse-${lesson.lessonTitle}-${idx}`}
-                      onClick={() => handleStartLesson(lesson.skillTitle, lesson.lessonTitle)}
-                      className="group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60"
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60 cursor-default"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
@@ -328,16 +297,38 @@ export function LearnModeModal({
                         </span>
                         <p className="text-sm text-foreground truncate">{lesson.lessonTitle}</p>
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        {lesson.isDue && (
-                          <span className="text-[10px] font-medium text-destructive">Due</span>
-                        )}
-                        <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
-                      </div>
-                    </button>
+                      {lesson.isDue && (
+                        <span className="text-[10px] font-medium text-destructive shrink-0">Due</span>
+                      )}
+                    </div>
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* ── Previous Lessons ── */}
+            <div className="space-y-2">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                <Clock className="h-3 w-3" />
+                Previous Lessons
+              </h3>
+              <div className="space-y-0.5">
+                {recentLessons.map((lesson, idx) => (
+                  <div
+                    key={`recent-${lesson.skillTitle}-${lesson.lessonTitle}-${idx}`}
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60 cursor-default"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <BookOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-foreground truncate">{lesson.lessonTitle}</p>
+                        <p className="text-xs text-muted-foreground truncate">{lesson.skillTitle}</p>
+                      </div>
+                    </div>
+                    <span className="text-[11px] text-muted-foreground/70 shrink-0">{formatDate(lesson.assignedDate)}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </ScrollArea>
