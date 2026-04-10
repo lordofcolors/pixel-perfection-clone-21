@@ -50,13 +50,13 @@ export function buildNudgeEmailHTML(): string {
                       <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; font-family: Arial, Helvetica, sans-serif; text-align: center; background: linear-gradient(90deg, #EED4F0, #94DFE9, #B9C6FE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                         Brain Workout Time!
                       </h1>
-                      <p style="margin: 0 0 28px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
+                      <p style="margin: 0 0 28px; font-size: 16px; color: #B9C6FE; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
                         Fun fact: your brain gets stronger every time you learn something new.
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: normal; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: normal; color: #EED4F0; font-family: Arial, Helvetica, sans-serif;">
                         Hi Donald,
                       </p>
-                      <p style="margin: 0 0 24px; font-size: 14px; color: #ffffff; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 24px; font-size: 14px; color: #EED4F0; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
                         It's been 3 days since your last learning session. Your learning journey is waiting for you, and Robert is ready to pick up right where you left off!
                       </p>
                       <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #94DFE9; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
@@ -100,7 +100,7 @@ export function buildNudgeEmailHTML(): string {
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                         <tr>
                           <td align="center" style="padding: 8px 0 24px;">
-                            <a href="https://app-dev.abyxolv.com" target="_blank" style="display: inline-block; padding: 16px 40px; background-color: #EED4F0; color: #000000; font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(238,212,240,0.3);">
+                            <a href="https://app-dev.abyxolv.com" target="_blank" style="display: inline-block; padding: 16px 40px; background: linear-gradient(90deg, #EED4F0, #94DFE9, #B9C6FE); color: #030817; font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: normal; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(148,223,233,0.3);">
                               Start Learning
                             </a>
                           </td>
@@ -157,13 +157,13 @@ export function buildNudgeEmailHTML(): string {
                       <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; font-family: Arial, Helvetica, sans-serif; text-align: center; background: linear-gradient(90deg, #EED4F0, #94DFE9, #B9C6FE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                         Reignite the Spark!
                       </h1>
-                      <p style="margin: 0 0 28px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
+                      <p style="margin: 0 0 28px; font-size: 16px; color: #B9C6FE; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
                         Their curiosity is still there. It just needs a little spark.
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: normal; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: normal; color: #EED4F0; font-family: Arial, Helvetica, sans-serif;">
                         Hi Tri,
                       </p>
-                      <p style="margin: 0 0 24px; font-size: 14px; color: #ffffff; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 24px; font-size: 14px; color: #EED4F0; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
                         It looks like Donald hasn't had a learning session in 3 days. A quick nudge can make a big difference in keeping their learning momentum going!
                       </p>
                       <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #94DFE9; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
@@ -207,7 +207,7 @@ export function buildNudgeEmailHTML(): string {
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                         <tr>
                           <td align="center" style="padding: 8px 0 24px;">
-                            <a href="https://app-dev.abyxolv.com" target="_blank" style="display: inline-block; padding: 16px 40px; background-color: #EED4F0; color: #000000; font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(238,212,240,0.3);">
+                            <a href="https://app-dev.abyxolv.com" target="_blank" style="display: inline-block; padding: 16px 40px; background: linear-gradient(90deg, #EED4F0, #94DFE9, #B9C6FE); color: #030817; font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: normal; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(148,223,233,0.3);">
                               Check on Donald
                             </a>
                           </td>
