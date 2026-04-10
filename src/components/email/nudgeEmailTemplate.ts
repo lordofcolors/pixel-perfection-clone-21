@@ -47,7 +47,7 @@ export function buildNudgeEmailHTML(): string {
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color: #030817; border: none; border-radius: 0 0 16px 16px; padding: 28px 24px;">
                   <tr>
                     <td style="padding: 28px 24px;">
-                      <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">
+                      <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; font-family: Arial, Helvetica, sans-serif; text-align: center; background: linear-gradient(90deg, #EED4F0, #94DFE9, #B9C6FE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                         Brain Workout Time!
                       </h1>
                       <p style="margin: 0 0 28px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
@@ -59,7 +59,7 @@ export function buildNudgeEmailHTML(): string {
                       <p style="margin: 0 0 24px; font-size: 14px; color: #ffffff; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
                         It's been 3 days since your last learning session. Your learning journey is waiting for you, and Robert is ready to pick up right where you left off!
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #94DFE9; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
                         Your Recent Topics
                       </p>
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin: 0 0 24px;">
@@ -154,7 +154,7 @@ export function buildNudgeEmailHTML(): string {
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color: #030817; border: none; border-radius: 0 0 16px 16px; padding: 28px 24px;">
                   <tr>
                     <td style="padding: 28px 24px;">
-                      <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">
+                      <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; font-family: Arial, Helvetica, sans-serif; text-align: center; background: linear-gradient(90deg, #EED4F0, #94DFE9, #B9C6FE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                         Reignite the Spark!
                       </h1>
                       <p style="margin: 0 0 28px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
@@ -166,7 +166,7 @@ export function buildNudgeEmailHTML(): string {
                       <p style="margin: 0 0 24px; font-size: 14px; color: #ffffff; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
                         It looks like Donald hasn't had a learning session in 3 days. A quick nudge can make a big difference in keeping their learning momentum going!
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #94DFE9; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
                         Donald's Recent Topics
                       </p>
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin: 0 0 24px;">
