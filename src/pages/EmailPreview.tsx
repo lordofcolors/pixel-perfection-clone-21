@@ -3,8 +3,8 @@
  * EmailPreview (/email)
  * =============================================================================
  *
- * Gmail-inspired inbox preview on desktop, raw email HTML on mobile.
- * Toggle between Dark and Light mode email templates.
+ * Nudge email preview – same HTML in both dark & light app modes.
+ * The iframe forces light color-scheme so text colors stay fixed.
  */
 
 import { useState } from "react";
@@ -14,8 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { buildDarkEmailHTML } from "@/components/email/darkEmailTemplate";
-import { buildLightEmailHTML } from "@/components/email/lightEmailTemplate";
+import { buildNudgeEmailHTML } from "@/components/email/nudgeEmailTemplate";
 
 const EmailPreview = () => {
   const navigate = useNavigate();
@@ -23,7 +22,8 @@ const EmailPreview = () => {
   const [starred, setStarred] = useState(false);
   const [mode, setMode] = useState<"dark" | "light">("dark");
 
-  const EMAIL_HTML = mode === "dark" ? buildDarkEmailHTML() : buildLightEmailHTML();
+  // Same HTML for both modes
+  const EMAIL_HTML = buildNudgeEmailHTML();
 
   /* ── Toggle pill (shared) ── */
   const modeToggle = (
@@ -54,7 +54,7 @@ const EmailPreview = () => {
           title="Email Preview"
           srcDoc={EMAIL_HTML}
           className="w-full flex-1 border-0"
-          style={{ minHeight: "3200px" }}
+          style={{ minHeight: "3200px", colorScheme: "only light" }}
           sandbox="allow-same-origin"
         />
       </div>
@@ -84,7 +84,7 @@ const EmailPreview = () => {
       <ScrollArea className="flex-1">
         <div className="mx-auto max-w-[900px] px-6 py-6">
           <div className="mb-4 flex items-start gap-3">
-            <h1 className="text-xl font-normal text-gray-900">Your Weekly Update — A by Xolv</h1>
+            <h1 className="text-xl font-normal text-gray-900">Nudge Emails — A by Xolv</h1>
             <span className="mt-1 rounded bg-gray-200 px-2 py-0.5 text-xs text-gray-600">Inbox</span>
           </div>
           <div className="mb-4 flex items-center gap-3">
@@ -108,7 +108,13 @@ const EmailPreview = () => {
             </div>
           </div>
           <div className="rounded-lg border border-gray-200 bg-white">
-            <iframe title="Email Preview" srcDoc={EMAIL_HTML} className="w-full border-0" style={{ minHeight: "3200px" }} sandbox="allow-same-origin" />
+            <iframe
+              title="Email Preview"
+              srcDoc={EMAIL_HTML}
+              className="w-full border-0"
+              style={{ minHeight: "3200px", colorScheme: "only light" }}
+              sandbox="allow-same-origin"
+            />
           </div>
           <div className="mt-4 flex gap-3">
             <Button variant="outline" className="gap-2 text-gray-600"><Reply className="h-4 w-4" /> Reply</Button>
