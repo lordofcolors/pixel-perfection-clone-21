@@ -33,7 +33,7 @@ export function buildNudgeEmailHTML(): string {
             <tr>
               <td align="center" style="padding: 32px 0 28px;">
                 <a href="https://app-dev.abyxolv.com" target="_blank">
-                  <img src="/images/a-robot.gif" alt="A by Xolv" width="140" height="140" style="display: block; max-width: 100%;" />
+                  <img src="/images/a-robot.gif" alt="A by Xolv" width="200" height="200" style="display: block; max-width: 100%;" />
                 </a>
               </td>
             </tr>
@@ -140,7 +140,7 @@ export function buildNudgeEmailHTML(): string {
             <tr>
               <td align="center" style="padding: 32px 0 28px;">
                 <a href="https://app-dev.abyxolv.com" target="_blank">
-                  <img src="/images/a-robot.gif" alt="A by Xolv" width="140" height="140" style="display: block; max-width: 100%;" />
+                  <img src="/images/a-robot.gif" alt="A by Xolv" width="200" height="200" style="display: block; max-width: 100%;" />
                 </a>
               </td>
             </tr>
