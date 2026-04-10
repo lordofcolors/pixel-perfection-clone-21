@@ -44,16 +44,16 @@ export function buildNudgeEmailHTML(): string {
                     <td style="height: 4px; background: linear-gradient(90deg, #EED4F0, #94DFE9, #B9C6FE);"></td>
                   </tr>
                 </table>
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color: #0F172A; border: 1px solid #1e293b; border-top: none; border-radius: 0 0 16px 16px; padding: 28px 24px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color: #030817; border: none; border-radius: 0 0 16px 16px; padding: 28px 24px;">
                   <tr>
                     <td style="padding: 28px 24px;">
                       <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">
                         Brain Workout Time!
                       </h1>
-                      <p style="margin: 0 0 20px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
+                      <p style="margin: 0 0 28px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
                         Fun fact: your brain gets stronger every time you learn something new.
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: normal; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
                         Hi Donald,
                       </p>
                       <p style="margin: 0 0 24px; font-size: 14px; color: #ffffff; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
@@ -151,16 +151,16 @@ export function buildNudgeEmailHTML(): string {
                     <td style="height: 4px; background: linear-gradient(90deg, #EED4F0, #94DFE9, #B9C6FE);"></td>
                   </tr>
                 </table>
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color: #0F172A; border: 1px solid #1e293b; border-top: none; border-radius: 0 0 16px 16px; padding: 28px 24px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color: #030817; border: none; border-radius: 0 0 16px 16px; padding: 28px 24px;">
                   <tr>
                     <td style="padding: 28px 24px;">
                       <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">
                         Reignite the Spark!
                       </h1>
-                      <p style="margin: 0 0 20px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
+                      <p style="margin: 0 0 28px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
                         Their curiosity is still there. It just needs a little spark.
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: normal; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
                         Hi Tri,
                       </p>
                       <p style="margin: 0 0 24px; font-size: 14px; color: #ffffff; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
