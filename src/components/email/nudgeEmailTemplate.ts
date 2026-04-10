@@ -50,7 +50,7 @@ export function buildNudgeEmailHTML(): string {
                       <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; font-family: Arial, Helvetica, sans-serif; text-align: center; background: linear-gradient(90deg, #EED4F0 0%, #EED4F0 25%, #94DFE9 50%, #B9C6FE 75%, #B9C6FE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                         Brain Workout Time!
                       </h1>
-                      <p style="margin: 0 0 28px; font-size: 16px; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic; background: linear-gradient(90deg, #EED4F0 0%, #EED4F0 25%, #94DFE9 50%, #B9C6FE 75%, #B9C6FE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                      <p style="margin: 0 0 28px; font-size: 16px; color: #B9C6FE; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
                         Fun fact: your brain gets stronger every time you learn something new.
                       </p>
                       <p style="margin: 0 0 8px; font-size: 14px; font-weight: normal; color: #EED4F0; font-family: Arial, Helvetica, sans-serif;">
@@ -59,7 +59,7 @@ export function buildNudgeEmailHTML(): string {
                       <p style="margin: 0 0 24px; font-size: 14px; color: #EED4F0; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
                         It's been <strong>3 days</strong> since your last learning session. Your learning journey is waiting for you, and Robert is ready to pick up right where you left off!
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #B9C6FE; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #EED4F0; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
                         Your Recent Topics
                       </p>
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin: 0 0 24px;">
@@ -157,7 +157,7 @@ export function buildNudgeEmailHTML(): string {
                       <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; font-family: Arial, Helvetica, sans-serif; text-align: center; background: linear-gradient(90deg, #EED4F0 0%, #EED4F0 25%, #94DFE9 50%, #B9C6FE 75%, #B9C6FE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                         Reignite the Spark!
                       </h1>
-                      <p style="margin: 0 0 28px; font-size: 16px; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic; background: linear-gradient(90deg, #EED4F0 0%, #EED4F0 25%, #94DFE9 50%, #B9C6FE 75%, #B9C6FE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                      <p style="margin: 0 0 28px; font-size: 16px; color: #B9C6FE; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
                         Their curiosity is still there. It just needs a little spark.
                       </p>
                       <p style="margin: 0 0 8px; font-size: 14px; font-weight: normal; color: #EED4F0; font-family: Arial, Helvetica, sans-serif;">
@@ -166,7 +166,7 @@ export function buildNudgeEmailHTML(): string {
                       <p style="margin: 0 0 24px; font-size: 14px; color: #EED4F0; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
                         It looks like Donald hasn't had a learning session in <strong>3 days</strong>. A quick nudge can make a big difference in keeping their learning momentum going!
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #B9C6FE; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #EED4F0; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
                         Donald's Recent Topics
                       </p>
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="margin: 0 0 24px;">
