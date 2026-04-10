@@ -50,13 +50,13 @@ export function buildNudgeEmailHTML(): string {
                       <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">
                         Brain Workout Time!
                       </h1>
-                      <p style="margin: 0 0 20px; font-size: 16px; color: #94a3b8; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
+                      <p style="margin: 0 0 20px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
                         Fun fact: your brain gets stronger every time you learn something new.
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 16px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
                         Hi Donald,
                       </p>
-                      <p style="margin: 0 0 24px; font-size: 14px; color: #94a3b8; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 24px; font-size: 14px; color: #ffffff; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
                         It's been 3 days since your last learning session. Your learning journey is waiting for you, and Robert is ready to pick up right where you left off!
                       </p>
                       <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
@@ -157,13 +157,13 @@ export function buildNudgeEmailHTML(): string {
                       <h1 style="margin: 0 0 4px; font-size: 24px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">
                         Reignite the Spark!
                       </h1>
-                      <p style="margin: 0 0 20px; font-size: 16px; color: #94a3b8; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
+                      <p style="margin: 0 0 20px; font-size: 16px; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center; font-style: italic;">
                         Their curiosity is still there. It just needs a little spark.
                       </p>
-                      <p style="margin: 0 0 8px; font-size: 16px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
                         Hi Tri,
                       </p>
-                      <p style="margin: 0 0 24px; font-size: 14px; color: #94a3b8; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
+                      <p style="margin: 0 0 24px; font-size: 14px; color: #ffffff; line-height: 1.6; font-family: Arial, Helvetica, sans-serif;">
                         It looks like Donald hasn't had a learning session in 3 days. A quick nudge can make a big difference in keeping their learning momentum going!
                       </p>
                       <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 1px; font-family: Arial, Helvetica, sans-serif;">
