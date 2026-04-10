@@ -101,7 +101,7 @@ export function buildNudgeEmailHTML(): string {
                         <tr>
                           <td align="center" style="padding: 8px 0 24px;">
                             <a href="https://app-dev.abyxolv.com" target="_blank" style="display: inline-block; padding: 16px 40px; background: linear-gradient(90deg, #EED4F0, #94DFE9, #B9C6FE); color: #030817; font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 9999px; box-shadow: 0 4px 14px rgba(148,223,233,0.3);">
-                              Dive Back In 🚀
+                              Jump Back In 🚀
                             </a>
                           </td>
                         </tr>
