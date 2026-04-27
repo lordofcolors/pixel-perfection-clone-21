@@ -42,7 +42,7 @@ export function SessionTimer({ formatted, isWarning }: SessionTimerProps) {
             </button>
           </TooltipTrigger>
           <TooltipContent side="top" align="end" className="max-w-[220px] text-xs leading-relaxed">
-            Each conversation with A is capped at 10 minutes.
+            Each conversation with A is capped at 10 minutes. You'll get a friendly reminder at the 2-minute mark, then a quick break before your next lesson.
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
