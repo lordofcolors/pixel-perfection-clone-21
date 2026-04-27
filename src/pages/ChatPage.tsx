@@ -94,6 +94,7 @@ const ChatPage = () => {
         onImageSearchChange={setImageSearchOn}
         skillMapOn={skillMapOn}
         onSkillMapChange={setSkillMapOn}
+        onTriggerTimeUp={timer.expireNow}
       />
 
       <div className="flex min-h-0 flex-1">
@@ -197,8 +198,8 @@ const ChatPage = () => {
 
       <TimeUpModal
         open={timer.isExpired}
-        onEndSession={session.handleDisconnect}
-        onBackToHome={() => navigate("/")}
+        onCompleteLesson={session.handleDisconnect}
+        onResumeSession={timer.reset}
       />
     </main>
   );

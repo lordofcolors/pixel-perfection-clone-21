@@ -2,41 +2,26 @@
  * =============================================================================
  * ChatTopBar
  * =============================================================================
- *
- * The header bar at the top of the /chat page. Contains:
- *   - A back button that returns to the home page
- *   - "Quick Start" label
- *   - Toggle switches for Image Search and Skill Map panels
- *
- * The bar fades in over 2 seconds once the main content is ready.
  */
 
-import { ArrowLeft, Image, Map } from "lucide-react";
+import { ArrowLeft, TimerOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 
 interface ChatTopBarProps {
-  /** Whether the main content has loaded (controls fade-in). */
   showContent: boolean;
-  /** Navigate back to home. */
   onBack: () => void;
-  /** Current state of the Image Search toggle. */
   imageSearchOn: boolean;
-  /** Callback when Image Search is toggled. */
   onImageSearchChange: (value: boolean) => void;
-  /** Current state of the Skill Map toggle. */
   skillMapOn: boolean;
-  /** Callback when Skill Map is toggled. */
   onSkillMapChange: (value: boolean) => void;
+  /** Dev preview — instantly trigger the Time's Up modal. */
+  onTriggerTimeUp: () => void;
 }
 
 export function ChatTopBar({
   showContent,
   onBack,
-  imageSearchOn,
-  onImageSearchChange,
-  skillMapOn,
-  onSkillMapChange,
+  onTriggerTimeUp,
 }: ChatTopBarProps) {
   return (
     <div
@@ -44,7 +29,6 @@ export function ChatTopBar({
         showContent ? "opacity-100" : "opacity-0"
       }`}
     >
-      {/* Left: back button + page title */}
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
@@ -57,7 +41,16 @@ export function ChatTopBar({
         <span className="text-sm text-muted-foreground">Quick Start</span>
       </div>
 
-      {/* Toggle switches hidden for now */}
+      {/* Right: dev shortcut to preview the "Time's Up" flow */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onTriggerTimeUp}
+        className="h-8 gap-1.5 text-[11px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
+      >
+        <TimerOff className="h-3.5 w-3.5" />
+        Complete Lesson
+      </Button>
     </div>
   );
 }
