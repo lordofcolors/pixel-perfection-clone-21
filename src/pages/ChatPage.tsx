@@ -47,6 +47,9 @@ const ChatPage = () => {
 
   const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn || webcamOn || quizOn;
 
+  // 10-minute session timer — starts ticking once the loading overlay clears.
+  const timer = useSessionTimer({ active: session.showContent && !session.sessionEnded });
+
   // Auto-reset to gallery when all side panels are turned off
   useEffect(() => {
     if (!hasSidePanels && expandedPanel !== null) {
