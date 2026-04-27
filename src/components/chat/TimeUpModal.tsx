@@ -27,8 +27,8 @@ export function TimeUpModal({ open, onCompleteLesson, onResumeSession }: TimeUpM
         </h2>
         <p className="text-sm text-foreground/80 leading-relaxed mb-8">
           You've been learning hard for 10 minutes. Nice work! Take a moment to
-          stretch. When you're ready, jump back in to keep going or wrap up
-          and review what you covered.
+          stretch. When you're ready, jump back in to keep going or take a
+          look at what you covered.
         </p>
 
         <div className="flex flex-col gap-3">
@@ -36,14 +36,14 @@ export function TimeUpModal({ open, onCompleteLesson, onResumeSession }: TimeUpM
             onClick={onResumeSession}
             className="w-full h-12 font-medium text-base bg-gradient-to-r dark:from-xolv-magenta-300 dark:via-xolv-blue-300 dark:to-xolv-teal-300 from-xolv-magenta-700 via-xolv-blue-600 to-xolv-teal-500 text-black"
           >
-            Resume Session
+            Let's keep chatting
           </Button>
           <Button
             variant="outline"
             onClick={onCompleteLesson}
             className="w-full h-12 font-medium text-base border-border/50"
           >
-            Wrap Up & Review
+            See what we covered
           </Button>
         </div>
       </div>
