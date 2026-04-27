@@ -102,22 +102,22 @@ export function VideoConferenceToolbar({
           </span>
         </div>
 
-        {/* ── Session timer ────────────────────────────────────────── */}
-        <SessionTimer formatted={timerFormatted} isWarning={timerIsWarning} />
-
-        {/* ── Disconnect button (far right) ────────────────────────── */}
-        <div className="flex w-20 flex-col items-center gap-1.5">
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-10 w-10 rounded-full border-destructive/30 bg-destructive/10 hover:bg-destructive/20"
-            onClick={onDisconnect}
-          >
-            <X className="h-4 w-4 text-destructive" />
-          </Button>
-          <span className="text-[8px] uppercase tracking-wider text-muted-foreground">
-            Disconnect
-          </span>
+        {/* ── Disconnect button + timer (far right) ───────────────── */}
+        <div className="flex items-center">
+          <div className="flex w-20 flex-col items-center gap-1.5">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-10 w-10 rounded-full border-destructive/30 bg-destructive/10 hover:bg-destructive/20"
+              onClick={onDisconnect}
+            >
+              <X className="h-4 w-4 text-destructive" />
+            </Button>
+            <span className="text-[8px] uppercase tracking-wider text-muted-foreground">
+              Disconnect
+            </span>
+          </div>
+          <SessionTimer formatted={timerFormatted} isWarning={timerIsWarning} />
         </div>
       </div>
     </div>
