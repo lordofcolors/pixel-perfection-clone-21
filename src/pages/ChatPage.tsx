@@ -194,6 +194,12 @@ const ChatPage = () => {
           )}
         </div>
       </div>
+
+      <TimeUpModal
+        open={timer.isExpired}
+        onEndSession={session.handleDisconnect}
+        onBackToHome={() => navigate("/")}
+      />
     </main>
   );
 };
