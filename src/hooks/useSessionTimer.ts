@@ -32,7 +32,8 @@ interface UseSessionTimerReturn {
 function format(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
-  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  // Single-digit minutes show as "0:00" through "9:59"; double-digit at "10:00".
+  return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
 export function useSessionTimer({
