@@ -21,10 +21,6 @@ import { ChatTranscriptPanel } from "@/components/chat/ChatTranscriptPanel";
 import { SessionEndedView } from "@/components/chat/SessionEndedView";
 import { ContinueLearningModal } from "@/components/chat/ContinueLearningModal";
 import { TimeUpModal } from "@/components/chat/TimeUpModal";
-import { VideoConferenceToolbar } from "@/components/chat/VideoConferenceToolbar";
-import { ChatTranscriptPanel } from "@/components/chat/ChatTranscriptPanel";
-import { SessionEndedView } from "@/components/chat/SessionEndedView";
-import { ContinueLearningModal } from "@/components/chat/ContinueLearningModal";
 
 import type { PanelKey } from "@/components/chat/types";
 
