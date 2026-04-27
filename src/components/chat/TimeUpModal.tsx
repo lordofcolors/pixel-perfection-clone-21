@@ -23,10 +23,10 @@ export function TimeUpModal({ open, onCompleteLesson, onResumeSession }: TimeUpM
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="relative w-full max-w-md mx-4 bg-card border border-border/50 rounded-2xl p-8">
         <h2 className="text-2xl font-bold text-foreground mb-3">
-          Time's up — let's take a quick break!
+          Time's up, let's take a quick break!
         </h2>
         <p className="text-sm text-foreground/80 leading-relaxed mb-8">
-          You've been learning hard for 10 minutes — nice work! Take a moment to
+          You've been learning hard for 10 minutes. Nice work! Take a moment to
           stretch. When you're ready, you can wrap up this lesson or jump back
           in to keep going.
         </p>
