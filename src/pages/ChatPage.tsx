@@ -24,11 +24,34 @@ import { TimeUpModal } from "@/components/chat/TimeUpModal";
 
 import type { PanelKey } from "@/components/chat/types";
 
+/**
+ * Outer wrapper: holds a `sessionKey` so we can fully remount the inner
+ * session (and replay loading + greeting) when the learner picks
+ * "Resume Session" from the Time's Up modal.
+ */
 const ChatPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { firstName } = (location.state as { firstName?: string }) || {};
+  const [sessionKey, setSessionKey] = useState(0);
 
+  return (
+    <ChatSession
+      key={sessionKey}
+      firstName={firstName}
+      navigate={navigate}
+      onResumeFreshSession={() => setSessionKey((k) => k + 1)}
+    />
+  );
+};
+
+interface ChatSessionProps {
+  firstName?: string;
+  navigate: ReturnType<typeof useNavigate>;
+  onResumeFreshSession: () => void;
+}
+
+const ChatSession = ({ firstName, navigate, onResumeFreshSession }: ChatSessionProps) => {
   const session = useChatSession({ firstName });
 
   // Panel toggles
@@ -199,7 +222,7 @@ const ChatPage = () => {
       <TimeUpModal
         open={timer.isExpired}
         onCompleteLesson={session.handleDisconnect}
-        onResumeSession={timer.reset}
+        onResumeSession={onResumeFreshSession}
       />
     </main>
   );
