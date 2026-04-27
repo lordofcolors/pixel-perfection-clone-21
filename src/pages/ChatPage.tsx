@@ -11,10 +11,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { useChatSession } from "@/hooks/useChatSession";
 import { useRiveAssistant } from "@/hooks/useRiveAssistant";
+import { useSessionTimer } from "@/hooks/useSessionTimer";
 
 import { ChatLoadingOverlay } from "@/components/chat/ChatLoadingOverlay";
 import { ChatTopBar } from "@/components/chat/ChatTopBar";
 import { Canvas } from "@/components/chat/canvas";
+import { VideoConferenceToolbar } from "@/components/chat/VideoConferenceToolbar";
+import { ChatTranscriptPanel } from "@/components/chat/ChatTranscriptPanel";
+import { SessionEndedView } from "@/components/chat/SessionEndedView";
+import { ContinueLearningModal } from "@/components/chat/ContinueLearningModal";
+import { TimeUpModal } from "@/components/chat/TimeUpModal";
 import { VideoConferenceToolbar } from "@/components/chat/VideoConferenceToolbar";
 import { ChatTranscriptPanel } from "@/components/chat/ChatTranscriptPanel";
 import { SessionEndedView } from "@/components/chat/SessionEndedView";
