@@ -16,7 +16,7 @@ export function SessionTimer({ formatted, isWarning }: SessionTimerProps) {
   return (
     <span
       className={cn(
-        "ml-2 font-mono text-xs tabular-nums tracking-tight",
+        "ml-2 font-mono text-[10px] tabular-nums tracking-tight",
         isWarning ? "text-destructive animate-pulse" : "text-muted-foreground",
       )}
     >
