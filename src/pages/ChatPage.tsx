@@ -159,6 +159,8 @@ const ChatPage = () => {
             isScreenSharing={screenShareOn}
             isWebcamOn={webcamOn}
             isMuted={isMuted}
+            timerFormatted={timer.formatted}
+            timerIsWarning={timer.isWarning}
           />
         </div>
 
