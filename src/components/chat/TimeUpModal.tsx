@@ -33,17 +33,17 @@ export function TimeUpModal({ open, onCompleteLesson, onResumeSession }: TimeUpM
 
         <div className="flex flex-col gap-3">
           <Button
-            onClick={onCompleteLesson}
+            onClick={onResumeSession}
             className="w-full h-12 font-medium text-base bg-gradient-to-r dark:from-xolv-magenta-300 dark:via-xolv-blue-300 dark:to-xolv-teal-300 from-xolv-magenta-700 via-xolv-blue-600 to-xolv-teal-500 text-black"
           >
-            Complete Lesson
+            Resume Session
           </Button>
           <Button
             variant="outline"
-            onClick={onResumeSession}
+            onClick={onCompleteLesson}
             className="w-full h-12 font-medium text-base border-border/50"
           >
-            Resume Session
+            Complete Lesson
           </Button>
         </div>
       </div>
