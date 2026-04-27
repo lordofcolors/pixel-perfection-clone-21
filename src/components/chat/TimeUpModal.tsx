@@ -43,7 +43,7 @@ export function TimeUpModal({ open, onCompleteLesson, onResumeSession }: TimeUpM
             onClick={onCompleteLesson}
             className="w-full h-12 font-medium text-base border-border/50"
           >
-            See what we covered
+            See the recap
           </Button>
         </div>
       </div>
