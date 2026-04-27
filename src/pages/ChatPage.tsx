@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { useChatSession } from "@/hooks/useChatSession";
 import { useRiveAssistant } from "@/hooks/useRiveAssistant";
+import { useSessionTimer } from "@/hooks/useSessionTimer";
 
 import { ChatLoadingOverlay } from "@/components/chat/ChatLoadingOverlay";
 import { ChatTopBar } from "@/components/chat/ChatTopBar";
@@ -19,6 +20,7 @@ import { VideoConferenceToolbar } from "@/components/chat/VideoConferenceToolbar
 import { ChatTranscriptPanel } from "@/components/chat/ChatTranscriptPanel";
 import { SessionEndedView } from "@/components/chat/SessionEndedView";
 import { ContinueLearningModal } from "@/components/chat/ContinueLearningModal";
+import { TimeUpModal } from "@/components/chat/TimeUpModal";
 
 import type { PanelKey } from "@/components/chat/types";
 
@@ -44,6 +46,9 @@ const ChatPage = () => {
   const [mapIndex, setMapIndex] = useState(0);
 
   const hasSidePanels = imageSearchOn || skillMapOn || screenShareOn || webcamOn || quizOn;
+
+  // 10-minute session timer — starts ticking once the loading overlay clears.
+  const timer = useSessionTimer({ active: session.showContent && !session.sessionEnded });
 
   // Auto-reset to gallery when all side panels are turned off
   useEffect(() => {
@@ -154,6 +159,8 @@ const ChatPage = () => {
             isScreenSharing={screenShareOn}
             isWebcamOn={webcamOn}
             isMuted={isMuted}
+            timerFormatted={timer.formatted}
+            timerIsWarning={timer.isWarning}
           />
         </div>
 
@@ -187,6 +194,12 @@ const ChatPage = () => {
           )}
         </div>
       </div>
+
+      <TimeUpModal
+        open={timer.isExpired}
+        onEndSession={session.handleDisconnect}
+        onBackToHome={() => navigate("/")}
+      />
     </main>
   );
 };

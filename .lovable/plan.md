@@ -1,37 +1,60 @@
+# Plan: 10-Minute Session Timer in /chat
 
+Add a compact MM:SS timer to the bottom toolbar that counts up from `00:00`, turns red at `08:00`, and triggers a "Time's Up" modal at `10:00`. Also reorder the toolbar so **Disconnect** sits at the far right with the **Timer to its left**.
 
-# Plan: Generate Dark-Mode Nudge Email HTML File
+## Toolbar Layout Change
 
-Take the uploaded light-mode HTML structure (nudge-email-preview-3.html) and apply all the dark-mode styles from the current preview to produce a standalone HTML file.
+Current order (in `VideoConferenceToolbar.tsx`):
+```text
+[Mute]  [Disconnect]  [Webcam]  [Share Screen]
+```
 
-## Style Mapping (uploaded structure -> dark preview styles)
+New order — Disconnect moves to far right, timer sits just left of it:
+```text
+[Mute]  [Webcam]  [Share Screen]  [⏱ 00:00]  [Disconnect]
+```
 
-| Element | Uploaded (light) | Dark preview |
-|---|---|---|
-| Page body bg | `#f1f5f9` | `#030817` |
-| Email wrapper bg | `#ffffff` | `#030817` |
-| Card bg | `#F8FAFC` with `border: 1px solid #E2E8F0` | `#030817` with `border: none` |
-| Logo | `logo.png` 80x80, padding `0 0 20px` | `a-robot.gif` 200x200, padding `32px 0 28px` |
-| H1 | Solid `#1E293B` | Gradient text (`#EED4F0 -> #94DFE9 -> #B9C6FE`) with `-webkit-background-clip: text` |
-| Quote/subtitle | Solid `#64748B` | Same gradient text as H1 |
-| Greeting ("Hi ...") | `#1E293B`, bold 16px | `#94DFE9`, normal weight 14px |
-| Body text | `#475569` | `#94DFE9` |
-| "Recent Topics" label | `#64748B` | `#B9C6FE` |
-| Topic cards bg | `#ffffff`, border `#E2E8F0` | `#1e293b`, border `#334155` |
-| Topic card text | `#1E293B` | `#e2e8f0` |
-| Topic left borders | `#24A1B6`, `#CA7FCD`, `#6166F3` | `#94DFE9`, `#EED4F0`, `#B9C6FE` |
-| CTA button | Solid `#C4A0BF`, text "Start Learning" / "Check on Donald" | Gradient bg, text "Jump Back In 🚀" / "Check on Donald" |
-| Unsubscribe link | `#24A1B6` | `#94DFE9` |
-| `.email-frame` border | `#e2e8f0` | `#1e293b` |
+The toolbar currently uses `justify-center` with fixed-width 80px slots per button. To avoid "auto-shifting everything" when the timer is added, keep `justify-center` and add the timer + reordered disconnect as two more items in the same flex row. The whole cluster stays centered but visually balanced.
 
-## Deliverable
+## Timer Design
 
-Write the final HTML to `/mnt/documents/nudge-email-dark.html` -- a standalone file with the same table structure as the uploaded file, all dark-mode inline styles applied, ready to copy-paste for email delivery. Both learner and parent emails included.
+- **Format**: `MM:SS` starting at `00:00`, ticking up every 1s (so user sees `00:00`, `00:01`, `00:02`…).
+- **Size**: small — same text size as the existing toolbar labels area; uses tabular/mono numerals so digits don't jitter as they change. Roughly `text-sm font-mono tabular-nums` with the same uppercase micro-label ("TIME") underneath, matching the visual rhythm of the other toolbar items.
+- **States**:
+  - `00:00` → `07:59` — neutral color (`text-muted-foreground`).
+  - `08:00` → `09:59` — red (`text-destructive`), optional subtle pulse to signal urgency.
+  - `10:00` — timer stops, "Time's Up" modal opens, session is ended.
+- **Slot width**: same ~80px column as the other toolbar items so it visually matches.
+
+## Time's Up Modal
+
+A new lightweight modal (separate from the existing `ContinueLearningModal`):
+- Title: **"Time's Up!"**
+- Body: Short message — e.g. "You've reached your 10-minute session limit. Great work!"
+- Primary CTA: **End Session** → triggers the same `handleDisconnect()` flow already in `useChatSession`, which transitions to `SessionEndedView`.
+- Secondary CTA (optional): **Back to Home** → navigates to `/`.
+- Style: matches existing dark modal pattern (`bg-card border border-border/50 rounded-2xl`), centered, `z-50` overlay, no close-X (must take an action).
+
+## Behavior Details
+
+- Timer starts when the chat content becomes visible (after the loading sequence completes — i.e. when `showContent` is true), not while the loading overlay is showing.
+- Timer pauses/cleans up if the user manually disconnects before 10:00.
+- Timer state lives in `ChatPage` (or a small `useSessionTimer` hook) so the toolbar and the time-up modal can both read it.
+- At 10:00, the modal opens but `sessionEnded` is NOT auto-flipped — user clicks the CTA to end. (This matches the existing pattern where `handleDisconnect` is the single source of truth for ending.)
 
 ## Technical Details
 
-- Use `code--exec` to write the file directly
-- Add `color-scheme: only light` meta tags to prevent email client theme flipping
-- All styles fully inline, no CSS classes inside email bodies
-- Keep the wrapper/label/subject chrome (`.pair-wrapper`, `.pair-label`, `.subject-preview`) as-is from the dark preview
+Files to change / add:
+1. **`src/hooks/useSessionTimer.ts`** *(new)* — small hook: `{ elapsedSeconds, formatted, isWarning, isExpired, start, stop }`. Uses `setInterval`, cleans up on unmount.
+2. **`src/components/chat/SessionTimer.tsx`** *(new)* — presentational component rendering the MM:SS display in the toolbar slot style (icon + mono digits + uppercase micro-label). Accepts `seconds` and `isWarning` props.
+3. **`src/components/chat/TimeUpModal.tsx`** *(new)* — modal component with the End Session CTA.
+4. **`src/components/chat/VideoConferenceToolbar.tsx`** *(edit)* — reorder buttons (Mute, Webcam, Share Screen, Timer, Disconnect) and inject `<SessionTimer />` into the new slot.
+5. **`src/pages/ChatPage.tsx`** *(edit)* — instantiate `useSessionTimer`, start it when `session.showContent` flips true, render `<TimeUpModal>` when `isExpired`, wire the modal CTA to `session.handleDisconnect`.
 
+No backend, schema, or auth changes. Pure client-side.
+
+## Out of Scope
+
+- Persisting timer across refresh (each session restarts at 00:00).
+- Configurable session lengths (hard-coded 10 min for now).
+- Audio/notification at 8-minute mark (visual red only).
