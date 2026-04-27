@@ -42,7 +42,7 @@ export function SessionTimer({ formatted, isWarning }: SessionTimerProps) {
             </button>
           </TooltipTrigger>
           <TooltipContent side="top" align="end" className="max-w-[220px] text-xs leading-relaxed">
-            Hey! Conversations are limited to 10 minutes. You'll get a heads-up at the 2-minute mark — then a small break before your next lesson.
+            Each conversation lasts up to 10 minutes. We'll give you a friendly reminder at the 2-minute mark, then take a quick break before your next lesson.
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
