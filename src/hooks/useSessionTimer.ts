@@ -25,6 +25,8 @@ interface UseSessionTimerReturn {
   isWarning: boolean;
   isExpired: boolean;
   reset: () => void;
+  /** Dev helper — jump straight to the limit to preview the Time's Up modal. */
+  expireNow: () => void;
 }
 
 function format(seconds: number): string {
@@ -65,11 +67,17 @@ export function useSessionTimer({
     setElapsedSeconds(0);
   }, []);
 
+  const expireNow = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setElapsedSeconds(limitSeconds);
+  }, [limitSeconds]);
+
   return {
     elapsedSeconds,
     formatted: format(elapsedSeconds),
     isWarning: elapsedSeconds >= warningSeconds && elapsedSeconds < limitSeconds,
     isExpired: elapsedSeconds >= limitSeconds,
     reset,
+    expireNow,
   };
 }
