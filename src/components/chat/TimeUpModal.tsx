@@ -36,7 +36,7 @@ export function TimeUpModal({ open, onCompleteLesson, onResumeSession }: TimeUpM
             onClick={onResumeSession}
             className="w-full h-12 font-medium text-base bg-gradient-to-r dark:from-xolv-magenta-300 dark:via-xolv-blue-300 dark:to-xolv-teal-300 from-xolv-magenta-700 via-xolv-blue-600 to-xolv-teal-500 text-black"
           >
-            Let's keep chatting
+            Resume chatting
           </Button>
           <Button
             variant="outline"
